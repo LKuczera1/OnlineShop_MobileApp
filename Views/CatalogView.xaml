@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OnlineShop_MobileApp.Views.CatalogView">
+    <Grid RowDefinitions="*,Auto" Padding="12">
+
+        <!-- LISTA -->
+        <CollectionView Grid.Row="0"
+                    ItemsSource="{Binding Items}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <!-- pojedynczy prostokątny element -->
+                    <Frame Margin="0,0,0,10" Padding="12">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Title}" FontSize="18"/>
+                            <Label Text="{Binding Subtitle}" FontSize="13"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+
+        <!-- PAGINACJA -->
+        <Grid Grid.Row="1"
+      ColumnDefinitions="Auto,*,Auto"
+      ColumnSpacing="10"
+      Padding="0,10,0,0">
+
+            <!-- LEWO -->
+            <Button Text="◀"
+            Command="{Binding PrevPageCommand}"
+            IsEnabled="{Binding CanPrev}" />
+
+            <!-- ŚRODEK: numery stron (scroll horyzontalny) -->
+            <CollectionView Grid.Column="1"
+                ItemsSource="{Binding PageNumbers}"
+                ItemsLayout="HorizontalList"
+                SelectionMode="None"
+                HorizontalScrollBarVisibility="Never">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding .}"
+                    Command="{Binding BindingContext.GoToPageNumberCommand,
+                                      Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                    CommandParameter="{Binding .}"
+                    Margin="0,0,8,0" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+            <!-- PRAWO -->
+            <Button Grid.Column="2"
+            Text="▶"
+            Command="{Binding NextPageCommand}"
+            IsEnabled="{Binding CanNext}" />
+        </Grid>
+
+
+
+    </Grid>
+</ContentView>

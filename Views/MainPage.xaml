@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OnlineShop_MobileApp.Views.MainPage">
+    <Grid RowDefinitions="48,740,110">
+
+        <!-- GÓRNY PASEK -->
+        <Grid Grid.Row="0" BackgroundColor="#222" Padding="12,0">
+            <Label Text="Nagłówek" TextColor="White" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- CONTENT (środek) -->
+        <ContentView Grid.Row="1"
+             Content="{Binding CurrentView}"/>
+
+        <!-- DOLNY PASEK -->
+        <Grid Grid.Row="2" BackgroundColor="#111" Padding="12">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12">
+                <Button Grid.Column="0" 
+                        Text="Catalog" 
+                        HeightRequest="80" 
+                        WidthRequest="80" 
+                        CornerRadius="10"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Catalog" />
+                
+                <Button Grid.Column="1" 
+                        Text="Cart" 
+                        HeightRequest="80" 
+                        WidthRequest="80" 
+                        CornerRadius="10"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Cart" />
+                
+                <Button Grid.Column="2" 
+                        Text="Orders" 
+                        HeightRequest="80" 
+                        WidthRequest="80" 
+                        CornerRadius="10"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Orders" />
+                
+                <Button Grid.Column="3" 
+                        Text="Account" 
+                        HeightRequest="80" 
+                        WidthRequest="80" 
+                        CornerRadius="10"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Account" />
+            </Grid>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
