@@ -1,0 +1,15 @@
+﻿{
+    "ConfigurationProperties": {
+        "EnvironmentType": "WindowsMachine",
+        "ScreenResolution": {
+            "x": 1000,
+            "y": 1000
+        },
+        "DarkTheme": true,
+        "ConnectionProperties": {
+            "Catalog": "localHost:7001",
+            "Identity": "localHost:7002",
+            "Shopping": "LocalHost:7003"
+        }
+    }
+}

@@ -23,6 +23,9 @@ namespace OnlineShop_MobileApp.ViewModel
         public ObservableCollection<Product> Items { get; } = new();
 
         public ObservableCollection<int> PageNumbers { get; } = new();
+        public ICommand GoToPageNumberCommand { get; }
+
+
 
 
         private int _currentPage = 1;
@@ -83,6 +86,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 _allItems.Add(new Product { Title = $"Produkt {i}", Subtitle = $"Opis {i}" });
 
             RecalcPagesAndLoad(1);
+            GoToPageNumberCommand = new Command<int>(page => LoadPage(page));
         }
 
         private void RecalcPagesAndLoad(int page)

@@ -6,7 +6,8 @@
 
         <!-- GÓRNY PASEK -->
         <Grid Grid.Row="0" BackgroundColor="#222" Padding="12,0">
-            <Label Text="Nagłówek" TextColor="White" VerticalOptions="Center"/>
+            <Button Text="..." HeightRequest="40" WidthRequest="40" VerticalOptions="Center" HorizontalOptions="Start" Clicked="OnMenuClicked"/>
+            <Label Text="OnlineShop" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center"/>
         </Grid>
 
         <!-- CONTENT (środek) -->
@@ -50,6 +51,40 @@
             </Grid>
         </Grid>
 
+        <!--Boczne menu-->
+        <Grid x:Name="MenuOverlay"
+          Grid.RowSpan="3"
+          IsVisible="False"
+          BackgroundColor="#80000000"
+          ZIndex="100">
+
+            <!-- klik w tło zamyka -->
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnOverlayTapped"/>
+            </Grid.GestureRecognizers>
+
+            <!-- panel wysuwany -->
+            <Grid x:Name="MenuPanel"
+              BackgroundColor="#1E1E1E"
+              WidthRequest="320"
+              HorizontalOptions="Start"
+              TranslationX="-320">
+                <!-- tu wrzuć zawartość menu -->
+                <VerticalStackLayout Padding="16" Spacing="12">
+                    <Label Text="MENU" TextColor="White" FontSize="20"/>
+                    <Button Text="Opcja 1" />
+                    <Button Text="Opcja 2" />
+                </VerticalStackLayout>
+
+                <!-- żeby kliknięcia w panel nie zamykały menu -->
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+        </Grid>
+
     </Grid>
+    
 
 </ContentPage>

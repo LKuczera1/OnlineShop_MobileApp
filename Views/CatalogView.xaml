@@ -33,22 +33,22 @@
             IsEnabled="{Binding CanPrev}" />
 
             <!-- ŚRODEK: numery stron (scroll horyzontalny) -->
-            <CollectionView Grid.Column="1"
+            <CollectionView x:Name="PagesCv"
+                Grid.Column="1"
                 ItemsSource="{Binding PageNumbers}"
                 ItemsLayout="HorizontalList"
                 SelectionMode="None"
                 HorizontalScrollBarVisibility="Never">
-
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Button Text="{Binding .}"
-                    Command="{Binding BindingContext.GoToPageNumberCommand,
-                                      Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                    Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.GoToPageNumberCommand}"
                     CommandParameter="{Binding .}"
                     Margin="0,0,8,0" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
 
 
             <!-- PRAWO -->

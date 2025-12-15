@@ -5,5 +5,6 @@ public partial class CartView : ContentView
 	public CartView()
 	{
 		InitializeComponent();
+		BindingContext = new CartViewModel();
 	}
 }

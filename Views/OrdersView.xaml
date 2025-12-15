@@ -2,5 +2,38 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.OrdersView">
-    <Label Text="Orders" />
+    <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OnlineShop_MobileApp.Views.OrdersView">
+
+        <Grid Padding="12">
+            <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,0,0,10" Padding="12">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+
+                                <!-- info o zamówieniu -->
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding OrderNumber}" FontSize="18"/>
+                                    <Label Text="{Binding DateText}" FontSize="13"/>
+                                    <Label Text="{Binding Status}" FontSize="13"/>
+                                </VerticalStackLayout>
+
+                                <!-- przycisk -->
+                                <Button Grid.Column="1"
+                                    Text="CheckOrderStatus"
+                                    VerticalOptions="Center"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                                                      Path=BindingContext.CheckOrderStatusCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+    </ContentView>
+
 </ContentView>
