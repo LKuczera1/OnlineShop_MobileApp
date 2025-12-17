@@ -2,10 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.MainPage">
-    <Grid RowDefinitions="48,740,110">
+    <Grid RowDefinitions="auto,*,auto">
 
         <!-- GÓRNY PASEK -->
-        <Grid Grid.Row="0" BackgroundColor="#222" Padding="12,0">
+        <Grid Grid.Row="0" BackgroundColor="#222" Padding="12,0" VerticalOptions="Start">
             <Button Text="..." HeightRequest="40" WidthRequest="40" VerticalOptions="Center" HorizontalOptions="Start" Clicked="OnMenuClicked"/>
             <Label Text="OnlineShop" TextColor="White" VerticalOptions="Center" HorizontalOptions="Center"/>
         </Grid>
@@ -15,12 +15,16 @@
              Content="{Binding CurrentView}"/>
 
         <!-- DOLNY PASEK -->
-        <Grid Grid.Row="2" BackgroundColor="#111" Padding="12">
+        <Grid Grid.Row="2" BackgroundColor="#111" Padding="12" VerticalOptions="Start" MinimumHeightRequest="100">
+            <!-- HeightRequest do zmiany, ale z tym pasek ładnie sie chowa poza ekran jezeli ekran jest za mały-->
+
+            <!-- HeightRequest do zmiany, ale z tym pasek ładnie sie chowa poza ekran jezeli ekran jest za mały-->
             <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12">
                 <Button Grid.Column="0" 
                         Text="Catalog" 
                         HeightRequest="80" 
-                        WidthRequest="80" 
+                        WidthRequest="80"
+                        HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Catalog" />
@@ -28,7 +32,8 @@
                 <Button Grid.Column="1" 
                         Text="Cart" 
                         HeightRequest="80" 
-                        WidthRequest="80" 
+                        WidthRequest="80"
+                        HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Cart" />
@@ -36,7 +41,8 @@
                 <Button Grid.Column="2" 
                         Text="Orders" 
                         HeightRequest="80" 
-                        WidthRequest="80" 
+                        WidthRequest="80"
+                        HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Orders" />
@@ -44,7 +50,8 @@
                 <Button Grid.Column="3" 
                         Text="Account" 
                         HeightRequest="80" 
-                        WidthRequest="80" 
+                        WidthRequest="80"
+                        HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Account" />

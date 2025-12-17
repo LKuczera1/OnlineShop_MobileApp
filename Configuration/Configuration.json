@@ -5,11 +5,27 @@
             "x": 1000,
             "y": 1000
         },
-        "DarkTheme": true,
         "ConnectionProperties": {
             "Catalog": "localHost:7001",
             "Identity": "localHost:7002",
             "Shopping": "LocalHost:7003"
+        },
+        "DarkTheme": true,
+        "DarkThemeColorStyles": {
+            "Background": "#ffffff",
+            "MainComponents": "#66ccff",
+            "SlidingMenu": "#33ccff",
+            "Tiles": "#6699ff",
+            "Buttons": "#0066ff",
+            "Text": "#000000"
+        },
+        "WhiteThemeColorStyles": {
+            "Background": "#ffffff",
+            "MainComponents": "#66ccff",
+            "SlidingMenu": "#33ccff",
+            "Tiles": "#6699ff",
+            "Buttons": "#0066ff",
+            "Text": "#000000"
         }
     }
 }
