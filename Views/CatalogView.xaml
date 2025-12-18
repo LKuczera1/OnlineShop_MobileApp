@@ -18,16 +18,36 @@
 
         <!-- LISTA -->
         <CollectionView Grid.Row="1"
-                    ItemsSource="{Binding Items}">
+                    ItemsSource="{Binding Items}"
+                    VerticalScrollBarVisibility="Never">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <!-- pojedynczy prostokątny element -->
-                    <Frame Margin="0,0,0,10" Padding="12">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding Title}" FontSize="18"/>
-                            <Label Text="{Binding Subtitle}" FontSize="13"/>
-                        </VerticalStackLayout>
-                    </Frame>
+                    <Grid Padding="0,0,0,0" VerticalOptions="Start">
+                        
+                        <Border Margin="0,0,0,2"
+                                 Padding="6,6,6,12"
+                                 BackgroundColor="Black"
+                                 StrokeThickness="0">
+                            
+                            <Border.StrokeShape>
+                                
+                                <RoundRectangle CornerRadius="8" />
+                                
+                            </Border.StrokeShape>
+                            
+
+                            <VerticalStackLayout>
+                                
+                                <Label Text="{Binding Title}" FontSize="18"/>
+                                
+                                <Label Text="{Binding Subtitle}" FontSize="13"/>
+                                
+                            </VerticalStackLayout>
+                            
+                        </Border>
+                        
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
