@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.ViewModel
 {
+    using OnlineShop_MobileApp.Services;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
@@ -24,6 +25,9 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ObservableCollection<int> PageNumbers { get; } = new();
         public ICommand GoToPageNumberCommand { get; }
+
+        //-------------------------- DI troubleshotting
+        private readonly ICatalogService _service;
 
 
 
@@ -75,8 +79,10 @@ namespace OnlineShop_MobileApp.ViewModel
 
 
 
-        public CatalogViewModel()
+        public CatalogViewModel(ICatalogService service)
         {
+            _service = service;
+
             PrevPageCommand = new Command(() => LoadPage(CurrentPage - 1), () => CanPrev);
             NextPageCommand = new Command(() => LoadPage(CurrentPage + 1), () => CanNext);
             GoToPageCommand = new Command(GoToPage);

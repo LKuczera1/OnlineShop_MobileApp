@@ -3,11 +3,12 @@ using OnlineShop_MobileApp.ViewModel;
 
 public partial class MainPage : ContentPage
 {
-	public MainPage()
+	public MainPage(MainPageViewModel viewModel)
 	{
 		InitializeComponent();
-		BindingContext = new MainPageViewModel();
-	}
+        BindingContext = viewModel;
+
+    }
 
     bool _menuOpen = false;
 

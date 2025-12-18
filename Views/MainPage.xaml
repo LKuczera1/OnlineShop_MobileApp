@@ -17,44 +17,46 @@
         <!-- DOLNY PASEK -->
         <Grid Grid.Row="2" BackgroundColor="#111" Padding="12" VerticalOptions="Start" MinimumHeightRequest="100">
             <!-- HeightRequest do zmiany, ale z tym pasek ładnie sie chowa poza ekran jezeli ekran jest za mały-->
-
-            <!-- HeightRequest do zmiany, ale z tym pasek ładnie sie chowa poza ekran jezeli ekran jest za mały-->
-            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12">
-                <Button Grid.Column="0" 
+            <Grid MaximumWidthRequest="700"> <!-- To preven buttons from overstreeching-->
+                
+                <!-- HeightRequest do zmiany, ale z tym pasek ładnie sie chowa poza ekran jezeli ekran jest za mały-->
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                    <Button Grid.Column="0" 
                         Text="Catalog" 
                         HeightRequest="80" 
-                        WidthRequest="80"
+                        WidthRequest="100"
                         HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Catalog" />
-                
-                <Button Grid.Column="1" 
+
+                    <Button Grid.Column="1" 
                         Text="Cart" 
                         HeightRequest="80" 
-                        WidthRequest="80"
+                        WidthRequest="100"
                         HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Cart" />
-                
-                <Button Grid.Column="2" 
+
+                    <Button Grid.Column="2" 
                         Text="Orders" 
                         HeightRequest="80" 
-                        WidthRequest="80"
+                        WidthRequest="100"
                         HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Orders" />
-                
-                <Button Grid.Column="3" 
+
+                    <Button Grid.Column="3" 
                         Text="Account" 
                         HeightRequest="80" 
-                        WidthRequest="80"
+                        WidthRequest="100"
                         HorizontalOptions="Center" VerticalOptions="Center"
                         CornerRadius="10"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Account" />
+                </Grid>
             </Grid>
         </Grid>
 
@@ -92,6 +94,6 @@
         </Grid>
 
     </Grid>
-    
+
 
 </ContentPage>

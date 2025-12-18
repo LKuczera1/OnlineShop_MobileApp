@@ -4,10 +4,10 @@ namespace OnlineShop_MobileApp
 {
     public partial class App : Application
     {
-        public App(AppShell shell)
+        public App(MainPage mainPage)
         {
             InitializeComponent();
-            MainPage = shell;
+            base.MainPage = mainPage;
         }
 
         protected override Window CreateWindow(IActivationState activationState)

@@ -24,10 +24,23 @@ namespace OnlineShop_MobileApp
 
             var builder = MauiApp.CreateBuilder();
 
+            /* Also works but probably worse
+            builder.Services.AddSingleton<ICatalogService, CatalogService>(c =>
+            {
+                var http = new HttpClient
+                {
+                    BaseAddress = new Uri("https://api1.twojadomena.pl/")
+                };
+                return new CatalogService(http);
+            });*/
+
+
+            builder.Services.AddSingleton<ICatalogService, CatalogService>();
             builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
             {
                 c.BaseAddress = new Uri("https://api1.twojadomena.pl/");
             });
+
             /*
             builder.Services.AddHttpClient<IOrdersService, OrdersService>(c =>
             {
@@ -45,19 +58,19 @@ namespace OnlineShop_MobileApp
             //builder.Services.AddSingleton<ICatalogService, CatalogService>();
             //builder.Services.AddSingleton<CatalogService>();
 
-            builder.Services.AddSingleton<ICatalogService, CatalogService>();
 
             builder.Services.AddSingleton<CatalogViewModel>();
             builder.Services.AddSingleton<CatalogView>();
 
 
-            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddSingleton<AppShell>(); 
+            builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<MainPage>();
 
             //----------------------------------------------------------------------------------------
             //------------------Centering app window on windows machine
 #if WINDOWS
-builder.ConfigureLifecycleEvents(events =>
+            builder.ConfigureLifecycleEvents(events =>
 {
     events.AddWindows(w =>
     {

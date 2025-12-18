@@ -1,4 +1,5 @@
-﻿using OnlineShop_MobileApp.Views;
+﻿using OnlineShop_MobileApp.Services;
+using OnlineShop_MobileApp.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,11 @@ namespace OnlineShop_MobileApp.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private readonly View _catalog;
+        private readonly View _cart;
+        private readonly View _orders;
+        private readonly View _account;
+
         private readonly CatalogView _catalogView;
 
         private View _currentView;
@@ -20,17 +26,21 @@ namespace OnlineShop_MobileApp.ViewModel
         {
             get => _currentView;
             set { _currentView = value; PropertyChanged?.Invoke(this, new(nameof(CurrentView))); }
+
+
         }
 
         public ICommand SwitchTabCommand { get; }
 
-        private readonly View _catalog = new CatalogView(App.Current!.Handler!.MauiContext!.Services.GetRequiredService<CatalogViewModel>());
-        private readonly View _cart = new CartView();
-        private readonly View _orders = new OrdersView();
-        private readonly View _account = new AccountView();
+        
 
         public MainPageViewModel(CatalogView catalog)
         {
+            _catalog = catalog;
+            _cart = new CartView();
+            _orders = new OrdersView();
+            _account = new AccountView();
+
             CurrentView = _catalog;
 
             
