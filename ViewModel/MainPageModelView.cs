@@ -13,6 +13,8 @@ namespace OnlineShop_MobileApp.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private readonly CatalogView _catalogView;
+
         private View _currentView;
         public View CurrentView
         {
@@ -22,14 +24,17 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ICommand SwitchTabCommand { get; }
 
-        private readonly View _catalog = new CatalogView();
+        private readonly View _catalog = new CatalogView(App.Current!.Handler!.MauiContext!.Services.GetRequiredService<CatalogViewModel>());
         private readonly View _cart = new CartView();
         private readonly View _orders = new OrdersView();
         private readonly View _account = new AccountView();
 
-        public MainPageViewModel()
+        public MainPageViewModel(CatalogView catalog)
         {
             CurrentView = _catalog;
+
+            
+
 
             SwitchTabCommand = new Command<string>(tab =>
             {

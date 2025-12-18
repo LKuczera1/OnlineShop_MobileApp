@@ -56,8 +56,17 @@ namespace OnlineShopMobileApp.Configuration
 
         public void LoadConfiguration()
         {
+            string jsonString;
 
-            string jsonString = File.ReadAllText(tempConfigDirectory);
+            try
+            {
+                jsonString = File.ReadAllText(tempConfigDirectory);
+            }
+            catch(Exception e)
+            {
+                return;
+            }
+            
 
             var serializerOptions = new JsonSerializerOptions()
             {

@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
+using OnlineShop_MobileApp.Services;
+using OnlineShop_MobileApp.ViewModel;
 using OnlineShop_MobileApp.Views;
 using OnlineShopMobileApp.Configuration;
+using Paket;
 
 //Zeby pokazywało apke w sensownym miejscu
 #if WINDOWS
@@ -20,6 +23,32 @@ namespace OnlineShop_MobileApp
             config.LoadConfiguration();
 
             var builder = MauiApp.CreateBuilder();
+
+            builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
+            {
+                c.BaseAddress = new Uri("https://api1.twojadomena.pl/");
+            });
+            /*
+            builder.Services.AddHttpClient<IOrdersService, OrdersService>(c =>
+            {
+                c.BaseAddress = new Uri("https://api2.twojadomena.pl/");
+            });
+
+            builder.Services.AddHttpClient<IAuthService, AuthService>(c =>
+            {
+                c.BaseAddress = new Uri("https://auth.twojadomena.pl/");
+            });
+            */
+
+            //Rejestracja serwisu - DI
+            //Lepsza praktyka jest dodanie ICatalogService - pozwala na mockowanie
+            //builder.Services.AddSingleton<ICatalogService, CatalogService>();
+            //builder.Services.AddSingleton<CatalogService>();
+
+            builder.Services.AddSingleton<ICatalogService, CatalogService>();
+
+            builder.Services.AddSingleton<CatalogViewModel>();
+            builder.Services.AddSingleton<CatalogView>();
 
 
             builder.Services.AddSingleton<AppShell>();
