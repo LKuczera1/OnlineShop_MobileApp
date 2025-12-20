@@ -3,16 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.CatalogView">
     <Grid RowDefinitions="Auto,*,Auto" Padding="12" VerticalOptions="Fill">
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" MaximumHeightRequest="50">
 
-            <Grid Grid.Column="0">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" MaximumHeightRequest="50" VerticalOptions="Center"  Margin="0,5,0,5">
+
+            <Grid Grid.Column="0" Margin="0,0,5,0">
                 <Entry Placeholder="Wyszukaj"/>
             </Grid>
             <Grid Grid.Column="1" HorizontalOptions="End" >
 
                 <Button Grid.Column="2"
                 Text="?"/>
-                
+
             </Grid>
         </Grid>
 
@@ -23,35 +24,88 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <!-- pojedynczy prostokątny element -->
-                    <Grid Padding="0,0,0,0" VerticalOptions="Start">
-                        
+                    <Grid Padding="0" VerticalOptions="Start" MaximumHeightRequest="120">
                         <Border Margin="0,0,0,2"
-                                 Padding="6,6,6,12"
-                                 BackgroundColor="Black"
-                                 StrokeThickness="0">
-                            
-                            <Border.StrokeShape>
-                                
-                                <RoundRectangle CornerRadius="8" />
-                                
-                            </Border.StrokeShape>
-                            
+                                Padding="8,8,8,12"
+                                BackgroundColor="Black"
+                                StrokeThickness="0">
 
-                            <VerticalStackLayout>
-                                
-                                <Label Text="{Binding Title}" FontSize="18"/>
-                                
-                                <Label Text="{Binding Subtitle}" FontSize="13"/>
-                                
-                            </VerticalStackLayout>
-                            
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  ColumnSpacing="12"
+                                  VerticalOptions="Start">
+
+                                <!-- LEWA: tekst + obrazek -->
+                                <HorizontalStackLayout Grid.Column="0"
+                                                       Spacing="1"
+                                                       VerticalOptions="Center">
+
+                                    <Border WidthRequest="80"
+                                            HeightRequest="80"
+                                            Padding="0"
+                                            StrokeThickness="0"
+                                            BackgroundColor="Transparent">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6" />
+                                        </Border.StrokeShape>
+
+                                        <!-- KLUCZ: Clip przycina obraz do kształtu -->
+                                        <Border.Clip>
+                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,80,80" />
+                                        </Border.Clip>
+
+                                        <Image Source="{Binding Icon}"
+                                               Aspect="AspectFill" 
+                                               Background="White"/>
+                                    </Border>
+                                </HorizontalStackLayout>
+
+                                <!-- ŚRODEK: Title + Subtitle -->
+                                <VerticalStackLayout Grid.Column="1"
+                                 Spacing="2"
+                                 VerticalOptions="Start">
+
+                                    <Label Text="{Binding Title}"
+                                    FontSize="18"
+                       TextColor="White"
+                       LineBreakMode="TailTruncation" />
+
+                                    <Label Text="{Binding Subtitle}"
+                       FontSize="13"
+                       TextColor="White"
+                       Opacity="0.8"
+                                      LineBreakMode="WordWrap" />
+                                </VerticalStackLayout>
+
+                                <!-- PRAWA: 2 przyciski jeden nad drugim -->
+                                <VerticalStackLayout Grid.Column="2"
+                                 Spacing="6"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="End">
+
+                                    <Button Text="Dodaj do koszyka"
+                                            FontSize="12"
+                                            MinimumHeightRequest="38"
+                                            Padding="10,0"
+                                            CornerRadius="8" />
+                                     
+                                    <Button Text="Szczegóły"
+                                            FontSize="12"
+                                            MinimumHeightRequest="38"
+                                            Padding="10,0"
+                                            CornerRadius="8" />
+                                </VerticalStackLayout>
+
+                            </Grid>
                         </Border>
-                        
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        
+
 
         <!-- PAGINACJA -->
         <Grid Grid.Row="2"

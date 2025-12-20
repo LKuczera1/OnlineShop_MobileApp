@@ -5,10 +5,10 @@
             "x": 1000,
             "y": 1000
         },
-        "ConnectionProperties": {
-            "Catalog": "localHost:7001",
-            "Identity": "localHost:7002",
-            "Shopping": "LocalHost:7003"
+        "Services": {
+            "Catalog": "https://localhost:7001",
+            "Identity": "https://localhost:7002",
+            "Shopping": "https://localhost:7003"
         },
         "DarkTheme": true,
         "DarkThemeColorStyles": {
