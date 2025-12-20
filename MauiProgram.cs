@@ -38,7 +38,7 @@ namespace OnlineShop_MobileApp
             builder.Services.AddSingleton<ICatalogService, CatalogService>();
             builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
             {
-                c.BaseAddress = new Uri("https://api1.twojadomena.pl/");
+                c.BaseAddress = new Uri(config.Properties.services.catalog);
             });
 
             /*

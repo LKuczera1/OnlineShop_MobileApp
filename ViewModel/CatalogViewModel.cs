@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.ViewModel
 {
+    using OnlineShop_MobileApp.Models;
     using OnlineShop_MobileApp.Services;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -87,9 +88,10 @@ namespace OnlineShop_MobileApp.ViewModel
             NextPageCommand = new Command(() => LoadPage(CurrentPage + 1), () => CanNext);
             GoToPageCommand = new Command(GoToPage);
 
-            // MOCK (usuń, gdy podepniesz prawdziwe dane)
-            for (int i = 1; i <= 1232; i++)
-                _allItems.Add(new Product { Title = $"Produkt {i}", Subtitle = $"Opis {i}" });
+            var temp = _service.GetProducts(0);
+            _allItems = new List<Product>();
+
+            _allItems = temp.Result;
 
             RecalcPagesAndLoad(1);
             GoToPageNumberCommand = new Command<int>(page => LoadPage(page));
@@ -135,11 +137,4 @@ namespace OnlineShop_MobileApp.ViewModel
         private void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
-
-    public class Product
-    {
-        public string? Title { get; set; }
-        public string? Subtitle { get; set; }
-    }
-
 }

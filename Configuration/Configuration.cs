@@ -18,7 +18,7 @@ namespace OnlineShopMobileApp.Configuration
             public double y { get; set; }
         }
 
-        public class ConnectionProperties
+        public class Services
         {
             public String catalog { get; set; }
             public String identity { get; set; }
@@ -29,7 +29,7 @@ namespace OnlineShopMobileApp.Configuration
         public ScreenResolution screenResolution { get; set; }
         public bool DarkTheme { get; set; }
 
-        public ConnectionProperties connectionProperties { get; set; }
+        public Services services { get; set; }
 
         public ConfigurationProperties() 
         {

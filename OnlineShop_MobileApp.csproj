@@ -76,10 +76,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Compile Update="Views\AccountView.xaml.cs">
 	    <DependentUpon>AccountView.xaml</DependentUpon>
 	  </Compile>

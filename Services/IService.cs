@@ -8,7 +8,7 @@ namespace OnlineShop_MobileApp.Services
 {
     public class Service
     {
-        protected readonly HttpClient _httpClient;
+        protected HttpClient _httpClient;
 
         public Service(HttpClient client)
         {

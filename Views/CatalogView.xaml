@@ -68,12 +68,12 @@
                                  Spacing="2"
                                  VerticalOptions="Start">
 
-                                    <Label Text="{Binding Title}"
+                                    <Label Text="{Binding Name}"
                                     FontSize="18"
                        TextColor="White"
                        LineBreakMode="TailTruncation" />
 
-                                    <Label Text="{Binding Subtitle}"
+                                    <Label Text="{Binding Description}"
                        FontSize="13"
                        TextColor="White"
                        Opacity="0.8"
