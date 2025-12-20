@@ -15,25 +15,38 @@ namespace OnlineShop_MobileApp.ViewModel
 
     public class CatalogViewModel : INotifyPropertyChanged
     {
+        //----- Clearing all this messs
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        //Numbers of items on single page
         private const int PageSize = 20;
 
-        // Źródło danych (na start może być mock, docelowo np. z API/DB)
+        //List of products
         private readonly List<Product> _allItems = new();
 
+        //List of produtcs (For UI)
         public ObservableCollection<Product> Items { get; } = new();
 
+        //Numbers of pages
         public ObservableCollection<int> PageNumbers { get; } = new();
-        public ICommand GoToPageNumberCommand { get; }
-
-        //-------------------------- DI troubleshotting
-        private readonly ICatalogService _service;
-
-
-
 
         private int _currentPage = 1;
+
+        private int _totalPages = 1;
+
+        //Predefying UI methods
+        public ICommand GoToPageNumberCommand { get; }
+        public ICommand PrevPageCommand { get; }
+        public ICommand NextPageCommand { get; }
+        public ICommand GoToPageCommand { get; }
+
+        //Service
+
+        private readonly ICatalogService _service;
+
+        //More complex elements
+
+        //Current page
         public int CurrentPage
         {
             get => _currentPage;
@@ -42,13 +55,13 @@ namespace OnlineShop_MobileApp.ViewModel
                 if (_currentPage == value) return;
                 _currentPage = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(PageLabel));
                 OnPropertyChanged(nameof(CanPrev));
                 OnPropertyChanged(nameof(CanNext));
             }
         }
 
-        private int _totalPages = 1;
+        //Total available pages
+
         public int TotalPages
         {
             get => _totalPages;
@@ -57,32 +70,52 @@ namespace OnlineShop_MobileApp.ViewModel
                 if (_totalPages == value) return;
                 _totalPages = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(PageLabel));
                 OnPropertyChanged(nameof(CanPrev));
                 OnPropertyChanged(nameof(CanNext));
             }
         }
 
-        public string PageLabel => $"Strona {CurrentPage} / {TotalPages}";
-        public bool CanPrev => CurrentPage > 1;
-        public bool CanNext => CurrentPage < TotalPages;
+        //Page control
+        private bool _connectionFailed = false;
 
-        private string? _goToPageText;
-        public string? GoToPageText
+        //Show main content
+        public bool IsMainPageVisible
         {
-            get => _goToPageText;
-            set { _goToPageText = value; OnPropertyChanged(); }
+            get => !_connectionFailed;
+            set
+            {
+                if (_connectionFailed == value) return;
+                _connectionFailed = value;
+                OnPropertyChanged();
+            }
         }
 
-        public ICommand PrevPageCommand { get; }
-        public ICommand NextPageCommand { get; }
-        public ICommand GoToPageCommand { get; }
+        //Show visible button
+        public bool IsRefreshButtonVisible
+        {
+            get => _connectionFailed;
+            set
+            {
+                if (_connectionFailed == value) return;
+                _connectionFailed = value;
+                OnPropertyChanged();
+            }
+        }
 
+        //Methods
 
-
+        //Constructor
         public CatalogViewModel(ICatalogService service)
         {
             _service = service;
+
+            // Dobra todo list:
+            // 1.Konczymy sprzatanie tego balaganu tutaj
+            // 2.Doprowadzamy strone glowna do ladu
+            // 3.Wprowadzamy pelna funkcjonalnosc services
+            // 4. ???
+            // 5. Profit
+
 
             PrevPageCommand = new Command(() => LoadPage(CurrentPage - 1), () => CanPrev);
             NextPageCommand = new Command(() => LoadPage(CurrentPage + 1), () => CanNext);
@@ -97,6 +130,32 @@ namespace OnlineShop_MobileApp.ViewModel
             GoToPageNumberCommand = new Command<int>(page => LoadPage(page));
         }
 
+        //------------------------------
+
+
+
+
+
+
+
+
+
+
+        public bool CanPrev => CurrentPage > 1;
+        public bool CanNext => CurrentPage < TotalPages;
+
+        private string? _goToPageText;
+        public string? GoToPageText
+        {
+            get => _goToPageText;
+            set { _goToPageText = value; OnPropertyChanged(); }
+        }
+
+
+
+
+        
+
         private void RecalcPagesAndLoad(int page)
         {
             TotalPages = Math.Max(1, (int)Math.Ceiling(_allItems.Count / (double)PageSize));
@@ -110,6 +169,7 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private void LoadPage(int page)
         {
+
             page = Math.Clamp(page, 1, TotalPages);
             CurrentPage = page;
 

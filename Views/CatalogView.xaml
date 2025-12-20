@@ -17,10 +17,32 @@
             </Grid>
         </Grid>
 
+        <!-- Refresh button-->
+        <Grid Grid.Row="1"
+              IsVisible="{Binding IsRefreshButtonVisible}"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              RowDefinitions="Auto,Auto"
+              RowSpacing="8">
+
+                    <Label Grid.Row="0"
+                           Text="Unable to connect to services"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                                   FontSize="20"/>
+
+                    <Button Grid.Row="1"
+                            Text="Refresh"
+                            FontSize="20"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"/>
+        </Grid>
+
         <!-- LISTA -->
         <CollectionView Grid.Row="1"
-                    ItemsSource="{Binding Items}"
-                    VerticalScrollBarVisibility="Never">
+                        ItemsSource="{Binding Items}"
+                        IsVisible="{Binding IsMainPageVisible}"
+                        VerticalScrollBarVisibility="Never">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <!-- pojedynczy prostokątny element -->
@@ -120,11 +142,12 @@
 
             <!-- ŚRODEK: numery stron (scroll horyzontalny) -->
             <CollectionView x:Name="PagesCv"
-                Grid.Column="1"
-                ItemsSource="{Binding PageNumbers}"
-                ItemsLayout="HorizontalList"
-                SelectionMode="None"
-                HorizontalScrollBarVisibility="Never">
+                            Grid.Column="1"
+                            ItemsSource="{Binding PageNumbers}"
+                            ItemsLayout="HorizontalList"
+                            SelectionMode="None"
+                            HorizontalScrollBarVisibility="Never"
+                            HorizontalOptions="Center">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Button Text="{Binding .}"
@@ -143,8 +166,5 @@
             Command="{Binding NextPageCommand}"
             IsEnabled="{Binding CanNext}" />
         </Grid>
-
-
-
     </Grid>
 </ContentView>
