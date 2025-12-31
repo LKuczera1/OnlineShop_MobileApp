@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -11,9 +12,10 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShop_MobileApp.Services
 {
-    public class CatalogService: Service, ICatalogService
+    public class CatalogService : Service, ICatalogService
     {
         private readonly String get_products_endpoint = "api/Products/page/";
+        private readonly String get_number_of_pages = "api/Products/numberOfProducts";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
@@ -22,34 +24,99 @@ namespace OnlineShop_MobileApp.Services
 
         public CatalogService(HttpClient client) : base(client)
         {
-            
+
         }
 
-        public async Task<List<Product>> GetProducts(int page = 0, CancellationToken ct = default)
+        public async Task<List<Product>> GetProducts(int page = 0)
         {
+            SetCancelationToken();
+
             var url = get_products_endpoint + page.ToString();
 
-            // Twardy timeout, żeby nigdy nie "wisieć"
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(TimeSpan.FromSeconds(15));
+            HttpResponseMessage response = null;
 
-            using var response = await base._httpClient.GetAsync(
-                url,
-                HttpCompletionOption.ResponseHeadersRead,
-                cts.Token
-            ).ConfigureAwait(false);
+            HttpStatusCode responseStatusCode; // 401, 404 -Not found etc, might be usefull later
 
-            response.EnsureSuccessStatusCode();
+            response = await GetAsync(url).ConfigureAwait(false);
+            //W services (Wszystko co jest poza UI thread i nie ma własciwości propertychanged) configureAwait() powinno być false
 
-            await using var stream = await response.Content.ReadAsStreamAsync(cts.Token).ConfigureAwait(false);
+            try
+            {
+            }
+            catch (Exception ex)
+            {
 
-            var products = await JsonSerializer.DeserializeAsync<List<Product>>(
-                stream,
-                JsonOptions,
-                cts.Token
-            ).ConfigureAwait(false);
+            }
 
-            return products ?? new List<Product>();
+            if (response != null)
+            {
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                    responseStatusCode = response.StatusCode;
+                }
+                catch
+                {
+                    //Unable to connect - throw an exception
+                }
+                //---------------------------------------------------
+
+                await using var stream = await response.Content.ReadAsStreamAsync(cts.Token).ConfigureAwait(false);
+
+                var products = await JsonSerializer.DeserializeAsync<List<Product>>(
+                    stream,
+                    JsonOptions,
+                    cts.Token
+                ).ConfigureAwait(false);
+
+                return products ?? new List<Product>();
+            }
+
+            return null;
+        }
+
+        public async Task<int> GetNumberOfPages()
+        {
+            SetCancelationToken();
+
+            var url = get_number_of_pages;
+
+            HttpResponseMessage response = null;
+
+            HttpStatusCode responseStatusCode; // 401, 404 -Not found etc, might be usefull later
+
+            response = await GetAsync(url).ConfigureAwait(false);
+            //W services (Wszystko co jest poza UI thread i nie ma własciwości propertychanged) configureAwait() powinno być false
+
+
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            if (response != null)
+            {
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                    responseStatusCode = response.StatusCode;
+                }
+                catch
+                {
+                    //Unable to connect - throw an exception
+                }
+                //---------------------------------------------------
+
+                var temp = response.Content.ReadAsStringAsync();
+
+
+                return int.Parse(temp.Result);
+            }
+
+            return 0;
         }
     }
 }

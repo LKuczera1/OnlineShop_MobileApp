@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.ViewModel
 {
+    using Chessie.ErrorHandling;
     using OnlineShop_MobileApp.Models;
     using OnlineShop_MobileApp.Services;
     using System.Collections.ObjectModel;
@@ -22,7 +23,7 @@ namespace OnlineShop_MobileApp.ViewModel
         private const int PageSize = 20;
 
         //List of products
-        private readonly List<Product> _allItems = new();
+        private List<Product> _allItems = new();
 
         //List of produtcs (For UI)
         public ObservableCollection<Product> Items { get; } = new();
@@ -43,6 +44,10 @@ namespace OnlineShop_MobileApp.ViewModel
         //Service
 
         private readonly ICatalogService _service;
+
+        //Task wait async (replacing canncelacion token)
+        
+        private TimeSpan _waitAsynctimeSpan = TimeSpan.FromSeconds(3);
 
         //More complex elements
 
@@ -78,6 +83,10 @@ namespace OnlineShop_MobileApp.ViewModel
         //Page control
         private bool _connectionFailed = false;
 
+        //Background tasks
+        private CancellationTokenSource? _bckTskCt;
+        private readonly SemaphoreSlim _semaphore = new(1, 1);
+
         //Show main content
         public bool IsMainPageVisible
         {
@@ -90,19 +99,37 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
-        //Show visible button
+        //Show refresh button
         public bool IsRefreshButtonVisible
         {
             get => _connectionFailed;
             set
             {
-                if (_connectionFailed == value) return;
                 _connectionFailed = value;
                 OnPropertyChanged();
             }
         }
 
+        //Page buttons labels
+        private int _pageCount;
+        public int PageCount
+        {
+            get => _pageCount;
+            private set
+            {
+                if (_pageCount == value) return;
+                _pageCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanPrev));
+                OnPropertyChanged(nameof(CanNext));
+            }
+        }
+
+        public bool CanPrev => CurrentPage > 1;
+        public bool CanNext => CurrentPage < PageCount;
+
         //Methods
+
 
         //Constructor
         public CatalogViewModel(ICatalogService service)
@@ -115,83 +142,147 @@ namespace OnlineShop_MobileApp.ViewModel
             // 3.Wprowadzamy pelna funkcjonalnosc services
             // 4. ???
             // 5. Profit
+            //
+            // A... No i wprowadzil pelna responsywnosc apki na stan serwisu... bo jak serwis jest off
+            // to debugger wywala
+            // No i tak. Jak jest: OK - Wyswietlamy strone, Brak polaczenia: "Connection error", wszystko pozostałe: "Wystapil blad."
+
+            StartBackgroundProcessing();
+
+            //Binding
+            PrevPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage - 1), () => CanPrev);
+            NextPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage + 1), () => CanNext);
+            GoToPageNumberCommand = new Command<int>(async page => await SwitchPageAsync(page));
 
 
-            PrevPageCommand = new Command(() => LoadPage(CurrentPage - 1), () => CanPrev);
-            NextPageCommand = new Command(() => LoadPage(CurrentPage + 1), () => CanNext);
-            GoToPageCommand = new Command(GoToPage);
 
-            var temp = _service.GetProducts(0);
             _allItems = new List<Product>();
 
-            _allItems = temp.Result;
-
-            RecalcPagesAndLoad(1);
-            GoToPageNumberCommand = new Command<int>(page => LoadPage(page));
         }
 
-        //------------------------------
-
-
-
-
-
-
-
-
-
-
-        public bool CanPrev => CurrentPage > 1;
-        public bool CanNext => CurrentPage < TotalPages;
-
-        private string? _goToPageText;
-        public string? GoToPageText
+        private async Task SwitchPageAsync(int pageIndex)
         {
-            get => _goToPageText;
-            set { _goToPageText = value; OnPropertyChanged(); }
+            if (pageIndex < 0 || pageIndex > PageCount) return;
+
+            await _semaphore.WaitAsync();
+            try
+            {
+                await LoadPageContent(pageIndex);
+                (PrevPageCommand as Command)?.ChangeCanExecute();
+                (NextPageCommand as Command)?.ChangeCanExecute();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
 
 
-
-        
-
-        private void RecalcPagesAndLoad(int page)
+        private void StartBackgroundProcessing()
         {
-            TotalPages = Math.Max(1, (int)Math.Ceiling(_allItems.Count / (double)PageSize));
+            if (_bckTskCt != null) return;
 
-            PageNumbers.Clear();
-            for (int i = 1; i <= TotalPages; i++)
-                PageNumbers.Add(i);
-
-            LoadPage(page);
+            _bckTskCt = new CancellationTokenSource();
+            _ = BackgroundProcessing(_bckTskCt.Token);
         }
 
-        private void LoadPage(int page)
+        public void StopBackgroundProcessing()
         {
-
-            page = Math.Clamp(page, 1, TotalPages);
-            CurrentPage = page;
-
-            var slice = _allItems
-                .Skip((CurrentPage - 1) * PageSize)
-                .Take(PageSize)
-                .ToList();
-
-            Items.Clear();
-            foreach (var it in slice) Items.Add(it);
-
-            // odśwież stan CanExecute
-            (PrevPageCommand as Command)?.ChangeCanExecute();
-            (NextPageCommand as Command)?.ChangeCanExecute();
+            _bckTskCt?.Cancel();
+            _bckTskCt?.Dispose();
+            _bckTskCt = null;
         }
 
-        private void GoToPage()
+        private async Task BackgroundProcessing(CancellationToken ct)
         {
-            if (!int.TryParse(GoToPageText, out var page))
-                return;
+            var timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
 
-            LoadPage(page);
+            await LoadPageContent(CurrentPage);
+
+            try
+            {
+                
+            }
+            catch (OperationCanceledException) { }
+            finally
+            {
+                timer.Dispose();
+            }
+        }
+
+        private async Task LoadPageContent(int page)
+        {
+            //get items
+            try
+            {
+                await LoadPage(page);
+                IsRefreshButtonVisible = false;
+            }
+            catch (TimeoutException)
+            {
+                IsRefreshButtonVisible = true;
+            }
+            catch (TaskCanceledException)
+            {
+                IsRefreshButtonVisible = true;
+            }
+            catch(Service.ConnectionErrorException)
+            {
+
+            }
+            catch (Exception)
+            {
+                IsRefreshButtonVisible = true;
+            }
+        }
+
+        private async Task LoadPage(int page)
+        {
+            try
+            {
+                await GetItemsForCurrentPage(page);
+                await GetNumberOfPages();
+
+                CurrentPage = page;
+                //execute state refresh
+                (PrevPageCommand as Command)?.ChangeCanExecute();
+                (NextPageCommand as Command)?.ChangeCanExecute();
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
+        }
+
+        //-----------------------------------------------------------------------------------------------
+
+        private async Task GetItemsForCurrentPage(int pageNumber)
+        {
+            var products = await _service.GetProducts(pageNumber).WaitAsync(_waitAsynctimeSpan);
+
+            _allItems = products;
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Items.Clear();
+                foreach (var p in _allItems)
+                    Items.Add(p);
+            });
+        }
+
+        private async Task GetNumberOfPages()
+        {
+            var totalProducts = await _service.GetNumberOfPages().WaitAsync(_waitAsynctimeSpan);
+
+            PageCount = (totalProducts + PageSize - 1) / PageSize;
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                PageNumbers.Clear();
+                for (int i = 1; i <= PageCount; i++)
+                    PageNumbers.Add(i);
+            });
         }
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

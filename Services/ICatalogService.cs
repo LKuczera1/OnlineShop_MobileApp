@@ -9,6 +9,7 @@ namespace OnlineShop_MobileApp.Services
 {
     public interface ICatalogService
     {
-        public Task<List<Product>> GetProducts(int page, CancellationToken ct = default);
+        public Task<List<Product>> GetProducts(int page);
+        public Task<int> GetNumberOfPages();
     }
 }
