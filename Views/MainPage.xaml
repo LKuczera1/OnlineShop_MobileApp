@@ -12,7 +12,8 @@
 
         <!-- CONTENT (środek) -->
         <ContentView Grid.Row="1"
-             Content="{Binding CurrentView}"/>
+             Content="{Binding CurrentView}"
+                     x:Name="Host"/>
 
         <!-- DOLNY PASEK -->
         <Grid Grid.Row="2" BackgroundColor="#111" Padding="12" VerticalOptions="Start" MinimumHeightRequest="100">

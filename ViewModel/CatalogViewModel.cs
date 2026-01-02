@@ -8,6 +8,7 @@ namespace OnlineShop_MobileApp.ViewModel
 {
     using Chessie.ErrorHandling;
     using OnlineShop_MobileApp.Models;
+    using OnlineShop_MobileApp.Navigators;
     using OnlineShop_MobileApp.Services;
     using OnlineShop_MobileApp.Views;
     using System.Collections.ObjectModel;
@@ -41,7 +42,6 @@ namespace OnlineShop_MobileApp.ViewModel
         public ICommand PrevPageCommand { get; }
         public ICommand NextPageCommand { get; }
         public ICommand GoToPageCommand { get; }
-        public ICommand ProductDetailsCommand { get; }
 
         //Service
 
@@ -130,6 +130,15 @@ namespace OnlineShop_MobileApp.ViewModel
         public bool CanPrev => CurrentPage > 1;
         public bool CanNext => CurrentPage < PageCount;
 
+        //Navigator
+
+        private IMainPageNavigator? _navigator;
+        public void SetNavigator(IMainPageNavigator navigator) => _navigator = navigator;
+
+        public ICommand ProductDetailsCommand { get; }
+
+        public ICommand BackToCatalogCommand { get; }
+
         //Methods
 
 
@@ -155,9 +164,9 @@ namespace OnlineShop_MobileApp.ViewModel
             PrevPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage - 1), () => CanPrev);
             NextPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage + 1), () => CanNext);
             GoToPageNumberCommand = new Command<int>(async page => await SwitchPageAsync(page));
+
             ProductDetailsCommand = new Command<Product>(async product => await ShowProductDetails(product));
-
-
+            BackToCatalogCommand = new Command( async () => await GoBackToCatalog());
 
 
 
@@ -269,19 +278,14 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private async Task ShowProductDetails(Product product)
         {
-            if (product == null) throw new ArgumentNullException();
+            if(_navigator!=null)
+                _navigator.ShowProductDetails(product);
+        }
 
-            try
-            {
-                await Shell.Current.GoToAsync(nameof(ProductDetailsView), true, new Dictionary<string, object>
-                {
-                    ["Product"] = product
-                });
-            }
-            catch
-            {
-
-            }
+        private async Task GoBackToCatalog()
+        {
+            if (_navigator != null)
+                _navigator.ShowCatalog();
         }
 
         //-----------------------------------------------------------------------------------------------

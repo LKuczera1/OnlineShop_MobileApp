@@ -1,16 +1,41 @@
 namespace OnlineShop_MobileApp.Views;
+
+using OnlineShop_MobileApp.Models;
+using OnlineShop_MobileApp.Navigators;
 using OnlineShop_MobileApp.ViewModel;
 
-public partial class MainPage : ContentPage
+public partial class MainPage : ContentPage, IMainPageNavigator
 {
-	public MainPage(MainPageViewModel viewModel)
-	{
-		InitializeComponent();
-        BindingContext = viewModel;
+    private readonly MainPageViewModel _mainVm;
+    private readonly CatalogViewModel _catalogVm;
 
-    }
+    private readonly CatalogView _catalogView;
+    private readonly ProductDetailsView _detailsView;
 
     bool _menuOpen = false;
+
+    public MainPage(
+        MainPageViewModel mainPageViewModel,
+        CatalogViewModel catalogViewModel,
+        CatalogView catalogView,
+        ProductDetailsView detailsView)
+    {
+        InitializeComponent();
+
+        _mainVm = mainPageViewModel;
+        BindingContext = _mainVm;
+
+        _catalogVm = catalogViewModel;
+        _catalogVm.SetNavigator(this);
+
+        _catalogView = catalogView;
+        _catalogView.BindingContext = _catalogVm;
+
+        _detailsView = detailsView;
+
+        // start: katalog w hoœcie
+        Host.Content = _catalogView;
+    }
 
     async void OnMenuClicked(object sender, EventArgs e)
     {
@@ -28,9 +53,6 @@ public partial class MainPage : ContentPage
         _menuOpen = true;
         MenuOverlay.IsVisible = true;
 
-        // (opcjonalnie) dopasuj szerokoœæ panelu do okna
-        // MenuPanel.WidthRequest = Math.Min(360, this.Width * 0.85);
-
         MenuPanel.TranslationX = -MenuPanel.WidthRequest;
         await MenuPanel.TranslateTo(0, 0, 180, Easing.CubicOut);
     }
@@ -42,4 +64,27 @@ public partial class MainPage : ContentPage
         MenuOverlay.IsVisible = false;
     }
 
+    public void ShowCatalog()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            Host.Content = _catalogView;
+
+            // opcjonalnie: zamknij menu przy przejœciu
+            if (_menuOpen) await CloseMenu();
+        });
+    }
+
+    public void ShowProductDetails(Product product)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            _detailsView.BindingContext = product;
+
+            // przekazanie komendy z VM:
+            _detailsView.GoBackCommand = _catalogVm.BackToCatalogCommand;
+
+            Host.Content = _detailsView;
+        });
+    }
 }
