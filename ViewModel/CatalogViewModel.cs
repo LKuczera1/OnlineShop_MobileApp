@@ -9,6 +9,7 @@ namespace OnlineShop_MobileApp.ViewModel
     using Chessie.ErrorHandling;
     using OnlineShop_MobileApp.Models;
     using OnlineShop_MobileApp.Services;
+    using OnlineShop_MobileApp.Views;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
@@ -40,6 +41,7 @@ namespace OnlineShop_MobileApp.ViewModel
         public ICommand PrevPageCommand { get; }
         public ICommand NextPageCommand { get; }
         public ICommand GoToPageCommand { get; }
+        public ICommand ProductDetailsCommand { get; }
 
         //Service
 
@@ -153,6 +155,9 @@ namespace OnlineShop_MobileApp.ViewModel
             PrevPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage - 1), () => CanPrev);
             NextPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage + 1), () => CanNext);
             GoToPageNumberCommand = new Command<int>(async page => await SwitchPageAsync(page));
+            ProductDetailsCommand = new Command<Product>(async product => await ShowProductDetails(product));
+
+
 
 
 
@@ -196,18 +201,23 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private async Task BackgroundProcessing(CancellationToken ct)
         {
-            var timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
-
             await LoadPageContent(CurrentPage);
 
             try
             {
-                
+                //Second connection attempt, just in case first one was unsucsesful
+                if(IsRefreshButtonVisible)
+                {
+                    IsRefreshButtonVisible = false;
+                    await Task.Delay(TimeSpan.FromSeconds(3), ct);
+
+                    await LoadPageContent(CurrentPage);
+                }
             }
             catch (OperationCanceledException) { }
             finally
             {
-                timer.Dispose();
+                //timer.Dispose();
             }
         }
 
@@ -257,17 +267,39 @@ namespace OnlineShop_MobileApp.ViewModel
 
         //-----------------------------------------------------------------------------------------------
 
+        private async Task ShowProductDetails(Product product)
+        {
+            if (product == null) throw new ArgumentNullException();
+
+            try
+            {
+                await Shell.Current.GoToAsync(nameof(ProductDetailsView), true, new Dictionary<string, object>
+                {
+                    ["Product"] = product
+                });
+            }
+            catch
+            {
+
+            }
+        }
+
+        //-----------------------------------------------------------------------------------------------
+
         private async Task GetItemsForCurrentPage(int pageNumber)
         {
             var products = await _service.GetProducts(pageNumber).WaitAsync(_waitAsynctimeSpan);
 
             _allItems = products;
 
-            await MainThread.InvokeOnMainThreadAsync(() =>
+            await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 Items.Clear();
                 foreach (var p in _allItems)
+                {
+                    await LoadProductsPictures(p);
                     Items.Add(p);
+                }
             });
         }
 
@@ -283,6 +315,30 @@ namespace OnlineShop_MobileApp.ViewModel
                 for (int i = 1; i <= PageCount; i++)
                     PageNumbers.Add(i);
             });
+        }
+
+        private async Task LoadProductsPictures(Product product)
+        {
+            //If there is no photo for picture default string is "string", that should be changed in REST API
+            if(string.IsNullOrWhiteSpace(product.PicturePath) || string.Equals("string", product.PicturePath))
+            {
+                //Temporally const path for nophoto icons
+                string nophotoiconpath = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\nophotoicon.png";
+
+                product.ImageSource = ImageSource.FromFile(nophotoiconpath);
+            }
+            else
+            {
+                try
+                {
+                    var pic = await _service.LoadProductPicture(product.Id);
+                    product.ImageSource = ImageSource.FromStream(() => new MemoryStream(pic));
+                }
+                catch
+                {
+
+                }
+            }
         }
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

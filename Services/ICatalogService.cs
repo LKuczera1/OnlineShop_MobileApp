@@ -11,5 +11,7 @@ namespace OnlineShop_MobileApp.Services
     {
         public Task<List<Product>> GetProducts(int page);
         public Task<int> GetNumberOfPages();
+
+        public Task<byte[]?> LoadProductPicture(int id);
     }
 }

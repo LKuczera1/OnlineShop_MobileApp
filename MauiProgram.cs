@@ -58,12 +58,13 @@ namespace OnlineShop_MobileApp
             //builder.Services.AddSingleton<ICatalogService, CatalogService>();
             //builder.Services.AddSingleton<CatalogService>();
 
+            builder.Services.AddSingleton<AppShell>();
 
             builder.Services.AddSingleton<CatalogViewModel>();
             builder.Services.AddSingleton<CatalogView>();
+            builder.Services.AddSingleton<ProductDetailsView>();
 
 
-            builder.Services.AddSingleton<AppShell>(); 
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<MainPage>();
 

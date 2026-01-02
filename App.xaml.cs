@@ -4,10 +4,10 @@ namespace OnlineShop_MobileApp
 {
     public partial class App : Application
     {
-        public App(MainPage mainPage)
+        public App(AppShell shell)
         {
             InitializeComponent();
-            base.MainPage = mainPage;
+            MainPage = shell;
         }
 
         protected override Window CreateWindow(IActivationState activationState)
@@ -19,13 +19,10 @@ namespace OnlineShop_MobileApp
         //to recreate the look of a real phone screen as closely as possible
         //Also window height was reduced by 250px to fit in computer screen...
 
-        //Zrobić tu automatyczną konfiguracje z configa
-
             window.Width = 540;
             window.Height = 930;
             window.Title = "OnlineShopMobileApp";
 #endif
-
             return window;
         }
     }

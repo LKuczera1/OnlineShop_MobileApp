@@ -8,10 +8,13 @@ namespace OnlineShop_MobileApp.Models
 {
     public class Product
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
         public double Stock { get; set; }
         public string? PicturePath { get; set; }
+
+        public ImageSource? ImageSource { get; set; } = null;
     }
 }

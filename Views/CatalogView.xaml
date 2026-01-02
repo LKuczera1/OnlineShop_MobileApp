@@ -79,7 +79,7 @@
                                             <RoundRectangleGeometry CornerRadius="6" Rect="0,0,80,80" />
                                         </Border.Clip>
 
-                                        <Image Source="{Binding Icon}"
+                                        <Image Source="{Binding ImageSource}"
                                                Aspect="AspectFill" 
                                                Background="White"/>
                                     </Border>
@@ -118,7 +118,9 @@
                                             FontSize="12"
                                             MinimumHeightRequest="38"
                                             Padding="10,0"
-                                            CornerRadius="8" />
+                                            CornerRadius="8" 
+                                            Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.ProductDetailsCommand}" 
+                                            CommandParameter="{Binding .}"  />
                                 </VerticalStackLayout>
 
                             </Grid>
