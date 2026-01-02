@@ -6,6 +6,11 @@
             "y": 1000
         },
         "Services": {
+            "Catalog": "https://192.168.0.178:7001",
+            "Identity": "https://192.168.0.178:7002",
+            "Shopping": "https://192.168.0.178:7003"
+        },
+        "WindowsMachineServices": {
             "Catalog": "https://localhost:7001",
             "Identity": "https://localhost:7002",
             "Shopping": "https://localhost:7003"

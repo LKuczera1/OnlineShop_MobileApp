@@ -16,17 +16,17 @@
                      x:Name="Host"/>
 
         <!-- DOLNY PASEK -->
-        <Grid Grid.Row="2" BackgroundColor="#111" Padding="12" VerticalOptions="Start" MinimumHeightRequest="100">
+        <Grid Grid.Row="2" BackgroundColor="#111" Padding="5" VerticalOptions="Start" MinimumHeightRequest="80">
             <!-- HeightRequest do zmiany, ale z tym pasek ładnie sie chowa poza ekran jezeli ekran jest za mały-->
             <Grid MaximumWidthRequest="700"> <!-- To preven buttons from overstreeching-->
                 
                 <!-- HeightRequest do zmiany, ale z tym pasek ładnie sie chowa poza ekran jezeli ekran jest za mały-->
-                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="5,5,5,5">
                     <Button Grid.Column="0" 
                         Text="Catalog" 
                         HorizontalOptions="Fill" VerticalOptions="Center"
                         CornerRadius="10"
-                        HeightRequest="80"
+                        HeightRequest="70"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Catalog" />
 
@@ -34,7 +34,7 @@
                         Text="Cart" 
                         HorizontalOptions="Fill" VerticalOptions="Center"
                         CornerRadius="10"
-                        HeightRequest="80"
+                        HeightRequest="70"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Cart" />
 
@@ -42,7 +42,7 @@
                         Text="Orders" 
                         HorizontalOptions="Fill" VerticalOptions="Center"
                         CornerRadius="10"
-                        HeightRequest="80"
+                        HeightRequest="70"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Orders" />
 
@@ -50,7 +50,7 @@
                         Text="Account" 
                         HorizontalOptions="Fill" VerticalOptions="Center"
                         CornerRadius="10"
-                        HeightRequest="80"
+                        HeightRequest="70"
                         Command="{Binding SwitchTabCommand}"
                         CommandParameter="Account" />
                 </Grid>

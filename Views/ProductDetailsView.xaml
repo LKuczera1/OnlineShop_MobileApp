@@ -5,10 +5,11 @@
              x:Name="ThisView">
 
     <Grid RowDefinitions="*,Auto"
-          Padding="16">
+          Padding="5">
 
         <!-- Góra: przewijalna zawartość -->
-        <ScrollView Grid.Row="0">
+        <ScrollView Grid.Row="0"
+                    Padding="6">
             <VerticalStackLayout Spacing="12">
 
                 <!-- Duże zdjęcie -->
@@ -42,7 +43,7 @@
 
                     <Border StrokeThickness="0"
                             BackgroundColor="Gray"
-                            HeightRequest="25"
+                            HeightRequest="30"
                             Grid.Column="0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="4" />
@@ -60,7 +61,7 @@
 
                     <Border StrokeThickness="0"
                             BackgroundColor="Gray"
-                            HeightRequest="25"
+                            HeightRequest="30"
                             Grid.Column="1">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="4" />
@@ -95,7 +96,7 @@
         <Grid Grid.Row="1"
               ColumnDefinitions="*,*"
               ColumnSpacing="12"
-              Margin="0,14,0,0"
+              Margin="5,5,5,0"
               MaximumWidthRequest="700">
 
             <Button Grid.Column="0" 
@@ -103,7 +104,7 @@
                     HorizontalOptions="Fill" 
                     VerticalOptions="Center"
                     CornerRadius="10"
-                    HeightRequest="60"
+                    HeightRequest="40"
                     Command="{Binding Source={x:Reference ThisView}, Path=GoBackCommand}" />
 
             <Button Grid.Column="1" 
@@ -111,7 +112,7 @@
                     HorizontalOptions="Fill" 
                     VerticalOptions="Center"
                     CornerRadius="10"
-                    HeightRequest="60"/>
+                    HeightRequest="40"/>
 
         </Grid>
 

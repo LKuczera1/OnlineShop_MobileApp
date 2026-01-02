@@ -43,7 +43,9 @@
 
 	<!-- Wazne! to pozwala na przeniesienie pliku config do telefonu podczas kompilacji!!!!!!-->
 	<ItemGroup>
-		<MauiAsset Include="Configuration\Configuration.json" LogicalName="Configuration/%(Filename)%(Extension)" />
+		<MauiAsset Include="Configuration\Configuration.json" LogicalName="Configuration/%(Filename)%(Extension)">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiAsset>
 	</ItemGroup>
 
 	<ItemGroup>

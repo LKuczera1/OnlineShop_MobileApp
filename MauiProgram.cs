@@ -39,6 +39,14 @@ namespace OnlineShop_MobileApp
             builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
             {
                 c.BaseAddress = new Uri(config.Properties.services.catalog);
+
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol)
+                var handler = new HttpClientHandler();
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                return handler;
             });
 
             /*

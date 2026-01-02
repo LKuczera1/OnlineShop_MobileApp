@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Maui.Graphics.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,50 +43,46 @@ namespace OnlineShopMobileApp.Configuration
     {
         public ConfigurationProperties? Properties { get; set; }
 
-        private string tempConfigDirectory = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Configuration\\Configuration.json";
-        public Configuration() 
+
+        // double backslash can provide errors on android devices, it's recommended to use single front slash
+        private const string configurationFileDirectory = "Configuration/Configuration.json";
+        public Configuration(bool loadConfigurationNow = true) 
         {
             Properties = new ConfigurationProperties();
 
-            string configPath = Path.Combine(
-            FileSystem.AppDataDirectory,
-            "config.json"
-);
+            if (loadConfigurationNow)
+                LoadConfiguration();
 
         }
 
         public void LoadConfiguration()
         {
-            string jsonString;
+            using var stream = FileSystem.OpenAppPackageFileAsync(configurationFileDirectory).GetAwaiter().GetResult();
+            using var reader = new StreamReader(stream);
+            var jsonString = reader.ReadToEnd();
 
-            try
-            {
-                jsonString = File.ReadAllText(tempConfigDirectory);
-            }
-            catch(Exception e)
-            {
-                return;
-            }
-            
+            if (string.IsNullOrWhiteSpace(jsonString))
+                throw new Exception("Could not load configuration (empty).");
 
-            var serializerOptions = new JsonSerializerOptions()
+            using var configurationDoc = JsonDocument.Parse(jsonString);
+
+
+            if (!configurationDoc.RootElement.TryGetProperty("ConfigurationProperties", out var node))
+                throw new Exception("Missing node: ConfigurationProperties");
+
+            var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
+                PropertyNameCaseInsensitive = true
             };
 
-            if (jsonString==null)
-                throw new Exception("Could not load configuration.");
-
             try
             {
-                var doc = JsonDocument.Parse(jsonString);
-
-                Properties = doc.RootElement.GetProperty("ConfigurationProperties")
-                    .Deserialize<ConfigurationProperties>(serializerOptions);
+                Properties = node.Deserialize<ConfigurationProperties>(options)
+                    ?? throw new Exception("Could not deserialize configuration json file");
             }
-            catch (Exception exception)
+            catch
             {
-                throw new Exception("Could not load configuration: " + exception.ToString());
+                throw;
             }
         }
     }

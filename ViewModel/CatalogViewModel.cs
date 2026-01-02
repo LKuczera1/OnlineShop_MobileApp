@@ -238,21 +238,17 @@ namespace OnlineShop_MobileApp.ViewModel
                 await LoadPage(page);
                 IsRefreshButtonVisible = false;
             }
-            catch (TimeoutException)
+            catch (Exception ex) when (ex is TimeoutException or TaskCanceledException or Service.ConnectionErrorException)
             {
                 IsRefreshButtonVisible = true;
-            }
-            catch (TaskCanceledException)
-            {
-                IsRefreshButtonVisible = true;
-            }
-            catch(Service.ConnectionErrorException)
-            {
-
             }
             catch (Exception)
             {
                 IsRefreshButtonVisible = true;
+            }
+            finally
+            {
+
             }
         }
 
@@ -296,6 +292,7 @@ namespace OnlineShop_MobileApp.ViewModel
 
             _allItems = products;
 
+
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 Items.Clear();
@@ -305,6 +302,11 @@ namespace OnlineShop_MobileApp.ViewModel
                     Items.Add(p);
                 }
             });
+
+
+            //Gdzies tu dochodzi do wycieku pamieci - tak jakby przedmioty z listy nie zostaly usuwane z pamieci
+            //i dochodzily nowe (ciagle odswiezanie/zmienianie stron powoduje zwiekszone zuzycie pamieci)
+            //+ przesyaly dzialac przyciski cart, orders, identity
         }
 
         private async Task GetNumberOfPages()
@@ -323,6 +325,7 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private async Task LoadProductsPictures(Product product)
         {
+
             //If there is no photo for picture default string is "string", that should be changed in REST API
             if(string.IsNullOrWhiteSpace(product.PicturePath) || string.Equals("string", product.PicturePath))
             {
