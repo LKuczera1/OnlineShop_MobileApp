@@ -11,7 +11,7 @@ namespace OnlineShop_MobileApp.Services
         protected HttpClient httpClient;
 
         protected CancellationTokenSource cts;
-        protected int connectionTimeout = 30; //Cancelation token timeout in seconds
+        protected int connectionTimeout = 3; //Cancelation token timeout in seconds
 
 
         //Custom exception to simplify possible scenarios...
@@ -44,7 +44,7 @@ namespace OnlineShop_MobileApp.Services
             httpClient = client;
         }
 
-        protected void SetCancelationToken()
+        protected void SetCancelationToken() //Refresh Cancellation token
         {
             cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(connectionTimeout));

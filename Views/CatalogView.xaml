@@ -79,7 +79,7 @@
                                             <RoundRectangleGeometry CornerRadius="6" Rect="0,0,80,80" />
                                         </Border.Clip>
 
-                                        <Image Source="{Binding ImageSource}"
+                                        <Image Source="{Binding ThumbnailSource}"
                                                Aspect="AspectFill" 
                                                Background="White"/>
                                     </Border>

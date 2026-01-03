@@ -298,7 +298,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 Items.Clear();
                 foreach (var p in _allItems)
                 {
-                    await LoadProductsPictures(p);
+                    await LoadProductPicture(p, true);
                     Items.Add(p);
                 }
             });
@@ -323,29 +323,62 @@ namespace OnlineShop_MobileApp.ViewModel
             });
         }
 
-        private async Task LoadProductsPictures(Product product)
+        private async Task LoadProductPicture(Product product, bool LoadThumbnail = false)
         {
+            //To prevent repeating code in condition statments there was defined getter and setter
+            //that provide acces to requested field
 
-            //If there is no photo for picture default string is "string", that should be changed in REST API
-            if(string.IsNullOrWhiteSpace(product.PicturePath) || string.Equals("string", product.PicturePath))
+            //Temporally const path for nophoto icons
+            string nophotoiconpath = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\nophotoicon.png";
+            string nophotothumbnailpath = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\nophotothumbnail.png";
+
+            Func<string> nopicture = () => LoadThumbnail ? nophotothumbnailpath : nophotoiconpath;
+
+            //----------------------
+
+            Func<Task<byte[]?>> LoadProductPicture = async () =>
+                LoadThumbnail ? await _service.LoadProductThumbnail(product.Id) : await _service.LoadProductPicture(product.Id);
+
+
+            Func<string?> getter = () => LoadThumbnail ? product.ThumbnailName : product.PictureName;
+            Action<ImageSource> setter = (value) =>
             {
-                //Temporally const path for nophoto icons
-                string nophotoiconpath = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\nophotoicon.png";
+                if (LoadThumbnail) product.ThumbnailSource = value;
+                else product.ImageSource = value;
+            };
 
-                product.ImageSource = ImageSource.FromFile(nophotoiconpath);
+            Action setNoPhotoIcon = () => setter(ImageSource.FromFile(nopicture()));
+
+            if (string.IsNullOrEmpty(getter()))
+            {
+                var temp = nopicture();
+
+                setNoPhotoIcon();
             }
             else
             {
                 try
                 {
-                    var pic = await _service.LoadProductPicture(product.Id);
-                    product.ImageSource = ImageSource.FromStream(() => new MemoryStream(pic));
+                    var picture = await LoadProductPicture();
+                    if (picture is null)
+                    {
+                        setNoPhotoIcon();
+                        return;
+                    }
+
+                    setter(ImageSource.FromStream(() => new MemoryStream(picture)));
                 }
                 catch
                 {
-
+                    throw;
                 }
+
             }
+
+            //Ok, metoda dziala zajebiscie. Teraz tylko:
+            //1. Dodac odpowiednie endpointy w REST API
+            //2. Upewnic sie, ze tworzenie miniaturek poprawnie dziala
+            //3. zmodyfikować metodę LoadProductThumbnail() aby fetchowala miniaturke a nie full img.
         }
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

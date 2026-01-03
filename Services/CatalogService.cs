@@ -159,5 +159,46 @@ namespace OnlineShop_MobileApp.Services
 
             return null;
         }
+
+        public async Task<byte[]?> LoadProductThumbnail(int id)
+        {
+            SetCancelationToken();
+
+            var url = $"/api/Products/{id}/image";
+
+            HttpResponseMessage response = null;
+
+            HttpStatusCode responseStatusCode; // 401, 404 -Not found etc, might be usefull later
+
+            response = await GetAsync(url).ConfigureAwait(false);
+            //W services (Wszystko co jest poza UI thread i nie ma własciwości propertychanged) configureAwait() powinno być false
+
+
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            if (response != null)
+            {
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                    responseStatusCode = response.StatusCode;
+                }
+                catch
+                {
+                    //Unable to connect - throw an exception
+                }
+                //---------------------------------------------------
+
+                return await response.Content.ReadAsByteArrayAsync(cts.Token);
+            }
+
+            return null;
+        }
     }
 }

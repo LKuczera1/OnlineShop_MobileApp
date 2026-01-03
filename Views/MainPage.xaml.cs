@@ -33,8 +33,6 @@ public partial class MainPage : ContentPage, IMainPageNavigator
 
         _detailsView = detailsView;
 
-        // start: katalog w hoœcie
-        Host.Content = _catalogView;
     }
 
     async void OnMenuClicked(object sender, EventArgs e)
@@ -66,13 +64,8 @@ public partial class MainPage : ContentPage, IMainPageNavigator
 
     public void ShowCatalog()
     {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            Host.Content = _catalogView;
-
-            // opcjonalnie: zamknij menu przy przejœciu
-            if (_menuOpen) await CloseMenu();
-        });
+        MainThread.BeginInvokeOnMainThread(() =>
+        ((MainPageViewModel)BindingContext).CurrentView = _catalogView);
     }
 
     public void ShowProductDetails(Product product)
@@ -80,11 +73,7 @@ public partial class MainPage : ContentPage, IMainPageNavigator
         MainThread.BeginInvokeOnMainThread(() =>
         {
             _detailsView.BindingContext = product;
-
-            // przekazanie komendy z VM:
-            _detailsView.GoBackCommand = _catalogVm.BackToCatalogCommand;
-
-            Host.Content = _detailsView;
+            ((MainPageViewModel)BindingContext).CurrentView = _detailsView;
         });
     }
 }

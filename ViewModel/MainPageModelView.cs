@@ -1,38 +1,32 @@
-﻿using OnlineShop_MobileApp.Services;
-using OnlineShop_MobileApp.Views;
-using System;
-using System.Collections.Generic;
+﻿using OnlineShop_MobileApp.Views;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace OnlineShop_MobileApp.ViewModel
 {
     public class MainPageViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly View _catalog;
         private readonly View _cart;
         private readonly View _orders;
         private readonly View _account;
 
-        private readonly CatalogView _catalogView;
-
         private View _currentView;
         public View CurrentView
         {
             get => _currentView;
-            set { _currentView = value; PropertyChanged?.Invoke(this, new(nameof(CurrentView))); }
-
-
+            set
+            {
+                if (ReferenceEquals(_currentView, value)) return;
+                _currentView = value;
+                OnPropertyChanged();
+            }
         }
 
         public ICommand SwitchTabCommand { get; }
-
-        
 
         public MainPageViewModel(CatalogView catalog)
         {
@@ -41,10 +35,7 @@ namespace OnlineShop_MobileApp.ViewModel
             _orders = new OrdersView();
             _account = new AccountView();
 
-            CurrentView = _catalog;
-
-            
-
+            _currentView = _catalog;
 
             SwitchTabCommand = new Command<string>(tab =>
             {
@@ -58,7 +49,8 @@ namespace OnlineShop_MobileApp.ViewModel
                 };
             });
         }
+
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-
 }
