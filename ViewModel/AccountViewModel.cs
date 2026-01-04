@@ -6,12 +6,22 @@ using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.ViewModel
 {
+    using OnlineShop_MobileApp.Services;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using System.Windows.Input;
 
     public class AccountViewModel : INotifyPropertyChanged
     {
+
+        //Straszny to AI bordel, trzeba to sprzatnac jak juz apka zacznie dzialac poprawnie
+
+        //---Moje linie kodu---
+
+        private readonly IIdentityService _service;
+
+        //---------------------
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private bool _isLoggedIn;
@@ -54,8 +64,15 @@ namespace OnlineShop_MobileApp.ViewModel
         public ICommand ShowLoginCommand { get; }
         public ICommand CreateAccountCommand { get; }
 
-        public AccountViewModel()
+        public AccountViewModel(IIdentityService service)
         {
+            //-----------------------------------------
+
+            _service = service;
+
+            //-----------------------------------------
+
+
             LoginCommand = new Command(() =>
             {
                 // na razie "na sztywno": po kliknięciu uznajemy, że zalogowany

@@ -1,4 +1,5 @@
 ﻿using OnlineShop_MobileApp.Models;
+using OnlineShop_MobileApp.Services.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,15 @@ namespace OnlineShop_MobileApp.Services
     {
         private readonly String get_products_endpoint = "api/Products/page/";
         private readonly String get_number_of_pages = "api/Products/numberOfProducts";
+        private readonly String get_product_thumbnail = "/api/Products/thumbnail/";
+        private readonly String get_product_picture = "/api/Products/image/";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };
 
-        public CatalogService(HttpClient client) : base(client)
+        public CatalogService(HttpClient client, ITokenStore tokenStore) : base(client, tokenStore)
         {
 
         }
@@ -123,7 +126,7 @@ namespace OnlineShop_MobileApp.Services
         {
             SetCancelationToken();
 
-            var url = $"/api/Products/{id}/image";
+            var url = get_product_picture + id.ToString();
 
             HttpResponseMessage response = null;
 
@@ -164,7 +167,7 @@ namespace OnlineShop_MobileApp.Services
         {
             SetCancelationToken();
 
-            var url = $"/api/Products/{id}/image";
+            var url = get_product_thumbnail + id.ToString();
 
             HttpResponseMessage response = null;
 

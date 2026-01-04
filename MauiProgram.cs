@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using OnlineShop_MobileApp.Services;
+using OnlineShop_MobileApp.Services.Authentication;
 using OnlineShop_MobileApp.ViewModel;
 using OnlineShop_MobileApp.Views;
 using OnlineShopMobileApp.Configuration;
@@ -35,12 +36,24 @@ namespace OnlineShop_MobileApp
             });*/
 
 
-            builder.Services.AddSingleton<ICatalogService, CatalogService>();
             builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
             {
                 c.BaseAddress = new Uri(config.Properties.services.catalog);
-
             })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol)
+                var handler = new HttpClientHandler();
+                handler.ServerCertificateCustomValidationCallback =
+                    (message, cert, chain, errors) => true;
+                return handler;
+            });
+
+            builder.Services.AddHttpClient<IIdentityService, IdentityService>(c =>
+            {
+                c.BaseAddress = new Uri(config.Properties.services.identity);
+
+            }) //There is no need to DI AuthHandler for IdentityService
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
                 //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol)
@@ -70,7 +83,14 @@ namespace OnlineShop_MobileApp
 
             builder.Services.AddSingleton<CatalogViewModel>();
             builder.Services.AddSingleton<CatalogView>();
+            
             builder.Services.AddSingleton<ProductDetailsView>();
+
+            builder.Services.AddSingleton<AccountViewModel>();
+            builder.Services.AddSingleton<AccountView>();
+
+            //Authentication DI
+            builder.Services.AddSingleton<ITokenStore, SecureTokenStore>();
 
 
             builder.Services.AddSingleton<MainPageViewModel>();

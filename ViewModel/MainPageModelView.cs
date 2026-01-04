@@ -28,12 +28,12 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ICommand SwitchTabCommand { get; }
 
-        public MainPageViewModel(CatalogView catalog)
+        public MainPageViewModel(CatalogView catalog, AccountView account)
         {
             _catalog = catalog;
             _cart = new CartView();
             _orders = new OrdersView();
-            _account = new AccountView();
+            _account = account;
 
             _currentView = _catalog;
 

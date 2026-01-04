@@ -13,10 +13,10 @@ public partial class ProductDetailsView : ContentView
         get => (ICommand?)GetValue(GoBackCommandProperty);
         set => SetValue(GoBackCommandProperty, value);
     }
-    public ProductDetailsView(CatalogViewModel catalogViewModel)
-	{
-		InitializeComponent();
-		BindingContext = catalogViewModel;
 
+    public ProductDetailsView(CatalogViewModel catalogViewModel)
+    {
+        InitializeComponent();
+        GoBackCommand = catalogViewModel.BackToCatalogCommand;
     }
 }

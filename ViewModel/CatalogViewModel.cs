@@ -275,7 +275,10 @@ namespace OnlineShop_MobileApp.ViewModel
         private async Task ShowProductDetails(Product product)
         {
             if(_navigator!=null)
+            {
+                await LoadProductPicture(product, false);
                 _navigator.ShowProductDetails(product);
+            }
         }
 
         private async Task GoBackToCatalog()
@@ -376,9 +379,10 @@ namespace OnlineShop_MobileApp.ViewModel
             }
 
             //Ok, metoda dziala zajebiscie. Teraz tylko:
-            //1. Dodac odpowiednie endpointy w REST API
-            //2. Upewnic sie, ze tworzenie miniaturek poprawnie dziala
+            //1. Dodac odpowiednie endpointy w REST API <- Done
+            //2. Upewnic sie, ze tworzenie miniaturek poprawnie dziala <- Done
             //3. zmodyfikować metodę LoadProductThumbnail() aby fetchowala miniaturke a nie full img.
+            //4. A... No i prztcisk "back to catalog znowu nie działą" Dzieki GPT
         }
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

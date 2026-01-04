@@ -9,14 +9,15 @@
 
         <!-- Góra: przewijalna zawartość -->
         <ScrollView Grid.Row="0"
-                    Padding="6">
+                    Padding="6"
+                    Margin="12,0,12,0">
             <VerticalStackLayout Spacing="12">
 
                 <!-- Duże zdjęcie -->
                 <Border StrokeThickness="0"
                         BackgroundColor="Black"
                         HeightRequest="400"
-                        MaximumWidthRequest="400">
+                        MaximumWidthRequest="480">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="14" />
                     </Border.StrokeShape>
@@ -105,7 +106,7 @@
                     VerticalOptions="Center"
                     CornerRadius="10"
                     HeightRequest="40"
-                    Command="{Binding Source={x:Reference ThisView}, Path=GoBackCommand}" />
+                    Command="{Binding GoBackCommand, Source={x:Reference ThisView}}" />
 
             <Button Grid.Column="1" 
                     Text="Add to cart" 
