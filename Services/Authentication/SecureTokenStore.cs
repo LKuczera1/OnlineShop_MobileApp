@@ -15,6 +15,9 @@ public class SecureTokenStore : ITokenStore
     private readonly SemaphoreSlim _gate = new(1, 1);
     private AuthSession? _cache;
 
+    private readonly HttpClient _httpClient;
+    private readonly string _refreshEndpoint;
+
     //Gdy uzytkownik zostanie zalogowany, tworzony jest nowy obiekt CredentialStoreDto
     //Z danymi logowania. Za kazdym razem gdy wysylany jest request sprawdzamy czy
     //jwt jest wciaz valid, jezeli nie, to pobieramy stad credentialStore - dane logowania
@@ -23,6 +26,13 @@ public class SecureTokenStore : ITokenStore
     //jest to projekt na "HumanComputerInteraction", gdzie liczy sie "wyglad" aplikacji, a nie na
     //"UserDataProtection". Moze kiedys zostanie to naprawione. +Nie chce mi sie dodawac specjalnych
     //Endpointow do api...
+
+    public SecureTokenStore(HttpClient httpClient, string refreshEndpoint)
+    {
+        _httpClient = httpClient;
+        _refreshEndpoint = refreshEndpoint;
+        //Ok, podstawy zrobione, teraz IdentityService po zalogowaniu musi przekazac metode/delegat - refresh
+    }
 
     public async Task<AuthSession?> GetAsync()
     {
@@ -72,11 +82,16 @@ public class SecureTokenStore : ITokenStore
         finally { _gate.Release(); }
     }
 
-    public async Task<bool> IsTokenStillActive(int timeReserve = 30) //30 seconds before JWT token expires
+    public async Task<bool> IsTokenStillActive(int timeReserve = 300) //5 minutes before JWT token expires
     {
         var session = await GetAsync();
         if (session is null) return false;
 
         return session.ExpiresAtUtc > DateTimeOffset.UtcNow.AddSeconds(timeReserve);
+    }
+
+    public async Task RefreshToken()
+    {
+        return;
     }
 }

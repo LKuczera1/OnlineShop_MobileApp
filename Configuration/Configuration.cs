@@ -24,6 +24,11 @@ namespace OnlineShopMobileApp.Configuration
             public String catalog { get; set; }
             public String identity { get; set; }
             public String shopping { get; set; }
+
+            //Simple deserializing all endpoints to dictionary
+            public Dictionary<string, string> CatalogEndpoints { get; set; } = new();
+            public Dictionary<string, string> IdentityEndpoints { get; set; } = new();
+            public Dictionary<string, string> ShoppingEndpoints { get; set; } = new();
         }
 
         public string EnvironmentType { get; set; }

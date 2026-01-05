@@ -35,6 +35,28 @@ namespace OnlineShop_MobileApp
                 return new CatalogService(http);
             });*/
 
+            //Authentication DI
+            builder.Services.AddHttpClient("Identity", c =>
+            {
+                c.BaseAddress = new Uri(config.Properties.services.identity);
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol)
+                var handler = new HttpClientHandler();
+                handler.ServerCertificateCustomValidationCallback = (m, cert, chain, err) => true;
+                return handler;
+            });
+
+            builder.Services.AddSingleton<ITokenStore>(sp =>
+            {
+                var factory = sp.GetRequiredService<IHttpClientFactory>();
+                var httpClient = factory.CreateClient("Identity");
+
+                var refreshEndpoint = config.Properties.services.IdentityEndpoints["refreshJWT"];
+                return new SecureTokenStore(httpClient, refreshEndpoint);
+            });
+
 
             builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
             {
@@ -88,10 +110,6 @@ namespace OnlineShop_MobileApp
 
             builder.Services.AddSingleton<AccountViewModel>();
             builder.Services.AddSingleton<AccountView>();
-
-            //Authentication DI
-            builder.Services.AddSingleton<ITokenStore, SecureTokenStore>();
-
 
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<MainPage>();

@@ -8,7 +8,18 @@
         "Services": {
             "Catalog": "https://192.168.0.178:7001",
             "Identity": "https://192.168.0.178:7002",
-            "Shopping": "https://192.168.0.178:7003"
+            "Shopping": "https://192.168.0.178:7003",
+            "CatalogEndpoints": {
+                "Produ":  "222"
+            },
+            "IdentityEndpoints": {
+                "login": "/api/Accounts/login",
+                "refreshJWT": "/api/Accounts/login/refresh",
+                "register": "/api/Accounts/register"
+            },
+            "ShoppingEndpoints": {
+                "Produ": "222"
+            }
         },
         "WindowsMachineServices": {
             "Catalog": "https://localhost:7001",
