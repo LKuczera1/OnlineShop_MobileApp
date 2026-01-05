@@ -146,7 +146,8 @@ namespace OnlineShop_MobileApp.Services
         //   that is send to SecureTokenStore. Maybe it's not so bad option at all.
         //
         //   We can simply implement method "GetJWT" that checks if token is still active, if not token is beeing refreshed
-        //   and user is still logged in.
+        //   and user is still logged in. <- W sumie jedyne sensowne wyjscie w obecnej sytuacji. Zrobic backup tego brancha zeby miec potem
+        //   te notatki...
         protected Task<HttpResponseMessage> RefreshJWTToken()
         {
             return null;
