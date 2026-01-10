@@ -37,11 +37,16 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private int _totalPages = 1;
 
+        //+ about 2 seconds because oc CanncelationToken
+        private const int connectionTimeout = 0;
+
         //Predefying UI methods
         public ICommand GoToPageNumberCommand { get; }
         public ICommand PrevPageCommand { get; }
         public ICommand NextPageCommand { get; }
         public ICommand GoToPageCommand { get; }
+
+        public ICommand RefreshCommand { get; }
 
         //Service
 
@@ -84,33 +89,42 @@ namespace OnlineShop_MobileApp.ViewModel
 
         //Page control
         private bool _connectionFailed = false;
+        //----------------
+
+        private ConnectionState _connectionState = ConnectionState.Loading;
+        public enum ConnectionState
+        {
+            Connected  = 0,
+            ConnectionFailed = 1,
+            Loading = 2,
+        }
+
+        public ConnectionState ConnectionStatus
+        {
+            get => _connectionState;
+            set
+            {
+                if (_connectionState == value) return;
+                _connectionState = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsLoadingVisible));
+                OnPropertyChanged(nameof(IsMainPageVisible));
+                OnPropertyChanged(nameof(IsRefreshButtonVisible));
+            }
+        }
+
+        public bool IsLoadingVisible => ConnectionStatus == ConnectionState.Loading;
+        public bool IsMainPageVisible => ConnectionStatus == ConnectionState.Connected;
+        public bool IsRefreshButtonVisible => ConnectionStatus == ConnectionState.ConnectionFailed;
+        public bool IsOverlayVisible => IsLoadingVisible || IsRefreshButtonVisible;
+
+
+
+        //----------------
 
         //Background tasks
         private CancellationTokenSource? _bckTskCt;
         private readonly SemaphoreSlim _semaphore = new(1, 1);
-
-        //Show main content
-        public bool IsMainPageVisible
-        {
-            get => !_connectionFailed;
-            set
-            {
-                if (_connectionFailed == value) return;
-                _connectionFailed = value;
-                OnPropertyChanged();
-            }
-        }
-
-        //Show refresh button
-        public bool IsRefreshButtonVisible
-        {
-            get => _connectionFailed;
-            set
-            {
-                _connectionFailed = value;
-                OnPropertyChanged();
-            }
-        }
 
         //Page buttons labels
         private int _pageCount;
@@ -138,6 +152,8 @@ namespace OnlineShop_MobileApp.ViewModel
         public ICommand ProductDetailsCommand { get; }
 
         public ICommand BackToCatalogCommand { get; }
+
+        public ICommand AddToCartCommand { get; }
 
         //Methods
 
@@ -167,6 +183,9 @@ namespace OnlineShop_MobileApp.ViewModel
 
             ProductDetailsCommand = new Command<Product>(async product => await ShowProductDetails(product));
             BackToCatalogCommand = new Command( async () => await GoBackToCatalog());
+            RefreshCommand = new Command(() => Refresh());
+
+            AddToCartCommand = new Command(async () => await AddToCart());
 
 
 
@@ -191,6 +210,12 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
+        private void Refresh()
+        {
+            ConnectionStatus = ConnectionState.Loading;
+            StopBackgroundProcessing();
+            StartBackgroundProcessing();
+        }
 
 
         private void StartBackgroundProcessing()
@@ -217,8 +242,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 //Second connection attempt, just in case first one was unsucsesful
                 if(IsRefreshButtonVisible)
                 {
-                    IsRefreshButtonVisible = false;
-                    await Task.Delay(TimeSpan.FromSeconds(3), ct);
+                    await Task.Delay(TimeSpan.FromSeconds(connectionTimeout), ct);
 
                     await LoadPageContent(CurrentPage);
                 }
@@ -228,6 +252,8 @@ namespace OnlineShop_MobileApp.ViewModel
             {
                 //timer.Dispose();
             }
+
+            StopBackgroundProcessing();
         }
 
         private async Task LoadPageContent(int page)
@@ -236,15 +262,15 @@ namespace OnlineShop_MobileApp.ViewModel
             try
             {
                 await LoadPage(page);
-                IsRefreshButtonVisible = false;
+                ConnectionStatus = ConnectionState.Connected;
             }
             catch (Exception ex) when (ex is TimeoutException or TaskCanceledException or Service.ConnectionErrorException)
             {
-                IsRefreshButtonVisible = true;
+                ConnectionStatus = ConnectionState.ConnectionFailed;
             }
             catch (Exception)
             {
-                IsRefreshButtonVisible = true;
+                ConnectionStatus = ConnectionState.ConnectionFailed;
             }
             finally
             {
@@ -266,6 +292,7 @@ namespace OnlineShop_MobileApp.ViewModel
             }
             catch(Exception e)
             {
+                ConnectionStatus = ConnectionState.ConnectionFailed;
                 throw;
             }
         }
@@ -278,6 +305,15 @@ namespace OnlineShop_MobileApp.ViewModel
             {
                 await LoadProductPicture(product, false);
                 _navigator.ShowProductDetails(product);
+            }
+        }
+
+        private async Task AddToCart()
+        {
+            if (_navigator != null)
+            {
+                _navigator.ShowAllert("User not logged in", "Please log in to perform this operation");
+                _navigator.RedirectToLoginPage();
             }
         }
 

@@ -24,6 +24,30 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        private ImageSource _showPasswordIcon;
+
+        private ImageSource _hidePasswordIcon;
+
+        private bool _showPassword = true;
+
+        public bool ShowPassword
+        {
+            get { return _showPassword; }
+            set
+            {
+                _showPassword = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ImageSource PasswordVisibilityIcon
+        {
+            get {
+                if (_showPassword) return _hidePasswordIcon;
+                return _showPasswordIcon;
+            }
+        }
+
         private bool _isLoggedIn;
         public bool IsLoggedIn
         {
@@ -59,16 +83,23 @@ namespace OnlineShop_MobileApp.ViewModel
         private string? _regPassword;
         public string? RegPassword { get => _regPassword; set { _regPassword = value; OnPropertyChanged(); } }
 
+        
+
         public ICommand LoginCommand { get; }
         public ICommand ShowRegisterCommand { get; }
         public ICommand ShowLoginCommand { get; }
         public ICommand CreateAccountCommand { get; }
+
+        public ICommand TogglePasswordVisibilityCommand { get; }
 
         public AccountViewModel(IIdentityService service)
         {
             //-----------------------------------------
 
             _service = service;
+
+            _hidePasswordIcon = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\openeyeicon.png");
+            _showPasswordIcon = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\closedeyeicon.png");
 
             //-----------------------------------------
 
@@ -81,6 +112,12 @@ namespace OnlineShop_MobileApp.ViewModel
 
             ShowRegisterCommand = new Command(() => IsRegisterMode = true);
             ShowLoginCommand = new Command(() => IsRegisterMode = false);
+            TogglePasswordVisibilityCommand = new Command(() =>
+            {
+                if (ShowPassword) ShowPassword = false;
+                else ShowPassword = true;
+                OnPropertyChanged(nameof(PasswordVisibilityIcon));
+            });
 
             CreateAccountCommand = new Command(() =>
             {

@@ -35,7 +35,23 @@
                             Text="Refresh"
                             FontSize="20"
                             HorizontalOptions="Center"
-                            VerticalOptions="Center"/>
+                            VerticalOptions="Center"
+                            Command="{Binding RefreshCommand}"/>
+        </Grid>
+
+        <!-- Loading Caption -->
+        <Grid Grid.Row="1"
+              IsVisible="{Binding IsLoadingVisible}"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              RowDefinitions="Auto"
+              RowSpacing="8">
+
+            <Label Grid.Row="0"
+                   Text="Loading..."
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                           FontSize="20"/>
         </Grid>
 
         <!-- LISTA -->

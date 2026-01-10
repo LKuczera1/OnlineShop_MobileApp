@@ -1,4 +1,5 @@
-﻿using OnlineShop_MobileApp.Views;
+﻿using OnlineShop_MobileApp.GUI_elements;
+using OnlineShop_MobileApp.Views;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -22,6 +23,18 @@ namespace OnlineShop_MobileApp.ViewModel
             {
                 if (ReferenceEquals(_currentView, value)) return;
                 _currentView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Allert _allert = new Allert();
+
+        public Allert allert
+        {
+            get => _allert;
+            set
+            {
+                _allert = value;
                 OnPropertyChanged();
             }
         }

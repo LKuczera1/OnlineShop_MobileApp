@@ -2,54 +2,90 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.AccountView">
-    <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="OnlineShop_MobileApp.Views.AccountView">
 
-        <ScrollView>
-            <VerticalStackLayout Padding="24" Spacing="14">
+    <ScrollView>
+        <VerticalStackLayout Padding="24"
+                             Spacing="14">
 
-                <!-- LOGOWANIE -->
-                <VerticalStackLayout IsVisible="{Binding ShowLoginForm}" Spacing="10">
-                    <Label Text="Login" />
-                    <Entry Text="{Binding Login}" Placeholder="Wpisz login" />
+            <!-- LOGOWANIE -->
 
-                    <Label Text="Password" />
-                    <Entry Text="{Binding Password}" Placeholder="Wpisz hasło" IsPassword="True" />
+            <VerticalStackLayout IsVisible="{Binding ShowLoginForm}"
+                                 Spacing="10">
+                <Label Text="Login" />
+                <Entry Text="{Binding Login}"
+                       Placeholder="Wpisz login" />
 
-                    <Button Text="Zaloguj" Command="{Binding LoginCommand}" />
+                <Label Text="Password" />
+                <Border Stroke="#666"
+                        StrokeThickness="0"
+                        BackgroundColor="#1E1E1E"
+                        StrokeShape="RoundRectangle 2">
 
-                    <Button Text="Utwórz konto"
+                    <Grid ColumnDefinitions="*,Auto"
+                          VerticalOptions="Center">
+
+                        <!-- Entry bez obramowania -->
+                        <Entry x:Name="PasswordEntry"
+                               Grid.Column="0"
+                               
+                               Text="{Binding RegPassword}"
+                               Placeholder="Wpisz hasło"
+                               IsPassword="{Binding ShowPassword}"
+                               BackgroundColor="Transparent"
+                               TextColor="White"
+                               PlaceholderColor="#AAAAAA"
+                               ClearButtonVisibility="Never" />
+
+                        <!-- Przycisk (oko) -->
+                        <ImageButton Grid.Column="1"
+                                     Source="{Binding PasswordVisibilityIcon}"
+                                     WidthRequest="24"
+                                     HeightRequest="24"
+                                     BackgroundColor="Transparent"
+                                     Command="{Binding TogglePasswordVisibilityCommand}" />
+                    </Grid>
+                </Border>
+
+                <Button Text="Zaloguj"
+                        Command="{Binding LoginCommand}" />
+
+                <Button Text="Utwórz konto"
                         Command="{Binding ShowRegisterCommand}" />
-                </VerticalStackLayout>
+            </VerticalStackLayout>
 
-                <!-- REJESTRACJA -->
-                <VerticalStackLayout IsVisible="{Binding ShowRegisterForm}" Spacing="10">
-                    <Label Text="Login" />
-                    <Entry Text="{Binding RegLogin}" Placeholder="Wpisz login" />
+            <!-- REJESTRACJA -->
+            <VerticalStackLayout IsVisible="{Binding ShowRegisterForm}"
+                                 Spacing="10">
+                <Label Text="Login" />
+                <Entry Text="{Binding RegLogin}"
+                       Placeholder="Wpisz login" />
 
-                    <Label Text="Email" />
-                    <Entry Text="{Binding RegEmail}" Placeholder="Wpisz email" Keyboard="Email" />
+                <Label Text="Email" />
+                <Entry Text="{Binding RegEmail}"
+                       Placeholder="Wpisz email"
+                       Keyboard="Email" />
 
-                    <Label Text="Hasło" />
-                    <Entry Text="{Binding RegPassword}" Placeholder="Wpisz hasło" IsPassword="True" />
+                <Label Text="Hasło" />
+                <Grid>
+                    <Entry Text="{Binding RegPassword}"
+                           Placeholder="Wpisz hasło"
+                           IsPassword="True" />
+                </Grid>
 
-                    <Button Text="Utwórz konto"
+                <Button Text="Utwórz konto"
                         Command="{Binding CreateAccountCommand}" />
 
-                    <Button Text="Powrót do logowania"
+                <Button Text="Powrót do logowania"
                         Command="{Binding ShowLoginCommand}" />
-                </VerticalStackLayout>
+            </VerticalStackLayout>
 
-                <!-- ZALOGOWANY -->
-                <Label IsVisible="{Binding ShowLoggedIn}"
+            <!-- ZALOGOWANY -->
+            <Label IsVisible="{Binding ShowLoggedIn}"
                    Text="Zalogowany"
                    FontSize="20"
                    HorizontalOptions="Center"
                    VerticalOptions="Center" />
 
-            </VerticalStackLayout>
-        </ScrollView>
-    </ContentView>
-
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentView>

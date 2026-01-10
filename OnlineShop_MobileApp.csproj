@@ -46,6 +46,8 @@
 		<MauiAsset Include="Configuration\Configuration.json" LogicalName="Configuration/%(Filename)%(Extension)">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</MauiAsset>
+		<MauiAsset Include="Resources\Images\closedeyeicon.png" />
+		<MauiAsset Include="Resources\Images\openeyeicon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -71,6 +73,11 @@
 
 	<ItemGroup>
 	  <Compile Remove="Services\Authentication\AuthHeaderHandler.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Remove="Resources\Images\closedeyeicon.png" />
+	  <MauiImage Remove="Resources\Images\openeyeicon.png" />
 	</ItemGroup>
 
 	<ItemGroup>

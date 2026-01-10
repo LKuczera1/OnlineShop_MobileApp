@@ -1,5 +1,6 @@
 namespace OnlineShop_MobileApp.Views;
 
+using Microsoft.Maui.Controls;
 using OnlineShop_MobileApp.Models;
 using OnlineShop_MobileApp.Navigators;
 using OnlineShop_MobileApp.ViewModel;
@@ -8,17 +9,21 @@ public partial class MainPage : ContentPage, IMainPageNavigator
 {
     private readonly MainPageViewModel _mainVm;
     private readonly CatalogViewModel _catalogVm;
+    private readonly AccountViewModel _accountVm;
 
     private readonly CatalogView _catalogView;
     private readonly ProductDetailsView _detailsView;
+    private readonly AccountView _accountView;
 
     bool _menuOpen = false;
 
     public MainPage(
         MainPageViewModel mainPageViewModel,
         CatalogViewModel catalogViewModel,
+        AccountViewModel accountViewModel,
         CatalogView catalogView,
-        ProductDetailsView detailsView)
+        ProductDetailsView detailsView,
+        AccountView accountView)
     {
         InitializeComponent();
 
@@ -30,6 +35,10 @@ public partial class MainPage : ContentPage, IMainPageNavigator
 
         _catalogView = catalogView;
         _catalogView.BindingContext = _catalogVm;
+
+        _accountVm = accountViewModel;
+        _accountView = accountView;
+        _accountView.BindingContext = _accountVm;
 
         _detailsView = detailsView;
 
@@ -75,5 +84,43 @@ public partial class MainPage : ContentPage, IMainPageNavigator
             _detailsView.BindingContext = product;
             ((MainPageViewModel)BindingContext).CurrentView = _detailsView;
         });
+    }
+
+    public void ShowAllert(string title, string message)
+    {
+        CreateNewAllertBanner(title, message);
+    }
+
+    public void RedirectToLoginPage()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            ((MainPageViewModel)BindingContext).CurrentView = _accountView;
+        });
+    }
+
+    //-----------
+
+    private async Task CreateNewAllertBanner(string title, string message)
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            _mainVm.allert = new GUI_elements.Allert(title, message);
+            await AnimateAllertbanner();
+        });
+    }
+
+    private async Task AnimateAllertbanner()
+    {
+        MessageBanner.IsVisible = true;
+
+        await Task.Yield();
+
+        await MessageBanner.TranslateTo(0, _mainVm.allert.onViewPosition, ((uint)_mainVm.allert.animationLength), Easing.SpringOut);
+        await Task.Delay(_mainVm.allert.onScreenTime);
+        await MessageBanner.TranslateTo(0, _mainVm.allert.hiddenPosition, ((uint)_mainVm.allert.animationLength), Easing.Linear);
+
+        _mainVm.allert.IsAllertVisible = false;
+        MessageBanner.IsVisible = false;
     }
 }

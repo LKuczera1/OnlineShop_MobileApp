@@ -11,5 +11,7 @@ namespace OnlineShop_MobileApp.Navigators
     {
         void ShowCatalog();
         void ShowProductDetails(Product product);
+        void ShowAllert(string title, string message);
+        void RedirectToLoginPage();
     }
 }
