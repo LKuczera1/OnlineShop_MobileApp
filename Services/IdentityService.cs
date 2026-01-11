@@ -1,46 +1,84 @@
-﻿using OnlineShop_MobileApp.Services.Authentication;
+﻿using OnlineShop_MobileApp.Models.DTOs;
+using OnlineShop_MobileApp.Services.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.Services
 {
     public class IdentityService: Service, IIdentityService
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+
         private readonly ITokenStore _tokenStore;
+
+        public string loginendpoint = "/api/Accounts/login";
 
         public IdentityService(HttpClient client, IHttpClientFactory httpClientFactory, ITokenStore tokenStore) : base(client, tokenStore)
         {
-            _httpClientFactory = httpClientFactory;
             _tokenStore = tokenStore;
         }
 
-        public async Task LoginAsync(string login, string password)
+        public async Task<bool> LoginAsync(string login, string password)
         {
-            var client = _httpClientFactory.CreateClient("Identity");
+            SetCancelationToken();
 
-            // TODO: dopasuj do swojego DTO
-            var response = await client.PostAsJsonAsync("/auth/login", new { login, password });
+            var temp = new
+            {
+                userName = login,
+                password = password,
+            };
 
-            response.EnsureSuccessStatusCode();
+            JsonContent loginJson = JsonContent.Create(temp);
 
-            var dto = await response.Content.ReadFromJsonAsync<LoginResponseDto>()
-                      ?? throw new Exception("Empty login response");
+            try
+            {
 
-            // dto.AccessToken + dto.ExpiresInSeconds (przykład)
-            var expiresAt = DateTimeOffset.UtcNow.AddSeconds(dto.ExpiresInSeconds);
+                var response = await SendAsync(loginendpoint, loginJson, HttpMethod.Post); 
+                
+                if (response != null)
+                {
+                    try
+                    {
+                        response.EnsureSuccessStatusCode();
+                    }
+                    catch
+                    {
+                        //Unable to connect - throw an exception
+                    }
+                    //---------------------------------------------------
 
-            await _tokenStore.SetAsync(new AuthSession(dto.AccessToken, expiresAt));
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+
+                        AuthSession session = new AuthSession();
+                        session.AccessToken = loginResponse.Token;
+                        session.ExpiresAtUtc = loginResponse.ExpiresAt;
+
+                        await _tokenStore.SetAuthSession(session, login);
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            
+
+            return false;
         }
-    }
-    public class LoginResponseDto
-    {
-        public string AccessToken { get; set; } = "";
-        public int ExpiresInSeconds { get; set; }
     }
 }

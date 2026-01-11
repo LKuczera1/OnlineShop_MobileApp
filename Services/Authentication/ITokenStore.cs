@@ -25,8 +25,12 @@ namespace OnlineShop_MobileApp.Services.Authentication
 
     public interface ITokenStore
     {
+        public bool IsUserLoggedIn
+        {
+            get;
+        }
         public Task<AuthSession?> GetAsync();
-        Task SetAsync(AuthSession session);
+        Task SetAsync(AuthSession session, string login);
         Task ClearAsync();
         /// <summary>
         /// This method checks checks activity status for JWT token and refreshes it 5 minutes before expiration time.
@@ -35,5 +39,6 @@ namespace OnlineShop_MobileApp.Services.Authentication
         /// <returns><c>true</c> if user is logged in or <c>false</c> if user is not logged in</returns>
         /// <exception cref="TokenRefreshException"></exception>
         public Task<bool> EnsureTokenActivity();
+        public Task SetAuthSession(AuthSession session, string login);
     }
 }

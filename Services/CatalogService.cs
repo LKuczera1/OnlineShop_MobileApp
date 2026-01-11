@@ -19,6 +19,7 @@ namespace OnlineShop_MobileApp.Services
         private readonly String get_number_of_pages = "api/Products/numberOfProducts";
         private readonly String get_product_thumbnail = "/api/Products/thumbnail/";
         private readonly String get_product_picture = "/api/Products/image/";
+        private readonly String get_product_by_id = "/api/Products/";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
@@ -28,6 +29,34 @@ namespace OnlineShop_MobileApp.Services
         public CatalogService(HttpClient client, ITokenStore tokenStore) : base(client, tokenStore)
         {
 
+        }
+
+        public async Task<Product?> GetProduct(int productId)
+        {
+            SetCancelationToken();
+
+            try
+            {
+
+                var response = await AuthorizedGetAsync(get_product_by_id + productId.ToString());
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                await using var prodJson = await response.Content.ReadAsStreamAsync(cts.Token).ConfigureAwait(false);
+
+                var product = await JsonSerializer.DeserializeAsync<Product>(
+                    prodJson,
+                    JsonOptions,
+                    cts.Token
+                ).ConfigureAwait(false);
+
+                return product;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<List<Product>> GetProducts(int page = 0)

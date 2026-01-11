@@ -10,6 +10,7 @@ namespace OnlineShop_MobileApp.ViewModel
     using OnlineShop_MobileApp.Models;
     using OnlineShop_MobileApp.Navigators;
     using OnlineShop_MobileApp.Services;
+    using OnlineShop_MobileApp.Services.Resolver;
     using OnlineShop_MobileApp.Views;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -46,11 +47,14 @@ namespace OnlineShop_MobileApp.ViewModel
         public ICommand NextPageCommand { get; }
         public ICommand GoToPageCommand { get; }
 
+
         public ICommand RefreshCommand { get; }
 
         //Service
 
         private readonly ICatalogService _service;
+
+        private readonly IServicesResolver _servicesResolver;
 
         //Task wait async (replacing canncelacion token)
         
@@ -159,9 +163,10 @@ namespace OnlineShop_MobileApp.ViewModel
 
 
         //Constructor
-        public CatalogViewModel(ICatalogService service)
+        public CatalogViewModel(ICatalogService service, IServicesResolver servicesResolver)
         {
             _service = service;
+            _servicesResolver = servicesResolver;
 
             // Dobra todo list:
             // 1.Konczymy sprzatanie tego balaganu tutaj
@@ -185,7 +190,7 @@ namespace OnlineShop_MobileApp.ViewModel
             BackToCatalogCommand = new Command( async () => await GoBackToCatalog());
             RefreshCommand = new Command(() => Refresh());
 
-            AddToCartCommand = new Command(async () => await AddToCart());
+            AddToCartCommand = new Command<Product>(async (product) => await AddToCart(product.Id));
 
 
 
@@ -308,12 +313,19 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
-        private async Task AddToCart()
+        private async Task AddToCart(int productId)
         {
             if (_navigator != null)
             {
-                _navigator.ShowAllert("User not logged in", "Please log in to perform this operation");
-                _navigator.RedirectToLoginPage();
+                if(_service.isUserLoggedIn())
+                {
+                    await _servicesResolver.ResolveInsertItemIntoCart(productId);
+                }
+                else
+                {
+                    _navigator.ShowAllert("User not logged in", "Please log in to perform this operation");
+                    _navigator.RedirectToLoginPage();
+                }
             }
         }
 
@@ -409,7 +421,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 }
                 catch
                 {
-                    throw;
+                    setNoPhotoIcon();
                 }
 
             }

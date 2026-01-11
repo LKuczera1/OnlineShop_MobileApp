@@ -170,6 +170,10 @@ namespace OnlineShop_MobileApp.Services
                     if (session != null && session.AccessToken != null) JWTtoken = session.AccessToken;
                     else throw new Exception("JWT token error");
                 }
+                else
+                {
+                    SetCancelationToken();
+                }
             }
             catch (Exception ex)
             {
@@ -228,6 +232,11 @@ namespace OnlineShop_MobileApp.Services
                     if (session != null && session.AccessToken != null) JWTtoken = session.AccessToken;
                     else throw new Exception("JWT token error");
                 }
+                else
+                {
+                    SetCancelationToken();
+                }
+
             }
             catch (Exception ex)
             {
@@ -259,6 +268,11 @@ namespace OnlineShop_MobileApp.Services
             }
 
             return response;
+        }
+
+        public bool isUserLoggedIn()
+        {
+            return _tokenStore.IsUserLoggedIn;
         }
     }
 }

@@ -41,10 +41,10 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ICommand SwitchTabCommand { get; }
 
-        public MainPageViewModel(CatalogView catalog, AccountView account)
+        public MainPageViewModel(CatalogView catalog, AccountView account, CartView cart)
         {
             _catalog = catalog;
-            _cart = new CartView();
+            _cart = cart;
             _orders = new OrdersView();
             _account = account;
 
@@ -52,15 +52,36 @@ namespace OnlineShop_MobileApp.ViewModel
 
             SwitchTabCommand = new Command<string>(tab =>
             {
-                CurrentView = tab switch
+                switch(tab)
                 {
-                    "Catalog" => _catalog,
-                    "Cart" => _cart,
-                    "Orders" => _orders,
-                    "Account" => _account,
-                    _ => _catalog
-                };
+                    case "Catalog":
+                        CurrentView = _catalog;
+                        break;
+                    case "Cart":
+                        CurrentView = _cart;
+                        RefreshCurrentView(_cart);
+                        break;
+                    case "Orders":
+                        CurrentView = _orders;
+                        break;
+                    case "Account":
+                        CurrentView = _account;
+                        break;
+                    default:
+                        CurrentView = _catalog;
+                        break;
+                }
             });
+        }
+
+        private void RefreshCurrentView(View view)
+        {
+            switch (view)
+            {
+                case CartView cartView when cartView.BindingContext is CartViewModel cartVm:
+                    cartVm.Refresh();
+                    break;
+            }
         }
 
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

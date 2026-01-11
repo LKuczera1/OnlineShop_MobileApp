@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.ViewModel
 {
+    using OnlineShop_MobileApp.Navigators;
     using OnlineShop_MobileApp.Services;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
@@ -19,6 +20,9 @@ namespace OnlineShop_MobileApp.ViewModel
         //---Moje linie kodu---
 
         private readonly IIdentityService _service;
+
+        private IMainPageNavigator? _navigator;
+        public void SetNavigator(IMainPageNavigator navigator) => _navigator = navigator;
 
         //---------------------
 
@@ -89,7 +93,6 @@ namespace OnlineShop_MobileApp.ViewModel
         public ICommand ShowRegisterCommand { get; }
         public ICommand ShowLoginCommand { get; }
         public ICommand CreateAccountCommand { get; }
-
         public ICommand TogglePasswordVisibilityCommand { get; }
 
         public AccountViewModel(IIdentityService service)
@@ -104,10 +107,13 @@ namespace OnlineShop_MobileApp.ViewModel
             //-----------------------------------------
 
 
-            LoginCommand = new Command(() =>
+            LoginCommand = new Command(async () =>
             {
-                // na razie "na sztywno": po kliknięciu uznajemy, że zalogowany
-                IsLoggedIn = true;
+            if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password)) return;
+
+                bool loginAttemptResult = await service.LoginAsync(Login, Password);
+
+                if (!loginAttemptResult) _navigator.ShowAllert("Login failed", "Provided login data was wrong.");
             });
 
             ShowRegisterCommand = new Command(() => IsRegisterMode = true);

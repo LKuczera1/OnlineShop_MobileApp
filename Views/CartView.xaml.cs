@@ -2,9 +2,10 @@ namespace OnlineShop_MobileApp.Views;
 
 public partial class CartView : ContentView
 {
-	public CartView()
+	public CartView(CartViewModel cartViewModel)
 	{
 		InitializeComponent();
-		BindingContext = new CartViewModel();
-	}
+		BindingContext = cartViewModel;
+
+    }
 }

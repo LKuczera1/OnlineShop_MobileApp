@@ -1,12 +1,15 @@
 ﻿using Microsoft.Maui.Storage;
 using OnlineShop_MobileApp.Models.DTOs;
 using OnlineShop_MobileApp.Services.Authentication;
+using System.ComponentModel;
 using System.Net.Http.Json;
 
 public class SecureTokenStore : ITokenStore
 {
     private const string TokenKey = "auth.access_token";
     private const string ExpKey = "auth.expires_at_utc";
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
 
     private readonly SemaphoreSlim _refreshLock = new(1, 1);
@@ -15,12 +18,22 @@ public class SecureTokenStore : ITokenStore
 
     private string? _username = null;
 
-    private bool isUserLoggedIn = false;
+    private bool _isUserLoggedIn = false;
+
+
+    public bool IsUserLoggedIn
+    {
+        get => _isUserLoggedIn;
+        private set
+        {
+            if (_isUserLoggedIn == value) return;
+            _isUserLoggedIn = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUserLoggedIn)));
+        }
+    }
     public string? Username
     {
         get { return _username; }
-
-        set { _username = value; }
     }
 
     public CredentialStoreDto? CredentialStore
@@ -76,16 +89,23 @@ public class SecureTokenStore : ITokenStore
         finally { _gate.Release(); }
     }
 
-    public async Task SetAsync(AuthSession session)
+    public async Task SetAsync(AuthSession session, string? login = null)
     {
         await _gate.WaitAsync();
         try
         {
+            if(login!=null)
+            {
+                _username = login;
+            }
+
             _cache = session;
             await SecureStorage.SetAsync(TokenKey, session.AccessToken);
             await SecureStorage.SetAsync(ExpKey, session.ExpiresAtUtc.ToString());
         }
         finally { _gate.Release(); }
+
+        IsUserLoggedIn = true;
     }
 
     public async Task ClearAsync()
@@ -97,7 +117,10 @@ public class SecureTokenStore : ITokenStore
             SecureStorage.Remove(TokenKey);
             SecureStorage.Remove(ExpKey);
         }
-        finally { _gate.Release(); }
+        finally { 
+            _gate.Release();
+            IsUserLoggedIn = false;
+        }
     }
 
     /// <summary>
@@ -111,7 +134,7 @@ public class SecureTokenStore : ITokenStore
         bool isTokenActive = await IsTokenStillActive();
 
         if(isTokenActive) return true;
-        else if(!isUserLoggedIn) return false;
+        else if(!_isUserLoggedIn) return false;
 
         try
         {
@@ -212,5 +235,10 @@ public class SecureTokenStore : ITokenStore
         {
             _refreshLock.Release();
         }
+    }
+
+    public async Task SetAuthSession(AuthSession session, string login)
+    {
+        await SetAsync(session, login);
     }
 }

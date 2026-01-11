@@ -8,6 +8,6 @@ namespace OnlineShop_MobileApp.Services
 {
     public interface IIdentityService
     {
-        public Task LoginAsync(string login, string password);
+        public Task<bool> LoginAsync(string login, string password);
     }
 }

@@ -114,7 +114,8 @@
                     VerticalOptions="Center"
                     CornerRadius="10"
                     HeightRequest="40"
-                    Command="{Binding AddToCartCommand, Source={x:Reference ThisView}}" />
+                    Command="{Binding AddToCartCommand, Source={x:Reference ThisView}}" 
+                    CommandParameter="{Binding .}"/>
 
         </Grid>
 

@@ -10,10 +10,12 @@ public partial class MainPage : ContentPage, IMainPageNavigator
     private readonly MainPageViewModel _mainVm;
     private readonly CatalogViewModel _catalogVm;
     private readonly AccountViewModel _accountVm;
+    private readonly CartViewModel _cartVm;
 
     private readonly CatalogView _catalogView;
     private readonly ProductDetailsView _detailsView;
     private readonly AccountView _accountView;
+    private readonly CartView _cartView;
 
     bool _menuOpen = false;
 
@@ -23,7 +25,9 @@ public partial class MainPage : ContentPage, IMainPageNavigator
         AccountViewModel accountViewModel,
         CatalogView catalogView,
         ProductDetailsView detailsView,
-        AccountView accountView)
+        AccountView accountView,
+        CartViewModel cartViewModel,
+        CartView cartView)
     {
         InitializeComponent();
 
@@ -39,6 +43,11 @@ public partial class MainPage : ContentPage, IMainPageNavigator
         _accountVm = accountViewModel;
         _accountView = accountView;
         _accountView.BindingContext = _accountVm;
+        _accountVm.SetNavigator(this);
+
+        _cartVm = cartViewModel;
+        _cartView = cartView;
+        _cartView.BindingContext = _cartVm;
 
         _detailsView = detailsView;
 

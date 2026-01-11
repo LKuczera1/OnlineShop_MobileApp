@@ -128,7 +128,9 @@
                                             FontSize="12"
                                             MinimumHeightRequest="38"
                                             Padding="10,0"
-                                            CornerRadius="8" />
+                                            CornerRadius="8"
+                                            Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.AddToCartCommand}"
+                                            CommandParameter="{Binding .}"/>
                                      
                                     <Button Text="Szczegóły"
                                             FontSize="12"
