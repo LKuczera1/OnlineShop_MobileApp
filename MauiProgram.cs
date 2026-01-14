@@ -130,6 +130,9 @@ namespace OnlineShop_MobileApp
             builder.Services.AddSingleton<AccountViewModel>();
             builder.Services.AddSingleton<AccountView>();
 
+            builder.Services.AddSingleton<OrdersViewModel>();
+            builder.Services.AddSingleton<OrdersView>();
+
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<MainPage>();
 

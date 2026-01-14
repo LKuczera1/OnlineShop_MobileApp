@@ -1,8 +1,10 @@
 ﻿using OnlineShop_MobileApp.Models.DTOs;
 using OnlineShop_MobileApp.Services.Authentication;
+using Shopping.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,10 +16,20 @@ namespace OnlineShop_MobileApp.Services
 
         private const string CartItemsEndpoint = "/api/ShoppingCartItems";
         private const string InsertItemToCartEndpoint = "/api/ShoppingCartItems";
+        private const string RemoveCartItemEndpoint = "/api/ShoppingCartItems/";
+        private const string PlaceOrderEndpoint = "/api/ShoppingCartItems/PlaceOrder";
+        private const string GetOrdersEndpoint = "/api/Orders";
         public ShoppingService(HttpClient client, ITokenStore tokenStore)
             : base(client, tokenStore)
         {
         }
+
+
+
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
         public async Task<List<CartItemDto>> GetCartItems()
         {
@@ -45,6 +57,42 @@ namespace OnlineShop_MobileApp.Services
 
             if (response.IsSuccessStatusCode) return true;
             else return false;
+        }
+
+        public async Task<bool> RemoveCartItem(int cartItemId)
+        {
+            string endpoint = RemoveCartItemEndpoint + cartItemId.ToString();
+
+            HttpResponseMessage response = await AuthorizedSendAsync(endpoint, null, HttpMethod.Delete);
+
+            if (response.IsSuccessStatusCode) return true;
+            else return false;
+        }
+
+        public async Task<bool> PlaceOrder(JsonContent content)
+        {
+            HttpResponseMessage response = await AuthorizedSendAsync(PlaceOrderEndpoint, content);
+
+            if (response.IsSuccessStatusCode) return true;
+            else return false;
+        }
+
+        public async Task<List<Order>?> GetOrders()
+        {
+            HttpResponseMessage response = await AuthorizedGetAsync(GetOrdersEndpoint);
+
+            if (!response.IsSuccessStatusCode) return null;
+
+            SetCancelationToken();
+
+            await using var OrdersJson = await response.Content.ReadAsStreamAsync(cts.Token);
+
+            var Orders = await JsonSerializer.DeserializeAsync<List<Order>?>(
+                OrdersJson,
+                JsonOptions,
+                cts.Token);
+
+            return Orders;
         }
     }
 }

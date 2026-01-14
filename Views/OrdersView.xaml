@@ -2,37 +2,121 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.OrdersView">
-    <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-        <Grid Padding="12">
-            <CollectionView ItemsSource="{Binding Items}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Margin="0,0,0,10" Padding="12">
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+    <Grid Padding="22">
+        <CollectionView ItemsSource="{Binding Items}"
+                        HorizontalScrollBarVisibility="Never"
+                        VerticalScrollBarVisibility="Never">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0"
+                          VerticalOptions="Start">
 
-                                <!-- info o zamówieniu -->
-                                <VerticalStackLayout>
-                                    <Label Text="{Binding OrderNumber}" FontSize="18"/>
-                                    <Label Text="{Binding DateText}" FontSize="13"/>
-                                    <Label Text="{Binding Status}" FontSize="13"/>
+                        <Border Margin="0,0,0,2"
+                                Padding="8,8,8,12"
+                                BackgroundColor="Black"
+                                StrokeThickness="0">
+                            <Grid ColumnDefinitions="*,auto">
+
+                                <VerticalStackLayout Grid.Column="0"
+                                                     HorizontalOptions="Start">
+                                    <Label TextColor="White"
+                                           Grid.Row="1">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Order number: " />
+                                                <Span Text="{Binding OrderId}" />
+
+
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label TextColor="White"
+                                           Grid.Row="1">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Total price: " />
+                                                <Span Text="{Binding TotalPrice, StringFormat='{0:0.00}'}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <VerticalStackLayout IsVisible="{Binding AreDetailsVisible}">
+                                        
+                                        <Label TextColor="White"
+                                               Grid.Row="1"
+                                               LineBreakMode="WordWrap"
+                                               Margin="0,10,0,10">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="OrderStatus: " />
+                                                    <Span Text="{Binding OrderStatusString}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                        <Label TextColor="White"
+                                               Grid.Row="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Ordered time: " />
+                                                    <Span Text="{Binding OrderTime}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        
+                                        <Label TextColor="White"
+                                               Grid.Row="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Packed time: " />
+                                                    <Span Text="{Binding PackedTime}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                        <Label TextColor="White"
+                                               Grid.Row="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Send time: " />
+                                                    <Span Text="{Binding SendTime}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+
+                                        <Label TextColor="White"
+                                               Grid.Row="1">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Delivered time: " />
+                                                    <Span Text="{Binding DeliveredTime}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                    </VerticalStackLayout>
+
                                 </VerticalStackLayout>
 
-                                <!-- przycisk -->
                                 <Button Grid.Column="1"
-                                    Text="CheckOrderStatus"
-                                    VerticalOptions="Center"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
-                                                      Path=BindingContext.CheckOrderStatusCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Grid>
+                                        Text="OrderDetails"
+                                        MaximumWidthRequest="120"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        MaximumHeightRequest="80"
+                                        Command="{Binding BindingContext.ChangeOrderDetailsVisiblity, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                        CommandParameter="{Binding .}">
+                                    
+                                </Button>
 
-    </ContentView>
+                            </Grid>
+
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 
 </ContentView>

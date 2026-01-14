@@ -1,11 +1,14 @@
 ﻿using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Platform;
 using OnlineShop_MobileApp.Models;
 using OnlineShop_MobileApp.Models.DTOs;
 using OnlineShop_MobileApp.Services;
 using OnlineShop_MobileApp.Services.Resolver;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Nodes;
 using System.Windows.Input;
 
 public class CartViewModel: INotifyPropertyChanged
@@ -24,6 +27,8 @@ public class CartViewModel: INotifyPropertyChanged
     public ICommand DecreaseCommand { get; }
     public ICommand RemoveCommand { get; }
 
+    public ICommand PlaceOrderCommand { get; }
+
     private bool _isCartViewAvailable = false;
 
     public bool IsCartViewAvailable
@@ -36,6 +41,14 @@ public class CartViewModel: INotifyPropertyChanged
         }
     }
 
+    private double _totalPrice = 0;
+
+    public double TotalPrice
+    {
+        get { return _totalPrice; }
+        set { _totalPrice = value; OnPropertyChanged(); }
+    }
+
 
     public CartViewModel(IShoppingService service, IServicesResolver servicesResolver)
     {
@@ -43,22 +56,90 @@ public class CartViewModel: INotifyPropertyChanged
         {
             if (item == null) return;
             item.Quantity++;
+            item.TotalPrice = item.dto.Price * item.Quantity;
+            CalculateTotalPrice();
         });
 
         DecreaseCommand = new Command<CartItem>(item =>
         {
             if (item == null) return;
             if (item.Quantity > 1) item.Quantity--;
+            item.TotalPrice = item.dto.Price * item.Quantity;
+
+            CalculateTotalPrice();
         });
 
-        RemoveCommand = new Command<CartItem>(item =>
-        {
-            if (item == null) return;
-            Items.Remove(item);
-        });
+        RemoveCommand = new Command<CartItem>(item => _ = RemoveItemAsync(item));
+
+        PlaceOrderCommand = new Command( () => PlaceOrder());
 
         _service = service;
         _servicesResolver = servicesResolver;
+    }
+
+    public void CalculateTotalPrice()
+    {
+        double sum = 0;
+
+        foreach (var item in Items)
+        {
+            sum += item.TotalPrice;
+        }
+
+        TotalPrice = sum;
+    }
+
+    private async Task PlaceOrder()
+    {
+        if(Items.Count == 0) return;
+
+        var jsonArray = new JsonArray();
+
+        foreach (var item in Items)
+        {
+            jsonArray.Add(new JsonObject
+            {
+                ["id"] = item.dto.Id,
+                ["quantity"] = item.dto.Quantity
+            });
+        }
+
+        var result = await _service.PlaceOrder(JsonContent.Create(jsonArray));
+
+        if(result)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Items.Clear();
+                CalculateTotalPrice();
+                OnPropertyChanged(nameof(Items));
+            });
+        }
+        else
+        {
+            //error
+        }
+    }
+    private async Task RemoveItemAsync(CartItem item)
+    {
+        if (item == null) return;
+
+        var id = item.dto?.Id;
+        if (id is null) return; // albo komunikat
+
+        if (await _service.RemoveCartItem(id.Value))
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Items.Remove(item);
+                CalculateTotalPrice();
+                OnPropertyChanged(nameof(Items));
+            });
+        }
+        else
+        {
+            // Show error message
+        }
     }
 
     public async Task GetCartItems()
@@ -91,8 +172,11 @@ public class CartViewModel: INotifyPropertyChanged
                 newCartItem.product.ThumbnailSource = ImageSource.FromFile(nophotothumbnailpath);
             }
 
+            newCartItem.TotalPrice = newCartItem.dto.Price * newCartItem.Quantity;
             Items.Add(newCartItem);
         }
+
+        CalculateTotalPrice();
     }
 
     public async Task Refresh()
@@ -122,8 +206,6 @@ public class CartItem : INotifyPropertyChanged
 
     public Product product { get; set; }
     public CartItemDto dto { get; set; }
-    public string? Title { get; set; }
-    public string? Subtitle { get; set; }
 
     private int _quantity = 1;
     public int Quantity
@@ -133,6 +215,17 @@ public class CartItem : INotifyPropertyChanged
         {
             if (_quantity == value) return;
             _quantity = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private double _totalPrice = 1;
+    public double TotalPrice
+    {
+        get => _totalPrice;
+        set
+        {
+            _totalPrice = value;
             OnPropertyChanged();
         }
     }

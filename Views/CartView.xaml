@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.CartView">
 
-    <Grid RowDefinitions="3*,1*"
+    <Grid RowDefinitions="6*,1*"
           Padding="12">
 
         <!-- Komunikat gdy użytkownik nie jest zalogowany -->
@@ -24,7 +24,8 @@
         <!-- LISTA (pokazuj tylko gdy user zalogowany) -->
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Items}"
-                        IsVisible="{Binding IsCartViewAvailable}">
+                        IsVisible="{Binding IsCartViewAvailable}"
+                        VerticalScrollBarVisibility="Never">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="0,0,0,2"
@@ -124,7 +125,7 @@
                                             CommandParameter="{Binding .}" />
                                 </HorizontalStackLayout>
 
-                                <Label FontSize="10"
+                                <Label FontSize="12"
                                        TextColor="White"
                                        Opacity="0.8"
                                        HorizontalTextAlignment="End">
@@ -133,6 +134,19 @@
                                             <Span Text="Price per unit: " />
                                             <!-- dto.Price, 2 cyfry po przecinku -->
                                             <Span Text="{Binding dto.Price, StringFormat='{0:0.00}'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label FontSize="12"
+                                       TextColor="White"
+                                       Opacity="0.8"
+                                       HorizontalTextAlignment="End">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Total price: " />
+                                            <!-- dto.Price, 2 cyfry po przecinku -->
+                                            <Span Text="{Binding TotalPrice, StringFormat='{0:0.00}'}" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
@@ -148,11 +162,41 @@
         </CollectionView>
 
         <!-- DÓŁ: placeholder (ukryj gdy user niezalogowany) -->
-        <Frame Grid.Row="1"
-               Padding="12"
-               IsVisible="{Binding IsCartViewAvailable}">
-            <Label Text="Podsumowanie / checkout (na później)" />
-        </Frame>
+        <Border Grid.Row="1"
+                Padding="12"
+                Margin="0,5,0,0"
+                IsVisible="{Binding IsCartViewAvailable}"
+                BackgroundColor="Black"
+                MaximumHeightRequest="200"
+                StrokeThickness="0">
+
+            <Grid ColumnDefinitions="7*,3*">
+                <Grid RowDefinitions="*,*,*"
+                      Grid.Column="0">
+
+                    <Label Text="Order summary:"
+                           Grid.Row="0"/>
+
+                    <Label TextColor="White"
+                           Grid.Row="1">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Total price: " />
+                                <Span Text="{Binding TotalPrice, StringFormat='{0:0.00}'}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Text="Pay to send order request"
+                           Grid.Row="2" />
+                </Grid>
+
+                <Button Grid.Column="1"
+                        Text="Pay order"
+                        Command="{Binding PlaceOrderCommand}"/>
+
+            </Grid>
+        </Border>
 
     </Grid>
 </ContentView>

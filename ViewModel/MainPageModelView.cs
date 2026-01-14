@@ -41,11 +41,11 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ICommand SwitchTabCommand { get; }
 
-        public MainPageViewModel(CatalogView catalog, AccountView account, CartView cart)
+        public MainPageViewModel(CatalogView catalog, AccountView account, CartView cart, OrdersView orders)
         {
             _catalog = catalog;
             _cart = cart;
-            _orders = new OrdersView();
+            _orders = orders;
             _account = account;
 
             _currentView = _catalog;
@@ -63,6 +63,7 @@ namespace OnlineShop_MobileApp.ViewModel
                         break;
                     case "Orders":
                         CurrentView = _orders;
+                        RefreshCurrentView(_orders);
                         break;
                     case "Account":
                         CurrentView = _account;
@@ -80,6 +81,9 @@ namespace OnlineShop_MobileApp.ViewModel
             {
                 case CartView cartView when cartView.BindingContext is CartViewModel cartVm:
                     cartVm.Refresh();
+                    break;
+                case OrdersView ordersView when ordersView.BindingContext is OrdersViewModel ordersVm:
+                    ordersVm.Refresh();
                     break;
             }
         }

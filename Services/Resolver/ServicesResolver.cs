@@ -49,6 +49,8 @@ namespace OnlineShop_MobileApp.Services.Resolver
             return null;
         }
 
+        //Moze lepiej zrobić z tego fasade
+
         public async Task<bool> ResolveInsertItemIntoCart(int productId)
         {
             return await _shoppingService.InsertItemToCart(productId);

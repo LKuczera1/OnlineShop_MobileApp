@@ -2,17 +2,25 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.CatalogView">
-    <Grid RowDefinitions="Auto,*,Auto" Padding="12" VerticalOptions="Fill">
+    <Grid RowDefinitions="Auto,*,Auto"
+          Padding="12"
+          VerticalOptions="Fill">
 
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" MaximumHeightRequest="50" VerticalOptions="Center"  Margin="0,5,0,5">
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,Auto"
+              MaximumHeightRequest="50"
+              VerticalOptions="Center"
+              Margin="0,5,0,5">
 
-            <Grid Grid.Column="0" Margin="0,0,5,0">
-                <Entry Placeholder="Wyszukaj"/>
+            <Grid Grid.Column="0"
+                  Margin="0,0,5,0">
+                <Entry Placeholder="Wyszukaj" />
             </Grid>
-            <Grid Grid.Column="1" HorizontalOptions="End" >
+            <Grid Grid.Column="1"
+                  HorizontalOptions="End">
 
                 <Button Grid.Column="2"
-                Text="?"/>
+                        Text="?" />
 
             </Grid>
         </Grid>
@@ -25,18 +33,18 @@
               RowDefinitions="Auto,Auto"
               RowSpacing="8">
 
-                    <Label Grid.Row="0"
-                           Text="Unable to connect to services"
-                           HorizontalOptions="Center"
-                           HorizontalTextAlignment="Center"
-                                   FontSize="20"/>
+            <Label Grid.Row="0"
+                   Text="Unable to connect to services"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   FontSize="20" />
 
-                    <Button Grid.Row="1"
-                            Text="Refresh"
-                            FontSize="20"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            Command="{Binding RefreshCommand}"/>
+            <Button Grid.Row="1"
+                    Text="Refresh"
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Command="{Binding RefreshCommand}" />
         </Grid>
 
         <!-- Loading Caption -->
@@ -51,7 +59,7 @@
                    Text="Loading..."
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"
-                           FontSize="20"/>
+                   FontSize="20" />
         </Grid>
 
         <!-- LISTA -->
@@ -62,7 +70,9 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <!-- pojedynczy prostokątny element -->
-                    <Grid Padding="0" VerticalOptions="Start" MaximumHeightRequest="120">
+                    <Grid Padding="0"
+                          VerticalOptions="Start"
+                          MaximumHeightRequest="120">
                         <Border Margin="0,0,0,2"
                                 Padding="8,8,8,12"
                                 BackgroundColor="Black"
@@ -92,37 +102,38 @@
 
                                         <!-- KLUCZ: Clip przycina obraz do kształtu -->
                                         <Border.Clip>
-                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,80,80" />
+                                            <RoundRectangleGeometry CornerRadius="6"
+                                                                    Rect="0,0,80,80" />
                                         </Border.Clip>
 
                                         <Image Source="{Binding ThumbnailSource}"
-                                               Aspect="AspectFill" 
-                                               Background="White"/>
+                                               Aspect="AspectFill"
+                                               Background="White" />
                                     </Border>
                                 </HorizontalStackLayout>
 
                                 <!-- ŚRODEK: Title + Subtitle -->
                                 <VerticalStackLayout Grid.Column="1"
-                                 Spacing="2"
-                                 VerticalOptions="Start">
+                                                     Spacing="2"
+                                                     VerticalOptions="Start">
 
                                     <Label Text="{Binding Name}"
-                                    FontSize="18"
-                       TextColor="White"
-                       LineBreakMode="TailTruncation" />
+                                           FontSize="18"
+                                           TextColor="White"
+                                           LineBreakMode="TailTruncation" />
 
                                     <Label Text="{Binding Description}"
-                       FontSize="13"
-                       TextColor="White"
-                       Opacity="0.8"
-                                      LineBreakMode="WordWrap" />
+                                           FontSize="13"
+                                           TextColor="White"
+                                           Opacity="0.8"
+                                           LineBreakMode="WordWrap" />
                                 </VerticalStackLayout>
 
                                 <!-- PRAWA: 2 przyciski jeden nad drugim -->
                                 <VerticalStackLayout Grid.Column="2"
-                                 Spacing="6"
-                                 VerticalOptions="Center"
-                                 HorizontalOptions="End">
+                                                     Spacing="6"
+                                                     VerticalOptions="Center"
+                                                     HorizontalOptions="End">
 
                                     <Button Text="Dodaj do koszyka"
                                             FontSize="12"
@@ -130,15 +141,15 @@
                                             Padding="10,0"
                                             CornerRadius="8"
                                             Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.AddToCartCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                     
+                                            CommandParameter="{Binding .}" />
+
                                     <Button Text="Szczegóły"
                                             FontSize="12"
                                             MinimumHeightRequest="38"
                                             Padding="10,0"
-                                            CornerRadius="8" 
-                                            Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.ProductDetailsCommand}" 
-                                            CommandParameter="{Binding .}"  />
+                                            CornerRadius="8"
+                                            Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.ProductDetailsCommand}"
+                                            CommandParameter="{Binding .}" />
                                 </VerticalStackLayout>
 
                             </Grid>
@@ -151,14 +162,14 @@
 
         <!-- PAGINACJA -->
         <Grid Grid.Row="2"
-      ColumnDefinitions="Auto,*,Auto"
-      ColumnSpacing="10"
-      Padding="0,10,0,0">
+              ColumnDefinitions="Auto,*,Auto"
+              ColumnSpacing="10"
+              Padding="0,10,0,0">
 
             <!-- LEWO -->
             <Button Text="◀"
-            Command="{Binding PrevPageCommand}"
-            IsEnabled="{Binding CanPrev}" />
+                    Command="{Binding PrevPageCommand}"
+                    IsEnabled="{Binding CanPrev}" />
 
             <!-- ŚRODEK: numery stron (scroll horyzontalny) -->
             <CollectionView x:Name="PagesCv"
@@ -171,9 +182,9 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Button Text="{Binding .}"
-                    Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.GoToPageNumberCommand}"
-                    CommandParameter="{Binding .}"
-                    Margin="0,0,8,0" />
+                                Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.GoToPageNumberCommand}"
+                                CommandParameter="{Binding .}"
+                                Margin="0,0,8,0" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
@@ -182,9 +193,9 @@
 
             <!-- PRAWO -->
             <Button Grid.Column="2"
-            Text="▶"
-            Command="{Binding NextPageCommand}"
-            IsEnabled="{Binding CanNext}" />
+                    Text="▶"
+                    Command="{Binding NextPageCommand}"
+                    IsEnabled="{Binding CanNext}" />
         </Grid>
     </Grid>
 </ContentView>
