@@ -48,6 +48,7 @@
 		</MauiAsset>
 		<MauiAsset Include="Resources\Images\closedeyeicon.png" />
 		<MauiAsset Include="Resources\Images\openeyeicon.png" />
+		<MauiAsset Include="Resources\Images\userprofilepicture.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -78,6 +79,7 @@
 	<ItemGroup>
 	  <MauiImage Remove="Resources\Images\closedeyeicon.png" />
 	  <MauiImage Remove="Resources\Images\openeyeicon.png" />
+	  <MauiImage Remove="Resources\Images\userprofilepicture.png" />
 	</ItemGroup>
 
 	<ItemGroup>

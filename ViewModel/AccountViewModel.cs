@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OnlineShop_MobileApp.Models.DTOs;
+using OnlineShop_MobileApp.Navigators;
+using OnlineShop_MobileApp.Services;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace OnlineShop_MobileApp.ViewModel
 {
-    using OnlineShop_MobileApp.Navigators;
-    using OnlineShop_MobileApp.Services;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using System.Windows.Input;
 
     public class AccountViewModel : INotifyPropertyChanged
     {
@@ -23,6 +19,45 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private IMainPageNavigator? _navigator;
         public void SetNavigator(IMainPageNavigator navigator) => _navigator = navigator;
+
+        private UserDataDto _userData = new UserDataDto();
+
+
+        private CurrentView _currentView = CurrentView.LoginScreen;
+        public enum CurrentView
+        {
+            LoginScreen = 0,
+            UserData = 1,
+            RegisterScreen = 2,
+        }
+
+        public CurrentView currentView
+        {
+            get => _currentView;
+            set
+            {
+                if (_currentView == value) return;
+                _currentView = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsLoginScreenvisible));
+                OnPropertyChanged(nameof(IsUserDataVisible));
+                OnPropertyChanged(nameof(IsRegisterFormVisible));
+            }
+        }
+
+        public bool IsLoginScreenvisible => currentView == CurrentView.LoginScreen;
+        public bool IsUserDataVisible => currentView == CurrentView.UserData;
+        public bool IsRegisterFormVisible => currentView == CurrentView.RegisterScreen;
+
+        public UserDataDto UserData
+        {
+            get { return _userData; }
+            set
+            {
+                _userData = value;
+                OnPropertyChanged();
+            }
+        }
 
         //---------------------
 
@@ -46,54 +81,69 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ImageSource PasswordVisibilityIcon
         {
-            get {
+            get
+            {
                 if (_showPassword) return _hidePasswordIcon;
                 return _showPasswordIcon;
             }
         }
 
-        private bool _isLoggedIn;
-        public bool IsLoggedIn
-        {
-            get => _isLoggedIn;
-            set { _isLoggedIn = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowLoginForm)); OnPropertyChanged(nameof(ShowRegisterForm)); OnPropertyChanged(nameof(ShowLoggedIn)); }
-        }
+        private ImageSource _userProfilePicture;
 
-        private bool _isRegisterMode;
-        public bool IsRegisterMode
+        public ImageSource UserProfilePicture
         {
-            get => _isRegisterMode;
-            set { _isRegisterMode = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowLoginForm)); OnPropertyChanged(nameof(ShowRegisterForm)); }
+            get { return _userProfilePicture; }
+            set
+            {
+                _userProfilePicture = value;
+                OnPropertyChanged();
+            }
         }
-
-        public bool ShowLoginForm => !IsLoggedIn && !IsRegisterMode;
-        public bool ShowRegisterForm => !IsLoggedIn && IsRegisterMode;
-        public bool ShowLoggedIn => IsLoggedIn;
 
         // LOGIN
-        private string? _login;
-        public string? Login { get => _login; set { _login = value; OnPropertyChanged(); } }
+        private LoginRequestDto _loginRequest = new LoginRequestDto();
 
-        private string? _password;
-        public string? Password { get => _password; set { _password = value; OnPropertyChanged(); } }
+        public LoginRequestDto LoginRequest
+        {
+            get { return _loginRequest; }
+            set
+            {
+                _loginRequest = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void ClearLoginForm()
+        {
+            LoginRequest.Clear();
+            OnPropertyChanged(nameof(LoginRequest));
+        }
 
         // REGISTER
-        private string? _regLogin;
-        public string? RegLogin { get => _regLogin; set { _regLogin = value; OnPropertyChanged(); } }
+        private RegisterRequestDto _registerRequest = new RegisterRequestDto();
 
-        private string? _regEmail;
-        public string? RegEmail { get => _regEmail; set { _regEmail = value; OnPropertyChanged(); } }
+        public RegisterRequestDto RegisterRequest
+        {
+            get { return _registerRequest; }
+            set { 
+                _registerRequest = value;
+                OnPropertyChanged(); 
+            }
+        }
 
-        private string? _regPassword;
-        public string? RegPassword { get => _regPassword; set { _regPassword = value; OnPropertyChanged(); } }
-
-        
+        private void ClearRegistrationForm()
+        {
+            RegisterRequest.Clear();
+            OnPropertyChanged(nameof(RegisterRequest));
+        }
 
         public ICommand LoginCommand { get; }
         public ICommand ShowRegisterCommand { get; }
         public ICommand ShowLoginCommand { get; }
         public ICommand CreateAccountCommand { get; }
         public ICommand TogglePasswordVisibilityCommand { get; }
+
+        public ICommand LogOutCommand { get; }
 
         public AccountViewModel(IIdentityService service)
         {
@@ -103,21 +153,46 @@ namespace OnlineShop_MobileApp.ViewModel
 
             _hidePasswordIcon = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\openeyeicon.png");
             _showPasswordIcon = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\closedeyeicon.png");
+            UserProfilePicture = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\userprofilepicture.png");
 
             //-----------------------------------------
 
 
             LoginCommand = new Command(async () =>
             {
-            if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password)) return;
+                if (string.IsNullOrWhiteSpace(LoginRequest.UserName) || string.IsNullOrWhiteSpace(LoginRequest.Password)) return;
 
-                bool loginAttemptResult = await service.LoginAsync(Login, Password);
+                var loginAttemptResult = await service.LoginAsync(LoginRequest);
 
-                if (!loginAttemptResult) _navigator.ShowAllert("Login failed", "Provided login data was wrong.");
+                if (loginAttemptResult == null) _navigator.ShowAllert("Login failed", "Provided login data was wrong.");
+                else
+                {
+                    _navigator.ShowMessage("Succesfully logged in");
+                    currentView = CurrentView.UserData;
+                    UserData = await _service.GetUserData(loginAttemptResult.UserId);
+
+                    ClearLoginForm();
+
+                    if (UserData == null) UserData = new UserDataDto();
+                }
             });
 
-            ShowRegisterCommand = new Command(() => IsRegisterMode = true);
-            ShowLoginCommand = new Command(() => IsRegisterMode = false);
+            ShowRegisterCommand = new Command(() =>
+            {
+                currentView = CurrentView.RegisterScreen;
+
+                ClearLoginForm();
+            });
+
+
+            ShowLoginCommand = new Command(() =>
+            {
+                currentView = CurrentView.LoginScreen;
+
+                ClearRegistrationForm();
+            });
+
+
             TogglePasswordVisibilityCommand = new Command(() =>
             {
                 if (ShowPassword) ShowPassword = false;
@@ -125,11 +200,36 @@ namespace OnlineShop_MobileApp.ViewModel
                 OnPropertyChanged(nameof(PasswordVisibilityIcon));
             });
 
-            CreateAccountCommand = new Command(() =>
+            CreateAccountCommand = new Command(async () =>
             {
-                // na razie: "utwórz konto" i od razu zaloguj / albo wróć do loginu — jak wolisz
-                IsLoggedIn = true;
+                var regResponse = await _service.CreateNewAccount(RegisterRequest);
+
+                if (regResponse == null)
+                {
+                    _navigator.ShowAllert("Error", "An unexpected error occured");
+                    return;
+                }
+
+                if(regResponse.Success)
+                {
+                    _navigator.ShowMessage(regResponse.Message);
+                    currentView = CurrentView.LoginScreen;
+
+                    ClearRegistrationForm();
+                }
+                else
+                {
+                    _navigator.ShowAllert("Registration form filled incorectly",regResponse.Message);
+                }
+
             });
+
+            LogOutCommand = new Command(() =>
+            {
+                _service.LogOut();
+                currentView = CurrentView.LoginScreen;
+            }
+            );
         }
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

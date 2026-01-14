@@ -1,6 +1,7 @@
 namespace OnlineShop_MobileApp.Views;
 
 using Microsoft.Maui.Controls;
+using OnlineShop_MobileApp.GUI_elements;
 using OnlineShop_MobileApp.Models;
 using OnlineShop_MobileApp.Navigators;
 using OnlineShop_MobileApp.ViewModel;
@@ -100,6 +101,11 @@ public partial class MainPage : ContentPage, IMainPageNavigator
         CreateNewAllertBanner(title, message);
     }
 
+    public void ShowMessage(string message)
+    {
+        CreateNewMessageBanner(message);
+    }
+
     public void RedirectToLoginPage()
     {
         MainThread.BeginInvokeOnMainThread(() =>
@@ -109,27 +115,61 @@ public partial class MainPage : ContentPage, IMainPageNavigator
     }
 
     //-----------
+    private async Task CreateNewMessageBanner(string message)
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            _mainVm.message = new GUI_elements.Message(message);
+            await AnimateBanner(_mainVm.message);
+        });
+    }
 
     private async Task CreateNewAllertBanner(string title, string message)
     {
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             _mainVm.allert = new GUI_elements.Allert(title, message);
-            await AnimateAllertbanner();
+            await AnimateBanner(_mainVm.allert);
         });
     }
 
-    private async Task AnimateAllertbanner()
+    private async Task AnimateBanner(Banner banner)
     {
-        MessageBanner.IsVisible = true;
+        Border animatedBanner;
+        double onViewPos;
+        double hiddenPos;
+        uint animLen;
+        TimeSpan onScreenTime;
 
+        switch (banner)
+        {
+            case Allert a:
+                animatedBanner = AllertBanner;
+                onViewPos = _mainVm.allert.onViewPosition;
+                hiddenPos = _mainVm.allert.hiddenPosition;
+                animLen = (uint)_mainVm.allert.animationLength;
+                onScreenTime = _mainVm.allert.onScreenTime;
+                break;
+
+            case Message m:
+                animatedBanner = MessageBanner;
+                onViewPos = _mainVm.message.onViewPosition;
+                hiddenPos = _mainVm.message.hiddenPosition;
+                animLen = (uint)_mainVm.message.animationLength;
+                onScreenTime = _mainVm.message.onScreenTime;
+                break;
+
+            default:
+                return;
+        }
+
+        animatedBanner.IsVisible = true;
         await Task.Yield();
 
-        await MessageBanner.TranslateTo(0, _mainVm.allert.onViewPosition, ((uint)_mainVm.allert.animationLength), Easing.SpringOut);
-        await Task.Delay(_mainVm.allert.onScreenTime);
-        await MessageBanner.TranslateTo(0, _mainVm.allert.hiddenPosition, ((uint)_mainVm.allert.animationLength), Easing.Linear);
+        await animatedBanner.TranslateTo(0, onViewPos, animLen, Easing.SpringOut);
+        await Task.Delay(onScreenTime);
+        await animatedBanner.TranslateTo(0, hiddenPos, animLen, Easing.Linear);
 
-        _mainVm.allert.IsAllertVisible = false;
-        MessageBanner.IsVisible = false;
+        animatedBanner.IsVisible = false;
     }
 }

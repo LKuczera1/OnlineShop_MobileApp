@@ -25,6 +25,32 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ICommand ChangeOrderDetailsVisiblity { get; }
 
+        public enum CurrentViewEnum
+        {
+            Orders = 0,
+            EmptyPage = 1,
+            UserNotLoggedIn = 2,
+        }
+
+        private CurrentViewEnum _currentView = CurrentViewEnum.UserNotLoggedIn;
+
+        public CurrentViewEnum CurrentView
+        {
+            get { return _currentView; }
+            set
+            {
+                _currentView = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsUserNotLoggedInVisible));
+                OnPropertyChanged(nameof(IsNoOrderVisible));
+                OnPropertyChanged(nameof(IsOrderPageVisible));
+            }
+        }
+
+        public bool IsUserNotLoggedInVisible => CurrentView == CurrentViewEnum.UserNotLoggedIn;
+        public bool IsNoOrderVisible => CurrentView == CurrentViewEnum.EmptyPage;
+        public bool IsOrderPageVisible => CurrentView == CurrentViewEnum.Orders;
+
         public OrdersViewModel(IShoppingService shoppingService)
         {
             _shoppingService = shoppingService;
@@ -34,9 +60,14 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public async Task Refresh()
         {
+            if(!_shoppingService.isUserLoggedIn()) CurrentView = CurrentViewEnum.UserNotLoggedIn;
+
             await GetOrderItems();
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                if (Items.Count == 0) CurrentView = CurrentViewEnum.EmptyPage;
+                else CurrentView = CurrentViewEnum.Orders;
+
                 OnPropertyChanged(nameof(Items));
             });
         }
@@ -50,16 +81,15 @@ namespace OnlineShop_MobileApp.ViewModel
         public async Task GetOrderItems()
         {
             _orders = await _shoppingService.GetOrders();
-
-            if(_orders==null)
-            {
-                _orders = new List<Order>();
-                Items.Clear();
-                return;
-            }
-
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                if(_orders==null)
+                {
+                    _orders = new List<Order>();
+                    Items.Clear();
+                    return;
+                }
+
                 Items.Clear();
                 foreach (var p in _orders)
                 {

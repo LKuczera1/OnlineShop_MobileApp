@@ -18,23 +18,19 @@ namespace OnlineShop_MobileApp.Services
         private readonly ITokenStore _tokenStore;
 
         public string loginendpoint = "/api/Accounts/login";
+        public string getUserDataEndpoint = "/api/Accounts/";
+        public string registerEndpoint = "/api/Accounts/register";
 
         public IdentityService(HttpClient client, IHttpClientFactory httpClientFactory, ITokenStore tokenStore) : base(client, tokenStore)
         {
             _tokenStore = tokenStore;
         }
 
-        public async Task<bool> LoginAsync(string login, string password)
+        public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto loginRequest)
         {
             SetCancelationToken();
 
-            var temp = new
-            {
-                userName = login,
-                password = password,
-            };
-
-            JsonContent loginJson = JsonContent.Create(temp);
+            JsonContent loginJson = JsonContent.Create(loginRequest);
 
             try
             {
@@ -61,24 +57,92 @@ namespace OnlineShop_MobileApp.Services
                         session.AccessToken = loginResponse.Token;
                         session.ExpiresAtUtc = loginResponse.ExpiresAt;
 
-                        await _tokenStore.SetAuthSession(session, login);
+                        await _tokenStore.SetAuthSession(session, loginRequest.UserName);
 
-                        return true;
+                        return loginResponse;
                     }
                     else
                     {
-                        return false;
+                        return null;
                     }
                 }
             }
             catch
             {
-                return false;
+                return null;
+            }
+            return null;
+        }
+
+        public async Task<UserDataDto?> GetUserData(int userId)
+        {
+            SetCancelationToken();
+
+            string endpoint = getUserDataEndpoint + userId.ToString();
+
+            HttpResponseMessage response = await AuthorizedGetAsync(endpoint);
+
+            if (response != null)
+            {
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                }
+                catch
+                {
+                    //Unable to connect - throw an exception
+                }
+                //---------------------------------------------------
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var userdata = await response.Content.ReadFromJsonAsync<UserDataDto>();
+
+                    return userdata;
+                }
+                else
+                {
+                    return null;
+                }
             }
 
-            
+            return null;
+        }
 
-            return false;
+        public async Task<RegisterResponseDto> CreateNewAccount(RegisterRequestDto regRequest)
+        {
+            SetCancelationToken();
+
+            JsonContent messageContent = JsonContent.Create(regRequest);
+            RegisterResponseDto regResponse = new RegisterResponseDto();
+
+            HttpResponseMessage response = await SendAsync(registerEndpoint, messageContent, HttpMethod.Post, ignoreStatusCode:true);
+
+            if (response != null)
+            {
+
+                var responseMessage = await response.Content.ReadAsStringAsync();
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    regResponse.RequestAccepted(responseMessage);
+                }
+                else
+                {
+                    regResponse.RequestDenied(responseMessage);
+                }
+            }
+            else
+            {
+                regResponse.RequestDenied("Unknown error");
+            }
+
+            return regResponse;
+        }
+
+        public void LogOut()
+        {
+            _tokenStore.ClearAsync();
         }
     }
 }

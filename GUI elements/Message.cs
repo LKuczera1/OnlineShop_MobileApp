@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.GUI_elements
 {
-    public class Allert: Banner, INotifyPropertyChanged
+    public class Message: Banner, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -17,23 +17,13 @@ namespace OnlineShop_MobileApp.GUI_elements
         public double animationLength { get; } = 500;
         public TimeSpan onScreenTime { get; set; } = TimeSpan.FromSeconds(2);
 
-        private bool _isAllertVisible;
-        public bool IsAllertVisible
+        private bool _isMessageVisible;
+        public bool IsMessageVisible
         {
-            get { return _isAllertVisible; }
-            set {
-                _isAllertVisible = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _title = string.Empty;
-        public string Title
-        {
-            get { return _title; }
+            get { return _isMessageVisible; }
             set
             {
-                _title = value;
+                _isMessageVisible = value;
                 OnPropertyChanged();
             }
         }
@@ -51,24 +41,22 @@ namespace OnlineShop_MobileApp.GUI_elements
 
         public bool _animating = false;
 
-        public Allert()
+        public Message()
         {
-            IsAllertVisible = false;
+            IsMessageVisible = false;
             _animating = false;
         }
 
-        public Allert(string title, string description)
+        public Message(string description)
         {
-            IsAllertVisible = true;
-            Title = title;
+            IsMessageVisible = true;
             Description = description;
             _animating = false;
         }
 
-        public void ResetAllert(string title, string description)
+        public void ResetAllert(string description)
         {
-            IsAllertVisible = true;
-            Title = title;
+            IsMessageVisible = true;
             Description = description;
             _animating = false;
         }

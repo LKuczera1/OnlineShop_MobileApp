@@ -135,7 +135,7 @@
                                                      VerticalOptions="Center"
                                                      HorizontalOptions="End">
 
-                                    <Button Text="Dodaj do koszyka"
+                                    <Button Text="Add to cart"
                                             FontSize="12"
                                             MinimumHeightRequest="38"
                                             Padding="10,0"
@@ -143,7 +143,7 @@
                                             Command="{Binding Source={x:Reference PagesCv}, Path=BindingContext.AddToCartCommand}"
                                             CommandParameter="{Binding .}" />
 
-                                    <Button Text="Szczegóły"
+                                    <Button Text="Details"
                                             FontSize="12"
                                             MinimumHeightRequest="38"
                                             Padding="10,0"

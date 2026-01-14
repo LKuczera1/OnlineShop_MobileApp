@@ -29,12 +29,23 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private Allert _allert = new Allert();
 
+        private Message _message = new Message();
+
         public Allert allert
         {
             get => _allert;
             set
             {
                 _allert = value;
+                OnPropertyChanged();
+            }
+        }
+        public Message message
+        {
+            get => _message;
+            set
+            {
+                _message = value;
                 OnPropertyChanged();
             }
         }

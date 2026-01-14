@@ -3,17 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.AccountView">
 
-    <ScrollView>
+    <ScrollView VerticalScrollBarVisibility="Never">
         <VerticalStackLayout Padding="24"
                              Spacing="14">
 
             <!-- LOGOWANIE -->
 
-            <VerticalStackLayout IsVisible="{Binding ShowLoginForm}"
+            <VerticalStackLayout IsVisible="{Binding IsLoginScreenvisible}"
                                  Spacing="10">
                 <Label Text="Login" />
-                <Entry Text="{Binding Login}"
-                       Placeholder="Wpisz login" />
+                <Entry Text="{Binding LoginRequest.UserName}"
+                       Placeholder="Enter login" />
 
                 <Label Text="Password" />
                 <Border Stroke="#666"
@@ -27,9 +27,8 @@
                         <!-- Entry bez obramowania -->
                         <Entry x:Name="PasswordEntry"
                                Grid.Column="0"
-                               
-                               Text="{Binding Password}"
-                               Placeholder="Wpisz hasło"
+                               Text="{Binding LoginRequest.Password}"
+                               Placeholder="Enter password"
                                IsPassword="{Binding ShowPassword}"
                                BackgroundColor="Transparent"
                                TextColor="White"
@@ -46,45 +45,170 @@
                     </Grid>
                 </Border>
 
-                <Button Text="Zaloguj"
+                <Button Text="Login"
                         Command="{Binding LoginCommand}" />
 
-                <Button Text="Utwórz konto"
+                <Button Text="Create new account"
                         Command="{Binding ShowRegisterCommand}" />
             </VerticalStackLayout>
 
             <!-- REJESTRACJA -->
-            <VerticalStackLayout IsVisible="{Binding ShowRegisterForm}"
+            <VerticalStackLayout IsVisible="{Binding IsRegisterFormVisible}"
                                  Spacing="10">
+                <Label Text="To create new account fill out the form. All fields are required."
+                       LineBreakMode="WordWrap"
+                       Margin="0,5,0,10"
+                       FontSize="15"/>
                 <Label Text="Login" />
-                <Entry Text="{Binding RegLogin}"
-                       Placeholder="Wpisz login" />
+                <Entry Text="{Binding RegisterRequest.UserName}"
+                       Placeholder="Enter login" />
 
-                <Label Text="Email" />
-                <Entry Text="{Binding RegEmail}"
-                       Placeholder="Wpisz email"
-                       Keyboard="Email" />
+                <Label Text="Password" />
+                <Grid ColumnDefinitions="*,Auto"
+                      VerticalOptions="Center">
 
-                <Label Text="Hasło" />
-                <Grid>
-                    <Entry Text="{Binding RegPassword}"
-                           Placeholder="Wpisz hasło"
-                           IsPassword="True" />
+
+                    <Entry x:Name="PasswordEntryRegistration"
+                           Grid.Column="0"
+                           Text="{Binding RegisterRequest.Password}"
+                           Placeholder="Enter password"
+                           IsPassword="{Binding ShowPassword}"
+                           BackgroundColor="Transparent"
+                           TextColor="White"
+                           PlaceholderColor="#AAAAAA"
+                           ClearButtonVisibility="Never" />
+
+                    <!-- Przycisk (oko) -->
+                    <ImageButton Grid.Column="1"
+                                 Source="{Binding PasswordVisibilityIcon}"
+                                 WidthRequest="24"
+                                 HeightRequest="24"
+                                 BackgroundColor="Transparent"
+                                 Command="{Binding TogglePasswordVisibilityCommand}" />
                 </Grid>
 
-                <Button Text="Utwórz konto"
+                <Label Text="email" />
+                <Entry Text="{Binding RegisterRequest.Email}"
+                       Placeholder="Enter email address"
+                       Keyboard="Email" />
+
+                <Label Text="Phone number" />
+                <Entry Text="{Binding RegisterRequest.PhoneNumber}"
+                       Placeholder="Enter phone number"/>
+
+                <Label Text="Address" />
+                <Entry Text="{Binding RegisterRequest.Address}"
+                       Placeholder="Enter address"/>
+
+                <Label Text="City" />
+                <Entry Text="{Binding RegisterRequest.City}"
+                       Placeholder="Enter city"/>
+
+                <Button Text="Create account"
                         Command="{Binding CreateAccountCommand}" />
 
-                <Button Text="Powrót do logowania"
+                <Button Text="Back to login site"
                         Command="{Binding ShowLoginCommand}" />
             </VerticalStackLayout>
 
             <!-- ZALOGOWANY -->
-            <Label IsVisible="{Binding ShowLoggedIn}"
-                   Text="Zalogowany"
-                   FontSize="20"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center" />
+            <Grid IsVisible="{Binding IsUserDataVisible}"
+                  RowDefinitions="*,*">
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     Grid.Row="0"
+                                     Margin="0,0,0,20">
+                    <Label Text="Logged as:"
+                           FontSize="20"
+                           HorizontalOptions="Center"/>
+                    
+                    <Image Source="{Binding UserProfilePicture}"
+                           Aspect="Fill"
+                           Scale="0.9" />
+
+                    <Border BackgroundColor="Black"
+                            StrokeThickness="0"
+                            Margin="0,2,0,2"
+                            Padding="5">
+                        <Label TextColor="White"
+                               Grid.Row="1">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="User name: "
+                                          FontSize="20" />
+                                    <Span Text="{Binding UserData.UserName}"
+                                          FontSize="20" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Border>
+
+
+
+                    <Border BackgroundColor="Black"
+                            StrokeThickness="0"
+                            Margin="0,2,0,2"
+                            Padding="5">
+                        <Label TextColor="White"
+                               Grid.Row="1">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Email address: "
+                                          FontSize="20" />
+                                    <Span Text="{Binding UserData.Email}"
+                                          FontSize="20" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Border>
+
+
+
+
+                    <Border BackgroundColor="Black"
+                            StrokeThickness="0"
+                            Margin="0,2,0,2"
+                            Padding="5">
+                        <Label TextColor="White"
+                               Grid.Row="1">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Phone number: "
+                                          FontSize="20" />
+                                    <Span Text="{Binding UserData.PhoneNumber}"
+                                          FontSize="20" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Border>
+
+
+
+
+
+                    <Border BackgroundColor="Black"
+                            StrokeThickness="0"
+                            Margin="0,2,0,2"
+                            Padding="5">
+                        <Label TextColor="White"
+                               Grid.Row="1">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="City: "
+                                          FontSize="20" />
+                                    <Span Text="{Binding UserData.City}"
+                                          FontSize="20" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Border>
+
+                </VerticalStackLayout>
+
+                <Button VerticalOptions="End"
+                        Grid.Row="1"
+                        Text="Logout"
+                        Command="{Binding LogOutCommand}"/>
+            </Grid>
 
         </VerticalStackLayout>
     </ScrollView>

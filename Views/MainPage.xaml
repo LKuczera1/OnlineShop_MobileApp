@@ -81,7 +81,7 @@
         </Grid>
 
         <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
-        <Border x:Name="MessageBanner"
+        <Border x:Name="AllertBanner"
                 AbsoluteLayout.LayoutBounds="0,0,1,-1"
                 AbsoluteLayout.LayoutFlags="WidthProportional"
                 MinimumHeightRequest="35"
@@ -113,6 +113,31 @@
                        LineBreakMode="WordWrap"
                        HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
+        </Border>
+
+        <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
+        <Border x:Name="MessageBanner"
+                AbsoluteLayout.LayoutBounds="0,0,1,-1"
+                AbsoluteLayout.LayoutFlags="WidthProportional"
+                MinimumHeightRequest="35"
+                Padding="12"
+                Margin="12,12,12,0"
+                StrokeThickness="2"
+                Stroke="#00FA0B"
+                BackgroundColor="#4FFF57"
+                IsVisible="{Binding message.IsMessageVisible}"
+                TranslationY="-300"
+                ZIndex="200"
+                InputTransparent="True">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+
+            <Label Text="{Binding message.Description}"
+                   TextColor="White"
+                   LineBreakMode="WordWrap"
+                   HorizontalTextAlignment="Center" />
         </Border>
 
     </AbsoluteLayout>

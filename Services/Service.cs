@@ -78,17 +78,21 @@ namespace OnlineShop_MobileApp.Services
 
         /// <summary>
         /// Method used to send data to APIs endpoint without authorization. url - API's endpoint, messageContent - Content of message,
-        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's post by default.
+        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's post by default, ignoreStatusCode - if it's true then
+        /// method returns HttpResponseMessage regardles status code. Ignore status code is false by default, so this method may throw 
+        /// excepction if response code is different than OK - 200.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="messageContent"></param>
         /// <param name="httpMethod"></param>
         /// <param name="HttpCmpOptions"></param>
+        /// <param name="ignoreStatusCode"></param>
         /// <returns></returns>
         protected async Task<HttpResponseMessage> SendAsync(string url,
             JsonContent? messageContent = null,
             HttpMethod? httpMethod = null,
-            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead)
+            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead,
+            bool ignoreStatusCode = false)
         {
             SetCancelationToken();
 
@@ -99,6 +103,8 @@ namespace OnlineShop_MobileApp.Services
             if (messageContent != null) { request.Content = messageContent; }
 
             var response = await httpClient.SendAsync(request, HttpCmpOptions, cts.Token);
+
+            if(ignoreStatusCode) return response;
 
             try
             {
@@ -114,15 +120,19 @@ namespace OnlineShop_MobileApp.Services
 
         /// <summary>
         /// Method used to fetch data from APIs endpoint without authorization. url - API's endpointm
-        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's GET by default.
+        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's GET by default, ignoreStatusCode - if it's true then
+        /// method returns HttpResponseMessage regardles status code. Ignore status code is false by default, so this method may throw 
+        /// excepction if response code is different than OK - 200.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="httpMethod"></param>
         /// <param name="HttpCmpOptions"></param>
+        /// <param name="ignoreStatusCode"></param>
         /// <returns></returns>
         protected async Task<HttpResponseMessage> GetAsync(string url,
             HttpMethod? httpMethod = null,
-            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead)
+            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead,
+            bool ignoreStatusCode = false)
         {
             SetCancelationToken();
 
@@ -132,6 +142,8 @@ namespace OnlineShop_MobileApp.Services
             HttpRequestMessage request = new HttpRequestMessage(httpMethod, url);
 
             var response = await httpClient.SendAsync(request, HttpCmpOptions, cts.Token);
+
+            if (ignoreStatusCode) return response;
 
             try
             {
@@ -147,17 +159,21 @@ namespace OnlineShop_MobileApp.Services
 
         /// <summary>
         /// Method used to send data to APIs endpoint with authorization. url - API's endpoint, messageContent - Content of message,
-        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's post by default.
+        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's post by default, ignoreStatusCode - if it's true then
+        /// method returns HttpResponseMessage regardles status code. Ignore status code is false by default, so this method may throw 
+        /// excepction if response code is different than OK - 200.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="messageContent"></param>
         /// <param name="httpMethod"></param>
         /// <param name="HttpCmpOptions"></param>
+        /// <param name="ignoreStatusCode"></param>
         /// <returns></returns>
         protected async Task<HttpResponseMessage> AuthorizedSendAsync(string url,
             JsonContent? messageContent = null,
             HttpMethod? httpMethod = null,
-            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead)
+            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead,
+            bool ignoreStatusCode = false)
         {
             //--- JWT logic ---
             string JWTtoken = null;
@@ -189,6 +205,8 @@ namespace OnlineShop_MobileApp.Services
 
             var response = await httpClient.SendAsync(request, HttpCmpOptions, cts.Token);
 
+            if (ignoreStatusCode) return response;
+
             try
             {
                 response.EnsureSuccessStatusCode();
@@ -199,7 +217,7 @@ namespace OnlineShop_MobileApp.Services
             }
 
             //Możliwa utrata waznosci tokenu, jednak w tym przypadku bardziej prawdopodobny brak dostepu
-            //W itoken securestore 401 oznacza utrate waznosci tokenu
+            //W itoken securestore 401 oznacza utrate waznosci tokenu, nie potrzebne tu bo itak wywali exception przy ensucresuccesstatus...
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 //await _tokenStore.ClearAsync();
@@ -210,16 +228,20 @@ namespace OnlineShop_MobileApp.Services
 
         /// <summary>
         /// Method used to fetch data from APIs endpoint with authorization. url - API's endpointm
-        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's GET by default.
+        /// httpMethod - target CRUD operation (GET / POST / PUT / DELETE etc.), it's GET by default, ignoreStatusCode - if it's true then
+        /// method returns HttpResponseMessage regardles status code. Ignore status code is false by default, so this method may throw 
+        /// excepction if response code is different than OK - 200.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="httpMethod"></param>
         /// <param name="HttpCmpOptions"></param>
+        /// <param name="ignoreStatusCode"></param>
         /// <returns></returns>
 
         protected async Task<HttpResponseMessage> AuthorizedGetAsync(string url, 
             HttpMethod? httpMethod = null, 
-            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead)
+            HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead,
+            bool ignoreStatusCode = false)
         {
             //--- JWT logic ---
             string JWTtoken = null;
@@ -250,6 +272,8 @@ namespace OnlineShop_MobileApp.Services
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", JWTtoken);
 
             var response = await httpClient.SendAsync(request, HttpCmpOptions, cts.Token);
+
+            if (ignoreStatusCode) return response;
 
             try
             {
