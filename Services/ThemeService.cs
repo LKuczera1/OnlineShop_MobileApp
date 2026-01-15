@@ -17,7 +17,7 @@ namespace OnlineShop_MobileApp.Services
 
     public class ThemeService
     {
-        public AppThemeMode Current { get; private set; } = AppThemeMode.Dark;
+        public AppThemeMode Current { get; private set; } = AppThemeMode.Light;
 
         private CustomStyles _customStyles;
 

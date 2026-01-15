@@ -136,40 +136,29 @@ public partial class MainPage : ContentPage, IMainPageNavigator
     private async Task AnimateBanner(Banner banner)
     {
         Border animatedBanner;
-        double onViewPos;
-        double hiddenPos;
-        uint animLen;
-        TimeSpan onScreenTime;
 
         switch (banner)
         {
             case Allert a:
                 animatedBanner = AllertBanner;
-                onViewPos = _mainVm.allert.onViewPosition;
-                hiddenPos = _mainVm.allert.hiddenPosition;
-                animLen = (uint)_mainVm.allert.animationLength;
-                onScreenTime = _mainVm.allert.onScreenTime;
                 break;
 
             case Message m:
                 animatedBanner = MessageBanner;
-                onViewPos = _mainVm.message.onViewPosition;
-                hiddenPos = _mainVm.message.hiddenPosition;
-                animLen = (uint)_mainVm.message.animationLength;
-                onScreenTime = _mainVm.message.onScreenTime;
                 break;
 
             default:
                 return;
         }
 
-        animatedBanner.IsVisible = true;
-        await Task.Yield();
+        banner.IsVisible = true;
 
-        await animatedBanner.TranslateTo(0, onViewPos, animLen, Easing.SpringOut);
-        await Task.Delay(onScreenTime);
-        await animatedBanner.TranslateTo(0, hiddenPos, animLen, Easing.Linear);
+        await animatedBanner.TranslateTo(0, banner.OnViewPosition, (uint)banner.AnimationLength, Easing.SpringOut);
+        await Task.Delay(banner.OnScreenTime);
+        await animatedBanner.TranslateTo(0, banner.HiddenPosition, (uint)banner.AnimationLength, Easing.Linear);
 
-        animatedBanner.IsVisible = false;
+        banner.IsVisible = false;
+
+
     }
 }

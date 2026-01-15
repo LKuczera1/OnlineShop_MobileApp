@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.OrdersView">
 
-    <Grid Padding="22"
-          BackgroundColor="{DynamicResource BackgroundColor}">
+    <Grid BackgroundColor="{DynamicResource BackgroundColor}">
 
         <Label IsVisible="{Binding IsNoOrderVisible}"
                Text="You haven't placed any orders yet."

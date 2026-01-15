@@ -3,12 +3,76 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.MainPage">
 
+    
     <AbsoluteLayout>
+
+        <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
+        <Border x:Name="AllertBanner"
+                AbsoluteLayout.LayoutBounds="0,0,1,100"
+                AbsoluteLayout.LayoutFlags="WidthProportional"
+                MinimumHeightRequest="35"
+                Padding="12"
+                Margin="12,12,12,0"
+                StrokeThickness="2"
+                Stroke="#A30000"
+                BackgroundColor="#470000"
+                IsVisible="{Binding allert.IsVisible}"
+                TranslationY="0"
+                ZIndex="200"
+                InputTransparent="True">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding allert.Title}"
+                       FontAttributes="Bold"
+                       FontSize="16"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center" />
+
+                <BoxView HeightRequest="1"
+                         Opacity="0.7"
+                         HorizontalOptions="Fill" />
+
+                <Label Text="{Binding allert.Description}"
+                       TextColor="White"
+                       LineBreakMode="WordWrap"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
+        <Border x:Name="MessageBanner"
+                AbsoluteLayout.LayoutBounds="0,0,1,60"
+                AbsoluteLayout.LayoutFlags="WidthProportional"
+                MinimumHeightRequest="35"
+                Padding="12"
+                Margin="12,12,12,0"
+                StrokeThickness="2"
+                Stroke="#00FA0B"
+                BackgroundColor="#00D10A"
+                IsVisible="{Binding message.IsVisible}"
+                TranslationY="0"
+                ZIndex="200"
+                InputTransparent="True">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+
+            <Label Text="{Binding message.Description}"
+                   TextColor="White"
+                   LineBreakMode="WordWrap"
+                   HorizontalTextAlignment="Center" />
+        </Border>
 
         <!-- CAŁY DOTYCHCZASOWY UKŁAD STRONY -->
         <Grid RowDefinitions="auto,*,auto"
               AbsoluteLayout.LayoutBounds="0,0,1,1"
-              AbsoluteLayout.LayoutFlags="All">
+              AbsoluteLayout.LayoutFlags="All"
+              Padding="0">
 
             <!-- GÓRNY PASEK -->
             <Grid Grid.Row="0"
@@ -22,7 +86,8 @@
                         Clicked="OnMenuClicked" />
                 <Label Text="OnlineShop"
                        VerticalOptions="Center"
-                       HorizontalOptions="Center" />
+                       HorizontalOptions="Center" 
+                       FontSize="25"/>
             </Grid>
 
             <!-- CONTENT (środek) -->
@@ -34,34 +99,39 @@
             <Grid Grid.Row="2"
                   BackgroundColor="{DynamicResource LowerBarColor}"
                   VerticalOptions="Start"
-                  MinimumHeightRequest="80">
+                  MinimumHeightRequest="60">
                 <Grid ColumnDefinitions="*,*,*,*"
                       ColumnSpacing="8"
-                      MaximumWidthRequest="700">
+                      MaximumWidthRequest="700"
+                      Padding="0">
                     <Button Grid.Column="0"
                             Text="Catalog"
                             CornerRadius="10"
-                            HeightRequest="70"
+                            HeightRequest="50"
                             Command="{Binding SwitchTabCommand}"
-                            CommandParameter="Catalog"/>
+                            CommandParameter="Catalog"
+                            FontSize="16"/>
                     <Button Grid.Column="1"
                             Text="Cart"
                             CornerRadius="10"
-                            HeightRequest="70"
+                            HeightRequest="50"
                             Command="{Binding SwitchTabCommand}"
-                            CommandParameter="Cart" />
+                            CommandParameter="Cart"
+                            FontSize="16" />
                     <Button Grid.Column="2"
                             Text="Orders"
                             CornerRadius="10"
-                            HeightRequest="70"
+                            HeightRequest="50"
                             Command="{Binding SwitchTabCommand}"
-                            CommandParameter="Orders" />
+                            CommandParameter="Orders"
+                            FontSize="16" />
                     <Button Grid.Column="3"
                             Text="Account"
                             CornerRadius="10"
-                            HeightRequest="70"
+                            HeightRequest="50"
                             Command="{Binding SwitchTabCommand}"
-                            CommandParameter="Account" />
+                            CommandParameter="Account"
+                            FontSize="16" />
                 </Grid>
             </Grid>
 
@@ -84,8 +154,8 @@
                       TranslationX="-320"
                       Padding="0">
 
-                    <VerticalStackLayout Padding="16"
-                                         Spacing="12">
+                    <VerticalStackLayout Padding="5"
+                                         Spacing="6">
                         <Label Text="Menu"
                                FontSize="20" />
                         <Border StrokeThickness="0"
@@ -118,67 +188,7 @@
 
         </Grid>
 
-        <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
-        <Border x:Name="AllertBanner"
-                AbsoluteLayout.LayoutBounds="0,0,1,-1"
-                AbsoluteLayout.LayoutFlags="WidthProportional"
-                MinimumHeightRequest="35"
-                Padding="12"
-                Margin="12,12,12,0"
-                StrokeThickness="2"
-                Stroke="#A30000"
-                BackgroundColor="#470000"
-                IsVisible="{Binding allert.IsAllertVisible}"
-                TranslationY="-300"
-                ZIndex="200"
-                InputTransparent="True">
-
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="5" />
-            </Border.StrokeShape>
-
-            <VerticalStackLayout Spacing="6">
-                <Label Text="{Binding allert.Title}"
-                       FontAttributes="Bold"
-                       FontSize="16"
-                       TextColor="White"
-                       HorizontalTextAlignment="Center" />
-
-                <BoxView HeightRequest="1"
-                         Opacity="0.7"
-                         HorizontalOptions="Fill" />
-
-                <Label Text="{Binding allert.Description}"
-                       TextColor="White"
-                       LineBreakMode="WordWrap"
-                       HorizontalTextAlignment="Center" />
-            </VerticalStackLayout>
-        </Border>
-
-        <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
-        <Border x:Name="MessageBanner"
-                AbsoluteLayout.LayoutBounds="0,0,1,-1"
-                AbsoluteLayout.LayoutFlags="WidthProportional"
-                MinimumHeightRequest="35"
-                Padding="12"
-                Margin="12,12,12,0"
-                StrokeThickness="2"
-                Stroke="#00FA0B"
-                BackgroundColor="#4FFF57"
-                IsVisible="{Binding message.IsMessageVisible}"
-                TranslationY="-300"
-                ZIndex="200"
-                InputTransparent="True">
-
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="5" />
-            </Border.StrokeShape>
-
-            <Label Text="{Binding message.Description}"
-                   TextColor="White"
-                   LineBreakMode="WordWrap"
-                   HorizontalTextAlignment="Center" />
-        </Border>
+        
 
     </AbsoluteLayout>
 </ContentPage>

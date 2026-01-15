@@ -38,8 +38,9 @@
 
                             <!-- 3 kolumny: Thumbnail | Tekst | Kontrolki -->
                             <Grid ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="12"
-                                  VerticalOptions="Center">
+                                  ColumnSpacing="5"
+                                  VerticalOptions="Center"
+                                  Padding="0">
 
                                 <!-- LEWA: Thumbnail -->
                                 <Border Grid.Column="0"
@@ -69,11 +70,11 @@
                                                      VerticalOptions="Center">
 
                                     <Label Text="{Binding product.Name}"
-                                           FontSize="15"
+                                           FontSize="20"
                                            LineBreakMode="TailTruncation" />
 
                                     <Label Text="{Binding product.Description}"
-                                           FontSize="10"
+                                           FontSize="14"
                                            Opacity="0.8"
                                            LineBreakMode="WordWrap" />
                                 </VerticalStackLayout>
@@ -89,6 +90,7 @@
                                                            HorizontalOptions="End">
 
                                         <Button Text="-"
+                                                FontSize="30"
                                                 WidthRequest="44"
                                                 HeightRequest="44"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
@@ -98,13 +100,14 @@
                                         <Border WidthRequest="44"
                                                HeightRequest="44"
                                                Padding="0"
-                                               BackgroundColor="Transparent">
+                                               BackgroundColor="{DynamicResource EntryColor}">
                                             <Label Text="{Binding Quantity}"
                                                    HorizontalOptions="Center"
                                                    VerticalOptions="Center" />
                                         </Border>
 
                                         <Button Text="+"
+                                                FontSize="25"
                                                 WidthRequest="44"
                                                 HeightRequest="44"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
@@ -112,6 +115,7 @@
                                                 CommandParameter="{Binding .}" />
 
                                         <Button Text="U"
+                                                FontSize="22"
                                                 WidthRequest="44"
                                                 HeightRequest="44"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
@@ -156,16 +160,18 @@
 
         <!-- DÓŁ: placeholder (ukryj gdy user niezalogowany) -->
         <Border Grid.Row="1"
-                Padding="12"
+                Padding="5"
                 Margin="0,5,0,0"
                 IsVisible="{Binding IsCartViewAvailable}"
                 BackgroundColor="{DynamicResource LowerBarColor}"
                 MaximumHeightRequest="200"
                 StrokeThickness="0">
 
-            <Grid ColumnDefinitions="7*,3*">
+            <Grid ColumnDefinitions="7*,3*"
+                  Padding="5">
                 <Grid RowDefinitions="*,*,*"
-                      Grid.Column="0">
+                      Grid.Column="0"
+                      Padding="0">
 
                     <Label Text="Order summary:"
                            Grid.Row="0" />

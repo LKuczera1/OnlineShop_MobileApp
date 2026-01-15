@@ -16,6 +16,7 @@
     <Color x:Key="ButtonColor">#3B7EFF</Color>
     <Color x:Key="PressedButtonColor">#0039A3</Color>
     <Color x:Key="DisabledButtonColor">#828282</Color>
+    <Color x:Key="DisabledButtonTextColor">#00091A</Color>
 
     <Color x:Key="LabelColor">#00091A</Color>
 
