@@ -4,7 +4,7 @@
              x:Class="OnlineShop_MobileApp.Views.CartView">
 
     <Grid RowDefinitions="6*,1*"
-          Padding="12">
+          BackgroundColor="{DynamicResource BackgroundColor}">
 
         <!-- Komunikat gdy użytkownik nie jest zalogowany -->
         <Label Grid.Row="0"
@@ -30,11 +30,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Border Margin="0,0,0,2"
-                                Padding="8,8,8,12"
-                                BackgroundColor="Black"
-                                StrokeThickness="0"
-                                MinimumHeightRequest="100">
+                        <Border class="CollectionItemBorder">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8" />
@@ -74,12 +70,10 @@
 
                                     <Label Text="{Binding product.Name}"
                                            FontSize="15"
-                                           TextColor="White"
                                            LineBreakMode="TailTruncation" />
 
                                     <Label Text="{Binding product.Description}"
                                            FontSize="10"
-                                           TextColor="White"
                                            Opacity="0.8"
                                            LineBreakMode="WordWrap" />
                                 </VerticalStackLayout>
@@ -101,16 +95,14 @@
                                   Path=BindingContext.DecreaseCommand}"
                                                 CommandParameter="{Binding .}" />
 
-                                        <Frame WidthRequest="44"
+                                        <Border WidthRequest="44"
                                                HeightRequest="44"
                                                Padding="0"
-                                               BorderColor="#777"
                                                BackgroundColor="Transparent">
                                             <Label Text="{Binding Quantity}"
-                                                   TextColor="White"
                                                    HorizontalOptions="Center"
                                                    VerticalOptions="Center" />
-                                        </Frame>
+                                        </Border>
 
                                         <Button Text="+"
                                                 WidthRequest="44"
@@ -128,7 +120,6 @@
                                     </HorizontalStackLayout>
 
                                     <Label FontSize="12"
-                                           TextColor="White"
                                            Opacity="0.8"
                                            HorizontalTextAlignment="End">
                                         <Label.FormattedText>
@@ -141,7 +132,6 @@
                                     </Label>
 
                                     <Label FontSize="12"
-                                           TextColor="White"
                                            Opacity="0.8"
                                            HorizontalTextAlignment="End">
                                         <Label.FormattedText>
@@ -169,7 +159,7 @@
                 Padding="12"
                 Margin="0,5,0,0"
                 IsVisible="{Binding IsCartViewAvailable}"
-                BackgroundColor="Black"
+                BackgroundColor="{DynamicResource LowerBarColor}"
                 MaximumHeightRequest="200"
                 StrokeThickness="0">
 
@@ -180,8 +170,7 @@
                     <Label Text="Order summary:"
                            Grid.Row="0" />
 
-                    <Label TextColor="White"
-                           Grid.Row="1">
+                    <Label Grid.Row="1">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="Total price: " />

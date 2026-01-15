@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.OrdersView">
 
-    <Grid Padding="22">
+    <Grid Padding="22"
+          BackgroundColor="{DynamicResource BackgroundColor}">
 
         <Label IsVisible="{Binding IsNoOrderVisible}"
                Text="You haven't placed any orders yet."
@@ -29,16 +30,12 @@
                     <Grid Padding="0"
                           VerticalOptions="Start">
 
-                        <Border Margin="0,0,0,2"
-                                Padding="8,8,8,12"
-                                BackgroundColor="Black"
-                                StrokeThickness="0">
+                        <Border class="CollectionItemBorder">
                             <Grid ColumnDefinitions="*,auto">
 
                                 <VerticalStackLayout Grid.Column="0"
                                                      HorizontalOptions="Start">
-                                    <Label TextColor="White"
-                                           Grid.Row="1">
+                                    <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="Order number: " />
@@ -48,8 +45,7 @@
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                    <Label TextColor="White"
-                                           Grid.Row="1">
+                                    <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="Total price: " />
@@ -59,8 +55,7 @@
                                     </Label>
                                     <VerticalStackLayout IsVisible="{Binding AreDetailsVisible}">
                                         
-                                        <Label TextColor="White"
-                                               Grid.Row="1"
+                                        <Label
                                                LineBreakMode="WordWrap"
                                                Margin="0,10,0,10">
                                             <Label.FormattedText>
@@ -71,8 +66,7 @@
                                             </Label.FormattedText>
                                         </Label>
 
-                                        <Label TextColor="White"
-                                               Grid.Row="1">
+                                        <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Ordered time: " />
@@ -81,8 +75,7 @@
                                             </Label.FormattedText>
                                         </Label>
                                         
-                                        <Label TextColor="White"
-                                               Grid.Row="1">
+                                        <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Packed time: " />
@@ -91,8 +84,7 @@
                                             </Label.FormattedText>
                                         </Label>
 
-                                        <Label TextColor="White"
-                                               Grid.Row="1">
+                                        <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Send time: " />
@@ -102,8 +94,7 @@
                                         </Label>
 
 
-                                        <Label TextColor="White"
-                                               Grid.Row="1">
+                                        <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Delivered time: " />

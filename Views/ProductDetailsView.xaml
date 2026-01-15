@@ -5,7 +5,8 @@
              x:Name="ThisView">
 
     <Grid RowDefinitions="*,Auto"
-          Padding="5">
+          BackgroundColor="{DynamicResource BackgroundColor}"
+          Padding="0">
 
         <!-- Góra: przewijalna zawartość -->
         <ScrollView Grid.Row="0"
@@ -35,20 +36,15 @@
                 <Label Text="{Binding Name}"
                        FontSize="26"
                        FontAttributes="Bold"
-                       TextColor="White"
                        LineBreakMode="WordWrap" />
 
                 <Grid ColumnDefinitions="*,*"
                       ColumnSpacing="12"
-                      Margin="0,0,0,0">
+                      Margin="0"
+                      Padding="0">
 
-                    <Border StrokeThickness="0"
-                            BackgroundColor="Gray"
-                            HeightRequest="30"
+                    <Border class="DataField"
                             Grid.Column="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="4" />
-                        </Border.StrokeShape>
 
                         <Label Text="{Binding Price, StringFormat='Price: {0:0.00}'}"
                                FontSize="14"
@@ -60,13 +56,8 @@
 
                     </Border>
 
-                    <Border StrokeThickness="0"
-                            BackgroundColor="Gray"
-                            HeightRequest="30"
+                    <Border class="DataField"
                             Grid.Column="1">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="4" />
-                        </Border.StrokeShape>
 
                         <Label Text="{Binding Stock, StringFormat='Stock: {0:0.###########}'}"
                                FontSize="14"
@@ -82,7 +73,6 @@
                 <!-- Opis -->
                 <Label Text="{Binding Description}"
                        FontSize="14"
-                       TextColor="White"
                        Opacity="0.85"
                        LineBreakMode="WordWrap" />
 

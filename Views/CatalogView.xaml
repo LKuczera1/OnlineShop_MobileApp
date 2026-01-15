@@ -3,14 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.CatalogView">
     <Grid RowDefinitions="Auto,*,Auto"
-          Padding="12"
-          VerticalOptions="Fill">
+          VerticalOptions="Fill"
+          BackgroundColor="{DynamicResource BackgroundColor}">
 
         <Grid Grid.Row="0"
               ColumnDefinitions="*,Auto"
-              MaximumHeightRequest="50"
+              MaximumHeightRequest="70"
               VerticalOptions="Center"
-              Margin="0,5,0,5">
+              Padding="0">
 
             <Grid Grid.Column="0"
                   Margin="0,0,5,0">
@@ -73,14 +73,7 @@
                     <Grid Padding="0"
                           VerticalOptions="Start"
                           MaximumHeightRequest="120">
-                        <Border Margin="0,0,0,2"
-                                Padding="8,8,8,12"
-                                BackgroundColor="Black"
-                                StrokeThickness="0">
-
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8" />
-                            </Border.StrokeShape>
+                        <Border class="CollectionItemBorder">
 
                             <Grid ColumnDefinitions="Auto,*,Auto"
                                   ColumnSpacing="12"
@@ -119,12 +112,10 @@
 
                                     <Label Text="{Binding Name}"
                                            FontSize="18"
-                                           TextColor="White"
                                            LineBreakMode="TailTruncation" />
 
                                     <Label Text="{Binding Description}"
                                            FontSize="13"
-                                           TextColor="White"
                                            Opacity="0.8"
                                            LineBreakMode="WordWrap" />
                                 </VerticalStackLayout>
