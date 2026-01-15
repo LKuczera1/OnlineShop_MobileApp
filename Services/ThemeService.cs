@@ -19,6 +19,8 @@ namespace OnlineShop_MobileApp.Services
     {
         public AppThemeMode Current { get; private set; } = AppThemeMode.Dark;
 
+        private CustomStyles _customStyles;
+
         private ResourceDictionary _light;
         private ResourceDictionary _dark;
         private ResourceDictionary _gold;
@@ -34,11 +36,25 @@ namespace OnlineShop_MobileApp.Services
 
         public void Initialize()
         {
+            _customStyles = new CustomStyles();
+
             _light = new LightTheme();
             _dark = new DarkTheme();
             _gold = new GoldTheme();
 
+            EnsureStylesLoaded();
             Apply(Current);
+        }
+
+        private void EnsureStylesLoaded()
+        {
+            var app = Application.Current;
+            if (app is null) return;
+
+            var merged = app.Resources.MergedDictionaries;
+
+            if (!merged.Contains(_customStyles!))
+                merged.Add(_customStyles!);
         }
 
         public void Apply(AppThemeMode mode)
@@ -47,6 +63,8 @@ namespace OnlineShop_MobileApp.Services
 
             var app = Application.Current;
             if (app is null) return;
+
+            EnsureStylesLoaded();
 
             var merged = app.Resources.MergedDictionaries;
 

@@ -6,35 +6,9 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <!--Fonts styles-->
-
-            <!-- Default font style for Label -->
-            <Style TargetType="Label">
-                <Setter Property="FontFamily"
-                        Value="Calibri" />
-                <Setter Property="FontSize"
-                        Value="15" />
-            </Style>
-
-            <!-- Default font style for Button -->
-            <Style TargetType="Button">
-                <Setter Property="FontFamily"
-                        Value="Calibri" />
-                <Setter Property="FontSize"
-                        Value="15" />
-            </Style>
-
-            <!-- Default font style for Entry -->
-            <Style TargetType="Entry">
-                <Setter Property="FontFamily"
-                        Value="Calibri" />
-                <Setter Property="FontSize"
-                        Value="15" />
-            </Style>
-
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="Resources/Themes/CustomStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

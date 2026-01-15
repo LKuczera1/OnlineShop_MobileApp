@@ -90,6 +90,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Resources\Themes\DarkTheme.xaml.cs">
+	    <DependentUpon>DarkTheme.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Themes\LightTheme.xaml.cs">
+	    <DependentUpon>LightTheme.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Themes\GoldTheme.xaml.cs">
+	    <DependentUpon>GoldTheme.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\AccountView.xaml.cs">
 	    <DependentUpon>AccountView.xaml</DependentUpon>
 	  </Compile>
@@ -112,6 +121,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Resources\Themes\GoldTheme.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Resources\Themes\CustomStyles.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\AccountView.xaml">
