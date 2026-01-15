@@ -1,4 +1,5 @@
 ﻿using OnlineShop_MobileApp.GUI_elements;
+using OnlineShop_MobileApp.Services;
 using OnlineShop_MobileApp.Views;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -14,6 +15,7 @@ namespace OnlineShop_MobileApp.ViewModel
         private readonly View _cart;
         private readonly View _orders;
         private readonly View _account;
+        private readonly ThemeService _themeService;
 
         private View _currentView;
         public View CurrentView
@@ -50,14 +52,20 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
+        public ICommand SwitchToLightTheme { get; set; }
+        public ICommand SwitchToDarkTheme { get; set; }
+        public ICommand SwitchToGoldTheme { get; set; }
+
+
         public ICommand SwitchTabCommand { get; }
 
-        public MainPageViewModel(CatalogView catalog, AccountView account, CartView cart, OrdersView orders)
+        public MainPageViewModel(CatalogView catalog, AccountView account, CartView cart, OrdersView orders, ThemeService themeService)
         {
             _catalog = catalog;
             _cart = cart;
             _orders = orders;
             _account = account;
+            _themeService = themeService;
 
             _currentView = _catalog;
 
@@ -84,6 +92,14 @@ namespace OnlineShop_MobileApp.ViewModel
                         break;
                 }
             });
+
+
+
+
+            SwitchToLightTheme = new Command(() => _themeService.Apply(AppThemeMode.Light));
+            SwitchToDarkTheme = new Command(() => _themeService.Apply(AppThemeMode.Dark));
+            SwitchToGoldTheme = new Command(() => _themeService.Apply(AppThemeMode.Gold));
+
         }
 
         private void RefreshCurrentView(View view)

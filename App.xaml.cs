@@ -1,12 +1,16 @@
-﻿using OnlineShop_MobileApp.Views;
+﻿using OnlineShop_MobileApp.Services;
+using OnlineShop_MobileApp.Views;
 
 namespace OnlineShop_MobileApp
 {
     public partial class App : Application
     {
-        public App(AppShell shell)
+        public App(AppShell shell, ThemeService themeService)
         {
             InitializeComponent();
+
+            themeService.Initialize();
+
             MainPage = shell;
         }
 

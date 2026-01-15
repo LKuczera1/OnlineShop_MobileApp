@@ -67,9 +67,27 @@
                       TranslationX="-320">
 
                     <VerticalStackLayout Padding="16" Spacing="12">
-                        <Label Text="MENU" TextColor="White" FontSize="20"/>
-                        <Button Text="Opcja 1" />
-                        <Button Text="Opcja 2" />
+                        <Label Text="Menu" TextColor="White" FontSize="20"/>
+                        <Border StrokeThickness="0"
+                                BackgroundColor="Black"
+                                Padding="5">
+                            
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="5">
+
+                                <Label Text="Switch color theme" />
+
+                                <Button Text="Light Theme"
+                                        Command="{Binding SwitchToLightTheme}"/>
+                                <Button Text="Dark Theme"
+                                        Command="{Binding SwitchToDarkTheme}" />
+                                <Button Text="Gold Theme"
+                                        Command="{Binding SwitchToGoldTheme}" />
+                            </VerticalStackLayout>
+                        </Border>
                     </VerticalStackLayout>
 
                     <Grid.GestureRecognizers>

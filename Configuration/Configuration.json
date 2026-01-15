@@ -26,16 +26,15 @@
             "Identity": "https://localhost:7002",
             "Shopping": "https://localhost:7003"
         },
-        "DarkTheme": true,
-        "DarkThemeColorStyles": {
-            "Background": "#ffffff",
-            "MainComponents": "#66ccff",
-            "SlidingMenu": "#33ccff",
-            "Tiles": "#6699ff",
-            "Buttons": "#0066ff",
-            "Text": "#000000"
+        "DarkTheme": {
+            "BackgroundColor": "#ffffff",
+            "FontColor": "#66ccff",
+            "BorderBackgroundColor": "#33ccff",
+            "ButtonColor": "#6699ff",
+            "PressedButtonColor": "#0066ff",
+            "ButtonFontColor": "#000000"
         },
-        "WhiteThemeColorStyles": {
+        "WhiteTheme": {
             "Background": "#ffffff",
             "MainComponents": "#66ccff",
             "SlidingMenu": "#33ccff",

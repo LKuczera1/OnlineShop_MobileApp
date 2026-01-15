@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Graphics.Text;
+using OnlineShop_MobileApp.GUI_elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +34,12 @@ namespace OnlineShopMobileApp.Configuration
 
         public string EnvironmentType { get; set; }
         public ScreenResolution screenResolution { get; set; }
-        public bool DarkTheme { get; set; }
 
         public Services services { get; set; }
+
+        public ColorTheme DarkTheme { get; set; }
+        public ColorTheme WhiteTheme { get; set; }
+        //public ColorTheme GoldTheme { get; set; }
 
         public ConfigurationProperties() 
         {

@@ -117,6 +117,8 @@ namespace OnlineShop_MobileApp
 
             builder.Services.AddSingleton<AppShell>();
 
+            builder.Services.AddSingleton<ThemeService>();
+
             builder.Services.AddTransient<IServicesResolver, ServicesResolver>();
 
             builder.Services.AddSingleton<CatalogViewModel>();
@@ -178,6 +180,8 @@ namespace OnlineShop_MobileApp
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("calibrib.ttf", "CalibriB");
+                    fonts.AddFont("calibri.ttf", "Calibri");
                 });
 
 #if DEBUG
