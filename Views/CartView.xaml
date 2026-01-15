@@ -36,118 +36,134 @@
                                 <RoundRectangle CornerRadius="8" />
                             </Border.StrokeShape>
 
-                            <!-- 3 kolumny: Thumbnail | Tekst | Kontrolki -->
-                            <Grid ColumnDefinitions="Auto,*,Auto"
-                                  ColumnSpacing="5"
-                                  VerticalOptions="Center"
-                                  Padding="0">
+                            <!-- GŁÓWNY UKŁAD: 2 wiersze -->
+                            <Grid RowDefinitions="Auto,Auto"
+                                  RowSpacing="10"
+                                  Padding="0"
+                                  VerticalOptions="Center">
+                                
+                                <Grid Grid.Row="0"
+                                      ColumnDefinitions="Auto,*"
+                                      ColumnSpacing="5"
+                                      Padding="0">
 
-                                <!-- LEWA: Thumbnail -->
-                                <Border Grid.Column="0"
-                                        WidthRequest="80"
-                                        HeightRequest="80"
-                                        Padding="0"
-                                        StrokeThickness="0"
-                                        BackgroundColor="Transparent"
-                                        VerticalOptions="Center">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="6" />
-                                    </Border.StrokeShape>
+                                    <!-- LEWA: Thumbnail -->
+                                    <Border Grid.Column="0"
+                                            WidthRequest="80"
+                                            HeightRequest="80"
+                                            Padding="0"
+                                            StrokeThickness="0"
+                                            BackgroundColor="Transparent"
+                                            VerticalOptions="Start"
+                                            Margin="0,6,0,0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6" />
+                                        </Border.StrokeShape>
 
-                                    <Border.Clip>
-                                        <RoundRectangleGeometry CornerRadius="6"
-                                                                Rect="0,0,80,80" />
-                                    </Border.Clip>
+                                        <Border.Clip>
+                                            <RoundRectangleGeometry CornerRadius="6"
+                                                                    Rect="0,0,80,80" />
+                                        </Border.Clip>
 
-                                    <Image Source="{Binding product.ThumbnailSource}"
-                                           Aspect="AspectFill"
-                                           Background="White" />
-                                </Border>
+                                        <Image Source="{Binding product.ThumbnailSource}"
+                                               Aspect="AspectFill"
+                                               Background="White"/>
+                                    </Border>
 
-                                <!-- ŚRODEK: Name na górze, Description pod spodem -->
-                                <VerticalStackLayout Grid.Column="1"
-                                                     Spacing="2"
-                                                     VerticalOptions="Center">
+                                    <!-- PRAWA: Tytuł + Opis -->
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Spacing="4"
+                                                         VerticalOptions="Start">
 
-                                    <Label Text="{Binding product.Name}"
-                                           FontSize="20"
-                                           LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding product.Name}"
+                                               FontSize="20"
+                                               LineBreakMode="TailTruncation" />
 
-                                    <Label Text="{Binding product.Description}"
-                                           FontSize="14"
-                                           Opacity="0.8"
-                                           LineBreakMode="WordWrap" />
-                                </VerticalStackLayout>
+                                        <Label Text="{Binding product.Description}"
+                                               FontSize="14"
+                                               Opacity="0.8"
+                                               LineBreakMode="WordWrap" />
+                                    </VerticalStackLayout>
+                                </Grid>
 
-                                <!-- PRAWA: przyciski -->
-                                <VerticalStackLayout Grid.Column="2"
-                                                     Spacing="4"
-                                                     VerticalOptions="Center"
-                                                     HorizontalOptions="End">
+                                <!-- =========================
+         DOLNY GRID: przyciski + ceny (po prawej)
+         ========================= -->
+                                <Grid Grid.Row="1"
+                                      ColumnDefinitions="Auto,*"
+                                      ColumnSpacing="10"
+                                      Padding="0">
 
-                                    <HorizontalStackLayout Spacing="8"
-                                                           VerticalOptions="Center"
-                                                           HorizontalOptions="End">
 
-                                        <Button Text="-"
-                                                FontSize="30"
-                                                WidthRequest="44"
-                                                HeightRequest="44"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
-                                  Path=BindingContext.DecreaseCommand}"
-                                                CommandParameter="{Binding .}" />
+                                    <!-- PRAWA: wszystko wyrównane do prawej -->
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Spacing="6"
+                                                         HorizontalOptions="End">
 
-                                        <Border WidthRequest="44"
-                                               HeightRequest="44"
-                                               Padding="0"
-                                               BackgroundColor="{DynamicResource EntryColor}">
-                                            <Label Text="{Binding Quantity}"
-                                                   HorizontalOptions="Center"
-                                                   VerticalOptions="Center" />
-                                        </Border>
+                                        <!-- PRZYCISKI (horyzontalnie) - też do prawej -->
+                                        <HorizontalStackLayout Spacing="8"
+                                                               HorizontalOptions="End"
+                                                               VerticalOptions="Center">
 
-                                        <Button Text="+"
-                                                FontSize="25"
-                                                WidthRequest="44"
-                                                HeightRequest="44"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
-                                  Path=BindingContext.IncreaseCommand}"
-                                                CommandParameter="{Binding .}" />
+                                            <Button Text="-"
+                                                    FontSize="30"
+                                                    WidthRequest="44"
+                                                    HeightRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                                          Path=BindingContext.DecreaseCommand}"
+                                                    CommandParameter="{Binding .}" />
 
-                                        <Button Text="U"
-                                                FontSize="22"
-                                                WidthRequest="44"
-                                                HeightRequest="44"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
-                                  Path=BindingContext.RemoveCommand}"
-                                                CommandParameter="{Binding .}" />
-                                    </HorizontalStackLayout>
+                                            <Border WidthRequest="44"
+                                                    HeightRequest="44"
+                                                    Padding="0"
+                                                    BackgroundColor="{DynamicResource EntryColor}">
+                                                <Label Text="{Binding Quantity}"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center" />
+                                            </Border>
 
-                                    <Label FontSize="12"
-                                           Opacity="0.8"
-                                           HorizontalTextAlignment="End">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="Price per unit: " />
-                                                <!-- dto.Price, 2 cyfry po przecinku -->
-                                                <Span Text="{Binding dto.Price, StringFormat='{0:0.00}'}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                            <Button Text="+"
+                                                    FontSize="25"
+                                                    WidthRequest="44"
+                                                    HeightRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                                          Path=BindingContext.IncreaseCommand}"
+                                                    CommandParameter="{Binding .}" />
 
-                                    <Label FontSize="12"
-                                           Opacity="0.8"
-                                           HorizontalTextAlignment="End">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="Total price: " />
-                                                <!-- dto.Price, 2 cyfry po przecinku -->
-                                                <Span Text="{Binding TotalPrice, StringFormat='{0:0.00}'}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                            <Button Text="U"
+                                                    FontSize="22"
+                                                    WidthRequest="44"
+                                                    HeightRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                                          Path=BindingContext.RemoveCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                        </HorizontalStackLayout>
 
-                                </VerticalStackLayout>
+                                        <!-- CENY (po prawej) -->
+                                        <Label FontSize="12"
+                                               Opacity="0.8"
+                                               HorizontalTextAlignment="End">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Price per unit: " />
+                                                    <Span Text="{Binding dto.Price, StringFormat='{0:0.00}'}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                        <Label FontSize="12"
+                                               Opacity="0.8"
+                                               HorizontalTextAlignment="End">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Total price: " />
+                                                    <Span Text="{Binding TotalPrice, StringFormat='{0:0.00}'}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                    </VerticalStackLayout>
+                                </Grid>
 
                             </Grid>
                         </Border>
