@@ -41,11 +41,23 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
-	<!-- Wazne! to pozwala na przeniesienie pliku config do telefonu podczas kompilacji!!!!!!-->
+	<!-- Wazne! to pozwala na przeniesienie pliku (config) do telefonu podczas kompilacji!!!!!!-->
+	<!-- trzeba Trzeba ręcznie ustawić ILogicalName dla MauiAssed + Copy to o output directory żeby jedna metoda działa zarówno -->
+	<!-- Trzeba ręcznie ustawić LogicalName dla MauiAssed + Copy to output directory żeby jedna metoda działa zarówno -->
+	<!-- na android jak i windows machine przy wywolaniu jednej metody-->
 	<ItemGroup>
 		<MauiAsset Include="Configuration\Configuration.json" LogicalName="Configuration/%(Filename)%(Extension)">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</MauiAsset>
+
+		<MauiAsset Include="Resources\Images\nophotoicon.png" LogicalName="Images/%(Filename)%(Extension)">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiAsset>
+
+		<MauiAsset Include="Resources\Images\nophotothumbnail.png" LogicalName="Images/%(Filename)%(Extension)">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiAsset>
+		
 		<MauiAsset Include="Resources\Images\closedeyeicon.png" />
 		<MauiAsset Include="Resources\Images\openeyeicon.png" />
 		<MauiAsset Include="Resources\Images\userprofilepicture.png" />
@@ -74,12 +86,6 @@
 
 	<ItemGroup>
 	  <Compile Remove="Services\Authentication\AuthHeaderHandler.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiImage Remove="Resources\Images\closedeyeicon.png" />
-	  <MauiImage Remove="Resources\Images\openeyeicon.png" />
-	  <MauiImage Remove="Resources\Images\userprofilepicture.png" />
 	</ItemGroup>
 
 	<ItemGroup>

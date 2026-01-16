@@ -16,6 +16,7 @@ namespace OnlineShop_MobileApp.ViewModel
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using System.Windows.Input;
+    using ViewModel.Common;
 
     public class CatalogViewModel : INotifyPropertyChanged
     {
@@ -59,6 +60,13 @@ namespace OnlineShop_MobileApp.ViewModel
         //Task wait async (replacing canncelacion token)
         
         private TimeSpan _waitAsynctimeSpan = TimeSpan.FromSeconds(3);
+
+        private ImageSource NoThumbnailIcon;
+
+        private ImageSource NoPhotoIcon;
+
+        private string noThumbnailRelativePath = "Images/nophotothumbnail.png";
+        private string noPhotoRelativePath = "Images/nophotoicon.png";
 
         //More complex elements
 
@@ -196,6 +204,14 @@ namespace OnlineShop_MobileApp.ViewModel
 
             _allItems = new List<Product>();
 
+            LoadGraphicResources();
+
+        }
+
+        private async Task LoadGraphicResources()
+        {
+            NoThumbnailIcon = await ResourcesLoader.LoadImageFromPackageAsync(noThumbnailRelativePath);
+            NoPhotoIcon = await ResourcesLoader.LoadImageFromPackageAsync(noPhotoRelativePath);
         }
 
         private async Task SwitchPageAsync(int pageIndex)
@@ -376,14 +392,7 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private async Task LoadProductPicture(Product product, bool LoadThumbnail = false)
         {
-            //To prevent repeating code in condition statments there was defined getter and setter
-            //that provide acces to requested field
-
-            //Temporally const path for nophoto icons
-            string nophotoiconpath = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\nophotoicon.png";
-            string nophotothumbnailpath = "D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\nophotothumbnail.png";
-
-            Func<string> nopicture = () => LoadThumbnail ? nophotothumbnailpath : nophotoiconpath;
+            Func<ImageSource> nopicture = () => LoadThumbnail ? NoThumbnailIcon : NoPhotoIcon;
 
             //----------------------
 
@@ -398,7 +407,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 else product.ImageSource = value;
             };
 
-            Action setNoPhotoIcon = () => setter(ImageSource.FromFile(nopicture()));
+            Action setNoPhotoIcon = () => setter(nopicture());
 
             if (string.IsNullOrEmpty(getter()))
             {
