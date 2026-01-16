@@ -65,14 +65,13 @@
                    FontSize="20" />
         </Grid>
 
-        <!-- LISTA -->
+        <!-- List of products -->
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding Items}"
                         IsVisible="{Binding IsMainPageVisible}"
                         VerticalScrollBarVisibility="Never">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <!-- pojedynczy prostokątny element -->
                     <Grid Padding="0"
                           VerticalOptions="Start"
                           MaximumHeightRequest="120">
@@ -83,7 +82,6 @@
                                   VerticalOptions="Start"
                                   Padding="0">
 
-                                <!-- LEWA: tekst + obrazek -->
                                 <HorizontalStackLayout Grid.Column="0"
                                                        Spacing="1"
                                                        VerticalOptions="Center">
@@ -97,7 +95,6 @@
                                             <RoundRectangle CornerRadius="6" />
                                         </Border.StrokeShape>
 
-                                        <!-- KLUCZ: Clip przycina obraz do kształtu -->
                                         <Border.Clip>
                                             <RoundRectangleGeometry CornerRadius="6"
                                                                     Rect="0,0,80,80" />
@@ -109,7 +106,6 @@
                                     </Border>
                                 </HorizontalStackLayout>
 
-                                <!-- ŚRODEK: Title + Subtitle -->
                                 <VerticalStackLayout Grid.Column="1"
                                                      VerticalOptions="Start">
 
@@ -123,7 +119,6 @@
                                            LineBreakMode="WordWrap" />
                                 </VerticalStackLayout>
 
-                                <!-- PRAWA: 2 przyciski jeden nad drugim -->
                                 <VerticalStackLayout Grid.Column="2"
                                                      Spacing="6"
                                                      VerticalOptions="Center"
@@ -153,19 +148,16 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-
-        <!-- PAGINACJA -->
+        <!-- Navigation bar -->
         <Grid Grid.Row="2"
               ColumnDefinitions="Auto,*,Auto"
               ColumnSpacing="10"
               Padding="0,5,0,0">
 
-            <!-- LEWO -->
             <Button Text="◀"
                     Command="{Binding PrevPageCommand}"
                     IsEnabled="{Binding CanPrev}" />
 
-            <!-- ŚRODEK: numery stron (scroll horyzontalny) -->
             <CollectionView x:Name="PagesCv"
                             Grid.Column="1"
                             ItemsSource="{Binding PageNumbers}"
@@ -183,9 +175,6 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-
-
-            <!-- PRAWO -->
             <Button Grid.Column="2"
                     Text="▶"
                     Command="{Binding NextPageCommand}"

@@ -12,57 +12,78 @@
 
     public class CatalogViewModel : INotifyPropertyChanged
     {
-        //----- Clearing all this messs
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        //Numbers of items on single page
         private const int PageSize = 20;
-
-        //List of products
-        private List<Product> _allItems = new();
-
-        //List of produtcs (For UI)
-        public ObservableCollection<Product> Items { get; } = new();
-
-        //Numbers of pages
-        public ObservableCollection<int> PageNumbers { get; } = new();
-
-        private int _currentPage = 1;
-
-        private int _totalPages = 1;
-
-        //+ about 2 seconds because oc CanncelationToken
         private const int connectionTimeout = 0;
 
-        //Predefying UI methods
-        public ICommand GoToPageNumberCommand { get; }
-        public ICommand PrevPageCommand { get; }
-        public ICommand NextPageCommand { get; }
-        public ICommand GoToPageCommand { get; }
-
-
-        public ICommand RefreshCommand { get; }
-
-        //Service
-
         private readonly ICatalogService _service;
-
         private readonly IServicesResolver _servicesResolver;
 
-        //Task wait async (replacing canncelacion token)
+        private List<Product> _allItems = new();
+
+        private int _currentPage = 1;
+        private int _totalPages = 1;
+        private int _pageCount;
 
         private TimeSpan _waitAsynctimeSpan = TimeSpan.FromSeconds(3);
 
         private ImageSource NoThumbnailIcon;
-
         private ImageSource NoPhotoIcon;
 
         private string noThumbnailRelativePath = "Images/nophotothumbnail.png";
         private string noPhotoRelativePath = "Images/nophotoicon.png";
 
-        //More complex elements
+        private CancellationTokenSource? _bckTskCt;
+        private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-        //Current page
+        private IMainPageNavigator? _navigator;
+
+        private ConnectionState _connectionState = ConnectionState.Loading;
+        public enum ConnectionState
+        {
+            Connected = 0,
+            ConnectionFailed = 1,
+            Loading = 2,
+        }
+
+        public ObservableCollection<Product> Items { get; } = new();
+        public ObservableCollection<int> PageNumbers { get; } = new();
+
+        //---Commands---
+        public ICommand GoToPageNumberCommand { get; }
+        public ICommand PrevPageCommand { get; }
+        public ICommand NextPageCommand { get; }
+        public ICommand GoToPageCommand { get; }
+
+        public ICommand RefreshCommand { get; }
+
+        public ICommand ProductDetailsCommand { get; }
+        public ICommand BackToCatalogCommand { get; }
+        public ICommand AddToCartCommand { get; }
+
+        public CatalogViewModel(ICatalogService service, IServicesResolver servicesResolver)
+        {
+            _service = service;
+            _servicesResolver = servicesResolver;
+
+            StartBackgroundProcessing();
+
+            PrevPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage - 1), () => CanPrev);
+            NextPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage + 1), () => CanNext);
+            GoToPageNumberCommand = new Command<int>(async page => await SwitchPageAsync(page));
+
+            ProductDetailsCommand = new Command<Product>(async product => await ShowProductDetails(product));
+            BackToCatalogCommand = new Command(async () => await GoBackToCatalog());
+            RefreshCommand = new Command(() => Refresh());
+
+            AddToCartCommand = new Command<Product>(async product => await AddToCart(product.Id));
+
+            _allItems = new List<Product>();
+
+            LoadGraphicResources();
+        }
+
         public int CurrentPage
         {
             get => _currentPage;
@@ -76,8 +97,6 @@
             }
         }
 
-        //Total available pages
-
         public int TotalPages
         {
             get => _totalPages;
@@ -89,18 +108,6 @@
                 OnPropertyChanged(nameof(CanPrev));
                 OnPropertyChanged(nameof(CanNext));
             }
-        }
-
-        //Page control
-        private bool _connectionFailed = false;
-        //----------------
-
-        private ConnectionState _connectionState = ConnectionState.Loading;
-        public enum ConnectionState
-        {
-            Connected = 0,
-            ConnectionFailed = 1,
-            Loading = 2,
         }
 
         public ConnectionState ConnectionStatus
@@ -122,16 +129,6 @@
         public bool IsRefreshButtonVisible => ConnectionStatus == ConnectionState.ConnectionFailed;
         public bool IsOverlayVisible => IsLoadingVisible || IsRefreshButtonVisible;
 
-
-
-        //----------------
-
-        //Background tasks
-        private CancellationTokenSource? _bckTskCt;
-        private readonly SemaphoreSlim _semaphore = new(1, 1);
-
-        //Page buttons labels
-        private int _pageCount;
         public int PageCount
         {
             get => _pageCount;
@@ -148,62 +145,52 @@
         public bool CanPrev => CurrentPage > 1;
         public bool CanNext => CurrentPage < PageCount;
 
-        //Navigator
-
-        private IMainPageNavigator? _navigator;
         public void SetNavigator(IMainPageNavigator navigator) => _navigator = navigator;
 
-        public ICommand ProductDetailsCommand { get; }
-
-        public ICommand BackToCatalogCommand { get; }
-
-        public ICommand AddToCartCommand { get; }
-
-        //Methods
-
-
-        //Constructor
-        public CatalogViewModel(ICatalogService service, IServicesResolver servicesResolver)
+        public void StopBackgroundProcessing()
         {
-            _service = service;
-            _servicesResolver = servicesResolver;
+            _bckTskCt?.Cancel();
+            _bckTskCt?.Dispose();
+            _bckTskCt = null;
+        }
 
-            // Dobra todo list:
-            // 1.Konczymy sprzatanie tego balaganu tutaj
-            // 2.Doprowadzamy strone glowna do ladu
-            // 3.Wprowadzamy pelna funkcjonalnosc services
-            // 4. ???
-            // 5. Profit
-            //
-            // A... No i wprowadzil pelna responsywnosc apki na stan serwisu... bo jak serwis jest off
-            // to debugger wywala
-            // No i tak. Jak jest: OK - Wyswietlamy strone, Brak polaczenia: "Connection error", wszystko pozostałe: "Wystapil blad."
-
+        private void Refresh()
+        {
+            ConnectionStatus = ConnectionState.Loading;
+            StopBackgroundProcessing();
             StartBackgroundProcessing();
-
-            //Binding
-            PrevPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage - 1), () => CanPrev);
-            NextPageCommand = new Command(async () => await SwitchPageAsync(CurrentPage + 1), () => CanNext);
-            GoToPageNumberCommand = new Command<int>(async page => await SwitchPageAsync(page));
-
-            ProductDetailsCommand = new Command<Product>(async product => await ShowProductDetails(product));
-            BackToCatalogCommand = new Command(async () => await GoBackToCatalog());
-            RefreshCommand = new Command(() => Refresh());
-
-            AddToCartCommand = new Command<Product>(async (product) => await AddToCart(product.Id));
-
-
-
-            _allItems = new List<Product>();
-
-            LoadGraphicResources();
-
         }
 
         private async Task LoadGraphicResources()
         {
             NoThumbnailIcon = await ResourcesLoader.LoadImageFromPackageAsync(noThumbnailRelativePath);
             NoPhotoIcon = await ResourcesLoader.LoadImageFromPackageAsync(noPhotoRelativePath);
+        }
+
+        private void StartBackgroundProcessing()
+        {
+            if (_bckTskCt != null) return;
+
+            _bckTskCt = new CancellationTokenSource();
+            _bckTskCt.CancelAfter(TimeSpan.FromSeconds(3));
+            _ = BackgroundProcessing(_bckTskCt.Token);
+        }
+
+        private async Task BackgroundProcessing(CancellationToken ct)
+        {
+            await LoadPageContent(CurrentPage);
+
+            try
+            {
+                if (IsRefreshButtonVisible)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(connectionTimeout), ct);
+                    await LoadPageContent(CurrentPage);
+                }
+            }
+            catch (OperationCanceledException) { }
+
+            StopBackgroundProcessing();
         }
 
         private async Task SwitchPageAsync(int pageIndex)
@@ -223,56 +210,8 @@
             }
         }
 
-        private void Refresh()
-        {
-            ConnectionStatus = ConnectionState.Loading;
-            StopBackgroundProcessing();
-            StartBackgroundProcessing();
-        }
-
-
-        private void StartBackgroundProcessing()
-        {
-            if (_bckTskCt != null) return;
-
-            _bckTskCt = new CancellationTokenSource();
-            _bckTskCt.CancelAfter(TimeSpan.FromSeconds(3));
-            _ = BackgroundProcessing(_bckTskCt.Token);
-        }
-
-        public void StopBackgroundProcessing()
-        {
-            _bckTskCt?.Cancel();
-            _bckTskCt?.Dispose();
-            _bckTskCt = null;
-        }
-
-        private async Task BackgroundProcessing(CancellationToken ct)
-        {
-            await LoadPageContent(CurrentPage);
-
-            try
-            {
-                //Second connection attempt, just in case first one was unsucsesful
-                if (IsRefreshButtonVisible)
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(connectionTimeout), ct);
-
-                    await LoadPageContent(CurrentPage);
-                }
-            }
-            catch (OperationCanceledException) { }
-            finally
-            {
-                //timer.Dispose();
-            }
-
-            StopBackgroundProcessing();
-        }
-
         private async Task LoadPageContent(int page)
         {
-            //get items
             try
             {
                 await LoadPage(page);
@@ -286,10 +225,6 @@
             {
                 ConnectionStatus = ConnectionState.ConnectionFailed;
             }
-            finally
-            {
-
-            }
         }
 
         private async Task LoadPage(int page)
@@ -300,7 +235,6 @@
                 await GetNumberOfPages();
 
                 CurrentPage = page;
-                //execute state refresh
                 (PrevPageCommand as Command)?.ChangeCanExecute();
                 (NextPageCommand as Command)?.ChangeCanExecute();
             }
@@ -310,8 +244,6 @@
                 throw;
             }
         }
-
-        //-----------------------------------------------------------------------------------------------
 
         private async Task ShowProductDetails(Product product)
         {
@@ -344,14 +276,11 @@
                 _navigator.ShowCatalog();
         }
 
-        //-----------------------------------------------------------------------------------------------
-
         private async Task GetItemsForCurrentPage(int pageNumber)
         {
             var products = await _service.GetProducts(pageNumber).WaitAsync(_waitAsynctimeSpan);
 
             _allItems = products;
-
 
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
@@ -362,11 +291,6 @@
                     Items.Add(p);
                 }
             });
-
-
-            //Gdzies tu dochodzi do wycieku pamieci - tak jakby przedmioty z listy nie zostaly usuwane z pamieci
-            //i dochodzily nowe (ciagle odswiezanie/zmienianie stron powoduje zwiekszone zuzycie pamieci)
-            //+ przesyaly dzialac przyciski cart, orders, identity
         }
 
         private async Task GetNumberOfPages()
@@ -387,14 +311,13 @@
         {
             Func<ImageSource> nopicture = () => LoadThumbnail ? NoThumbnailIcon : NoPhotoIcon;
 
-            //----------------------
-
             Func<Task<byte[]?>> LoadProductPicture = async () =>
-                LoadThumbnail ? await _service.LoadProductThumbnail(product.Id) : await _service.LoadProductPicture(product.Id);
-
+                LoadThumbnail
+                    ? await _service.LoadProductThumbnail(product.Id)
+                    : await _service.LoadProductPicture(product.Id);
 
             Func<string?> getter = () => LoadThumbnail ? product.ThumbnailName : product.PictureName;
-            Action<ImageSource> setter = (value) =>
+            Action<ImageSource> setter = value =>
             {
                 if (LoadThumbnail) product.ThumbnailSource = value;
                 else product.ImageSource = value;
@@ -404,35 +327,25 @@
 
             if (string.IsNullOrEmpty(getter()))
             {
-                var temp = nopicture();
-
                 setNoPhotoIcon();
+                return;
             }
-            else
-            {
-                try
-                {
-                    var picture = await LoadProductPicture();
-                    if (picture is null)
-                    {
-                        setNoPhotoIcon();
-                        return;
-                    }
 
-                    setter(ImageSource.FromStream(() => new MemoryStream(picture)));
-                }
-                catch
+            try
+            {
+                var picture = await LoadProductPicture();
+                if (picture is null)
                 {
                     setNoPhotoIcon();
+                    return;
                 }
 
+                setter(ImageSource.FromStream(() => new MemoryStream(picture)));
             }
-
-            //Ok, metoda dziala zajebiscie. Teraz tylko:
-            //1. Dodac odpowiednie endpointy w REST API <- Done
-            //2. Upewnic sie, ze tworzenie miniaturek poprawnie dziala <- Done
-            //3. zmodyfikować metodę LoadProductThumbnail() aby fetchowala miniaturke a nie full img.
-            //4. A... No i prztcisk "back to catalog znowu nie działą" Dzieki GPT
+            catch
+            {
+                setNoPhotoIcon();
+            }
         }
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

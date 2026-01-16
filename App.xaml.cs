@@ -18,6 +18,7 @@ namespace OnlineShop_MobileApp
             var window = base.CreateWindow(activationState);
 
 #if WINDOWS
+        //For convenient app testing on Windows Machine screen resolution was simulated
         //Based on samsung galaxy g54 screen resolution divided by 2 (1080 x 2340)
         //to recreate the look of a real phone screen as closely as possible
         //Also window height was reduced by 250px to fit in computer screen...

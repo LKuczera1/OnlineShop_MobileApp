@@ -8,13 +8,11 @@
           BackgroundColor="{DynamicResource BackgroundColor}"
           Padding="0">
 
-        <!-- Góra: przewijalna zawartość -->
         <ScrollView Grid.Row="0"
                     Padding="6"
                     Margin="12,0,12,0">
             <VerticalStackLayout Spacing="12">
 
-                <!-- Duże zdjęcie -->
                 <Border StrokeThickness="0"
                         BackgroundColor="Black"
                         HeightRequest="400"
@@ -32,7 +30,6 @@
                            BackgroundColor="White" />
                 </Border>
 
-                <!-- Nazwa -->
                 <Label Text="{Binding Name}"
                        FontSize="26"
                        FontAttributes="Bold"
@@ -70,44 +67,35 @@
                     </Border>
                 </Grid>
 
-                <!-- Opis -->
                 <Label Text="{Binding Description}"
                        FontSize="14"
                        Opacity="0.85"
                        LineBreakMode="WordWrap" />
-
-
-                
-
             </VerticalStackLayout>
         </ScrollView>
-        
 
-        <!-- Dół: przyciski -->
         <Grid Grid.Row="1"
               ColumnDefinitions="*,*"
               ColumnSpacing="12"
               Margin="5,5,5,0"
               MaximumWidthRequest="700">
 
-            <Button Grid.Column="0" 
-                    Text="Back To Catalog" 
-                    HorizontalOptions="Fill" 
+            <Button Grid.Column="0"
+                    Text="Back To Catalog"
+                    HorizontalOptions="Fill"
                     VerticalOptions="Center"
                     CornerRadius="10"
                     HeightRequest="40"
                     Command="{Binding GoBackCommand, Source={x:Reference ThisView}}" />
 
-            <Button Grid.Column="1" 
-                    Text="Add to cart" 
-                    HorizontalOptions="Fill" 
+            <Button Grid.Column="1"
+                    Text="Add to cart"
+                    HorizontalOptions="Fill"
                     VerticalOptions="Center"
                     CornerRadius="10"
                     HeightRequest="40"
-                    Command="{Binding AddToCartCommand, Source={x:Reference ThisView}}" 
-                    CommandParameter="{Binding .}"/>
-
+                    Command="{Binding AddToCartCommand, Source={x:Reference ThisView}}"
+                    CommandParameter="{Binding .}" />
         </Grid>
-
     </Grid>
 </ContentView>

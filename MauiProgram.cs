@@ -7,7 +7,7 @@ using OnlineShop_MobileApp.ViewModel;
 using OnlineShop_MobileApp.Views;
 using OnlineShopMobileApp.Configuration;
 
-//Zeby pokazywało apke w sensownym miejscu
+//Showin app window in center of screen
 #if WINDOWS
 using Microsoft.UI.Windowing;
 using Windows.Graphics;
@@ -25,16 +25,6 @@ namespace OnlineShop_MobileApp
 
             var builder = MauiApp.CreateBuilder();
 
-            /* Also works but probably worse
-            builder.Services.AddSingleton<ICatalogService, CatalogService>(c =>
-            {
-                var http = new HttpClient
-                {
-                    BaseAddress = new Uri("https://api1.twojadomena.pl/")
-                };
-                return new CatalogService(http);
-            });*/
-
             //Authentication DI
             builder.Services.AddHttpClient("Identity", c =>
             {
@@ -42,7 +32,8 @@ namespace OnlineShop_MobileApp
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
-                //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol)
+                //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol and
+                // lack of ssl)
                 var handler = new HttpClientHandler();
                 handler.ServerCertificateCustomValidationCallback = (m, cert, chain, err) => true;
                 return handler;
@@ -57,7 +48,7 @@ namespace OnlineShop_MobileApp
                 return new SecureTokenStore(httpClient, refreshEndpoint);
             });
 
-
+            //Http clients for services
             builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
             {
                 c.BaseAddress = new Uri(config.Properties.services.catalog);
@@ -75,7 +66,7 @@ namespace OnlineShop_MobileApp
             {
                 c.BaseAddress = new Uri(config.Properties.services.identity);
 
-            }) //There is no need to DI AuthHandler for IdentityService
+            })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
                 //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol)
@@ -88,7 +79,7 @@ namespace OnlineShop_MobileApp
             {
                 c.BaseAddress = new Uri(config.Properties.services.shopping);
 
-            }) //There is no need to DI AuthHandler for IdentityService
+            })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
                 //Android blocks insecure connections by default, this handler is a workaround (related to the https protocol)
@@ -97,22 +88,7 @@ namespace OnlineShop_MobileApp
                 return handler;
             });
 
-            /*
-            builder.Services.AddHttpClient<IOrdersService, OrdersService>(c =>
-            {
-                c.BaseAddress = new Uri("https://api2.twojadomena.pl/");
-            });
-
-            builder.Services.AddHttpClient<IAuthService, AuthService>(c =>
-            {
-                c.BaseAddress = new Uri("https://auth.twojadomena.pl/");
-            });
-            */
-
-            //Rejestracja serwisu - DI
-            //Lepsza praktyka jest dodanie ICatalogService - pozwala na mockowanie
-            //builder.Services.AddSingleton<ICatalogService, CatalogService>();
-            //builder.Services.AddSingleton<CatalogService>();
+            //Services DI
 
             builder.Services.AddSingleton<AppShell>();
 
@@ -137,8 +113,8 @@ namespace OnlineShop_MobileApp
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<MainPage>();
 
-            //----------------------------------------------------------------------------------------
-            //------------------Centering app window on windows machine
+
+            //--Centering app window on windows (run on windows machine)
 #if WINDOWS
             builder.ConfigureLifecycleEvents(events =>
 {
@@ -169,9 +145,6 @@ namespace OnlineShop_MobileApp
 });
 #endif
             //---------------------------------------------------------------------------------------
-
-
-
 
             builder
                 .UseMauiApp<App>()

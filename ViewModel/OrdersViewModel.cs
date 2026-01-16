@@ -1,23 +1,23 @@
-﻿namespace OnlineShop_MobileApp.ViewModel
-{
-    using OnlineShop_MobileApp.Services;
-    using Shopping.Models;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
-    using System.Windows.Input;
+﻿using OnlineShop_MobileApp.Services;
+using Shopping.Models;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
+namespace OnlineShop_MobileApp.ViewModel
+{
     public class OrdersViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private readonly IShoppingService _shoppingService;
 
-        public ObservableCollection<OrderItem> Items { get; } = new();
-
         private List<Order>? _orders = null;
 
-        public ICommand ChangeOrderDetailsVisiblity { get; }
+        private CurrentViewEnum _currentView = CurrentViewEnum.UserNotLoggedIn;
+
+        public ObservableCollection<OrderItem> Items { get; } = new();
 
         public enum CurrentViewEnum
         {
@@ -26,11 +26,9 @@
             UserNotLoggedIn = 2,
         }
 
-        private CurrentViewEnum _currentView = CurrentViewEnum.UserNotLoggedIn;
-
         public CurrentViewEnum CurrentView
         {
-            get { return _currentView; }
+            get => _currentView;
             set
             {
                 _currentView = value;
@@ -45,18 +43,23 @@
         public bool IsNoOrderVisible => CurrentView == CurrentViewEnum.EmptyPage;
         public bool IsOrderPageVisible => CurrentView == CurrentViewEnum.Orders;
 
+        //---Commands---
+        public ICommand ChangeOrderDetailsVisiblity { get; }
+
         public OrdersViewModel(IShoppingService shoppingService)
         {
             _shoppingService = shoppingService;
 
-            ChangeOrderDetailsVisiblity = new Command<OrderItem>(item => ChangeOrderDetailVisiblity(item));
+            ChangeOrderDetailsVisiblity = new Command<OrderItem>(ChangeOrderDetailVisiblity);
         }
 
         public async Task Refresh()
         {
-            if (!_shoppingService.isUserLoggedIn()) CurrentView = CurrentViewEnum.UserNotLoggedIn;
+            if (!_shoppingService.isUserLoggedIn())
+                CurrentView = CurrentViewEnum.UserNotLoggedIn;
 
             await GetOrderItems();
+
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 if (Items.Count == 0) CurrentView = CurrentViewEnum.EmptyPage;
@@ -75,6 +78,7 @@
         public async Task GetOrderItems()
         {
             _orders = await _shoppingService.GetOrders();
+
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 if (_orders == null)
@@ -86,9 +90,7 @@
 
                 Items.Clear();
                 foreach (var p in _orders)
-                {
                     Items.Add(new OrderItem(p));
-                }
             });
         }
 
@@ -135,19 +137,19 @@
                 default:
                     OrderStatusString = "We apologize, but we are unable to verify your order status at this time.";
                     break;
-
             }
         }
 
         public bool AreDetailsVisible
         {
-            get { return _areDetailsVisible; }
+            get => _areDetailsVisible;
             set
             {
                 _areDetailsVisible = value;
                 OnPropertyChanged();
             }
         }
+
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

@@ -114,7 +114,7 @@ public partial class MainPage : ContentPage, IMainPageNavigator
         });
     }
 
-    //-----------
+    //---Private methods---
     private async Task CreateNewMessageBanner(string message)
     {
         await MainThread.InvokeOnMainThreadAsync(async () =>
@@ -158,7 +158,5 @@ public partial class MainPage : ContentPage, IMainPageNavigator
         await animatedBanner.TranslateTo(0, banner.HiddenPosition, (uint)banner.AnimationLength, Easing.Linear);
 
         banner.IsVisible = false;
-
-
     }
 }

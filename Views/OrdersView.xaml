@@ -5,21 +5,21 @@
 
     <Grid BackgroundColor="{DynamicResource BackgroundColor}">
 
+        <!-- No orders -->
         <Label IsVisible="{Binding IsNoOrderVisible}"
                Text="You haven't placed any orders yet."
                HorizontalOptions="Center"
                VerticalOptions="Center" 
                FontSize="20"/>
 
-
+        <!-- User not logged in -->
         <Label IsVisible="{Binding IsUserNotLoggedInVisible}"
                Text="Please log in to see this content"
                HorizontalOptions="Center"
                VerticalOptions="Center"  
                FontSize="20"/>
 
-
-
+        <!-- Orders list -->
         <CollectionView ItemsSource="{Binding Items}"
                         IsVisible="{Binding IsOrderPageVisible}"
                         HorizontalScrollBarVisibility="Never"
@@ -39,7 +39,6 @@
                                             <FormattedString>
                                                 <Span Text="Order number: " />
                                                 <Span Text="{Binding OrderId}" />
-
 
                                             </FormattedString>
                                         </Label.FormattedText>
@@ -117,14 +116,11 @@
                                         CommandParameter="{Binding .}">
                                     
                                 </Button>
-
                             </Grid>
-
                         </Border>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
     </Grid>
-
 </ContentView>

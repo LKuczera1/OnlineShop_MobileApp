@@ -6,7 +6,7 @@
     <Grid RowDefinitions="85*,15*"
           BackgroundColor="{DynamicResource BackgroundColor}">
 
-        <!-- Komunikat gdy użytkownik nie jest zalogowany -->
+        <!-- User not logged in - View -->
         <Label Grid.Row="0"
                Text="Log in to use this feature"
                HorizontalOptions="Center"
@@ -22,7 +22,7 @@
             </Label.Triggers>
         </Label>
 
-        <!-- LISTA (pokazuj tylko gdy user zalogowany) -->
+        <!-- List of cart items - When user is logged in -->
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Items}"
                         IsVisible="{Binding IsCartViewAvailable}"
@@ -37,7 +37,6 @@
                                 <RoundRectangle CornerRadius="8" />
                             </Border.StrokeShape>
 
-                            <!-- GŁÓWNY UKŁAD: 2 wiersze -->
                             <Grid RowDefinitions="Auto,Auto"
                                   RowSpacing="2"
                                   Padding="0"
@@ -48,7 +47,6 @@
                                       ColumnSpacing="5"
                                       Padding="5,0,5,0">
 
-                                    <!-- LEWA: Thumbnail -->
                                     <Border Grid.Column="0"
                                             WidthRequest="80"
                                             HeightRequest="80"
@@ -71,7 +69,6 @@
                                                Background="White"/>
                                     </Border>
 
-                                    <!-- PRAWA: Tytuł + Opis -->
                                     <VerticalStackLayout Grid.Column="1"
                                                          Spacing="4"
                                                          VerticalOptions="Start">
@@ -87,21 +84,15 @@
                                     </VerticalStackLayout>
                                 </Grid>
 
-                                <!-- =========================
-         DOLNY GRID: przyciski + ceny (po prawej)
-         ========================= -->
                                 <Grid Grid.Row="1"
                                       ColumnDefinitions="Auto,*"
                                       ColumnSpacing="10"
                                       Padding="5,0,5,5">
 
-
-                                    <!-- PRAWA: wszystko wyrównane do prawej -->
                                     <VerticalStackLayout Grid.Column="1"
                                                          Spacing="6"
                                                          HorizontalOptions="End">
 
-                                        <!-- PRZYCISKI (horyzontalnie) - też do prawej -->
                                         <HorizontalStackLayout Spacing="8"
                                                                HorizontalOptions="End"
                                                                VerticalOptions="Center">
@@ -149,7 +140,6 @@
                                                     CommandParameter="{Binding .}" />
                                         </HorizontalStackLayout>
 
-                                        <!-- CENY (po prawej) -->
                                         <Label FontSize="12"
                                                Opacity="0.8"
                                                HorizontalTextAlignment="End">
@@ -184,7 +174,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- DÓŁ: placeholder (ukryj gdy user niezalogowany) -->
+        <!-- Order summary -->
         <Border Grid.Row="1"
                 Padding="5"
                 Margin="0,5,0,0"
@@ -225,9 +215,7 @@
                         MaximumHeightRequest="60"
                         MaximumWidthRequest="140"
                         CornerRadius="5"/>
-
             </Grid>
         </Border>
-
     </Grid>
 </ContentView>

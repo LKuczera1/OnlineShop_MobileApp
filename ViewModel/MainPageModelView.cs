@@ -18,6 +18,9 @@ namespace OnlineShop_MobileApp.ViewModel
         private readonly ThemeService _themeService;
 
         private View _currentView;
+        private Allert _allert = new Allert();
+        private Message _message = new Message();
+
         public View CurrentView
         {
             get => _currentView;
@@ -29,10 +32,6 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
-        private Allert _allert = new Allert();
-
-        private Message _message = new Message();
-
         public Allert allert
         {
             get => _allert;
@@ -42,6 +41,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 OnPropertyChanged();
             }
         }
+
         public Message message
         {
             get => _message;
@@ -52,14 +52,18 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
+        //---Commands---
         public ICommand SwitchToLightTheme { get; set; }
         public ICommand SwitchToDarkTheme { get; set; }
         public ICommand SwitchToGoldTheme { get; set; }
-
-
         public ICommand SwitchTabCommand { get; }
 
-        public MainPageViewModel(CatalogView catalog, AccountView account, CartView cart, OrdersView orders, ThemeService themeService)
+        public MainPageViewModel(
+            CatalogView catalog,
+            AccountView account,
+            CartView cart,
+            OrdersView orders,
+            ThemeService themeService)
         {
             _catalog = catalog;
             _cart = cart;
@@ -69,37 +73,39 @@ namespace OnlineShop_MobileApp.ViewModel
 
             _currentView = _catalog;
 
-            SwitchTabCommand = new Command<string>(tab =>
-            {
-                switch (tab)
-                {
-                    case "Catalog":
-                        CurrentView = _catalog;
-                        break;
-                    case "Cart":
-                        CurrentView = _cart;
-                        RefreshCurrentView(_cart);
-                        break;
-                    case "Orders":
-                        CurrentView = _orders;
-                        RefreshCurrentView(_orders);
-                        break;
-                    case "Account":
-                        CurrentView = _account;
-                        break;
-                    default:
-                        CurrentView = _catalog;
-                        break;
-                }
-            });
-
-
-
+            SwitchTabCommand = new Command<string>(SwitchTab);
 
             SwitchToLightTheme = new Command(() => _themeService.Apply(AppThemeMode.Light));
             SwitchToDarkTheme = new Command(() => _themeService.Apply(AppThemeMode.Dark));
             SwitchToGoldTheme = new Command(() => _themeService.Apply(AppThemeMode.Gold));
+        }
 
+        private void SwitchTab(string tab)
+        {
+            switch (tab)
+            {
+                case "Catalog":
+                    CurrentView = _catalog;
+                    break;
+
+                case "Cart":
+                    CurrentView = _cart;
+                    RefreshCurrentView(_cart);
+                    break;
+
+                case "Orders":
+                    CurrentView = _orders;
+                    RefreshCurrentView(_orders);
+                    break;
+
+                case "Account":
+                    CurrentView = _account;
+                    break;
+
+                default:
+                    CurrentView = _catalog;
+                    break;
+            }
         }
 
         private void RefreshCurrentView(View view)
@@ -109,6 +115,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 case CartView cartView when cartView.BindingContext is CartViewModel cartVm:
                     cartVm.Refresh();
                     break;
+
                 case OrdersView ordersView when ordersView.BindingContext is OrdersViewModel ordersVm:
                     ordersVm.Refresh();
                     break;

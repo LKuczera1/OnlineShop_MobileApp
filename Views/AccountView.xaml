@@ -8,7 +8,7 @@
         <VerticalStackLayout Padding="24"
                              Spacing="14">
 
-            <!-- LOGOWANIE -->
+            <!-- Login -->
 
             <VerticalStackLayout IsVisible="{Binding IsLoginScreenvisible}"
                                  Spacing="10">
@@ -27,7 +27,6 @@
                           BackgroundColor="{DynamicResource BackgroundColor}"
                           Padding="0">
 
-                        <!-- Entry bez obramowania -->
                         <Entry x:Name="PasswordEntry"
                                Grid.Column="0"
                                Text="{Binding LoginRequest.Password}"
@@ -35,14 +34,13 @@
                                IsPassword="{Binding ShowPassword}"
                                ClearButtonVisibility="Never" />
 
-                        <!-- Przycisk (oko) -->
                         <ImageButton Grid.Column="1"
                                      Source="{Binding PasswordVisibilityIcon}"
                                      WidthRequest="24"
                                      HeightRequest="24"
                                      BackgroundColor="{DynamicResource ContrastColor}"
-                                     Command="{Binding TogglePasswordVisibilityCommand}" 
-                                     CornerRadius="5"/>
+                                     Command="{Binding TogglePasswordVisibilityCommand}"
+                                     CornerRadius="5" />
                     </Grid>
                 </Border>
 
@@ -53,13 +51,13 @@
                         Command="{Binding ShowRegisterCommand}" />
             </VerticalStackLayout>
 
-            <!-- REJESTRACJA -->
+            <!-- Registration -->
             <VerticalStackLayout IsVisible="{Binding IsRegisterFormVisible}"
                                  Spacing="10">
                 <Label Text="To create new account fill out the form. All fields are required."
                        LineBreakMode="WordWrap"
                        Margin="0,5,0,10"
-                       FontSize="15"/>
+                       FontSize="15" />
                 <Label Text="Login" />
                 <Entry Text="{Binding RegisterRequest.UserName}"
                        Placeholder="Enter login" />
@@ -77,7 +75,6 @@
                            IsPassword="{Binding ShowPassword}"
                            ClearButtonVisibility="Never" />
 
-                    <!-- Przycisk (oko) -->
                     <ImageButton Grid.Column="1"
                                  Source="{Binding PasswordVisibilityIcon}"
                                  WidthRequest="24"
@@ -93,15 +90,15 @@
 
                 <Label Text="Phone number" />
                 <Entry Text="{Binding RegisterRequest.PhoneNumber}"
-                       Placeholder="Enter phone number"/>
+                       Placeholder="Enter phone number" />
 
                 <Label Text="Address" />
                 <Entry Text="{Binding RegisterRequest.Address}"
-                       Placeholder="Enter address"/>
+                       Placeholder="Enter address" />
 
                 <Label Text="City" />
                 <Entry Text="{Binding RegisterRequest.City}"
-                       Placeholder="Enter city"/>
+                       Placeholder="Enter city" />
 
                 <Button Text="Create account"
                         Command="{Binding CreateAccountCommand}" />
@@ -110,7 +107,7 @@
                         Command="{Binding ShowLoginCommand}" />
             </VerticalStackLayout>
 
-            <!-- ZALOGOWANY -->
+            <!-- Logged in -->
             <Grid IsVisible="{Binding IsUserDataVisible}"
                   RowDefinitions="*,*">
                 <VerticalStackLayout HorizontalOptions="Center"
@@ -118,8 +115,8 @@
                                      Margin="0,0,0,20">
                     <Label Text="Logged as:"
                            FontSize="20"
-                           HorizontalOptions="Center"/>
-                    
+                           HorizontalOptions="Center" />
+
                     <Image Source="{Binding UserProfilePicture}"
                            Aspect="Fill"
                            Scale="0.9" />
@@ -137,8 +134,6 @@
                         </Label>
                     </Border>
 
-
-
                     <Border class="DataField">
                         <Label>
                             <Label.FormattedText>
@@ -152,9 +147,6 @@
                         </Label>
                     </Border>
 
-
-
-
                     <Border class="DataField">
                         <Label>
                             <Label.FormattedText>
@@ -167,10 +159,6 @@
                             </Label.FormattedText>
                         </Label>
                     </Border>
-
-
-
-
 
                     <Border class="DataField">
                         <Label>
@@ -190,7 +178,7 @@
                 <Button VerticalOptions="End"
                         Grid.Row="1"
                         Text="Logout"
-                        Command="{Binding LogOutCommand}"/>
+                        Command="{Binding LogOutCommand}" />
             </Grid>
 
         </VerticalStackLayout>

@@ -6,7 +6,7 @@
     
     <AbsoluteLayout>
 
-        <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
+        <!-- Allert banner -->
         <Border x:Name="AllertBanner"
                 AbsoluteLayout.LayoutBounds="0,0,1,100"
                 AbsoluteLayout.LayoutFlags="WidthProportional"
@@ -43,7 +43,7 @@
             </VerticalStackLayout>
         </Border>
 
-        <!-- BANNER OVERLAY (NIE WPŁYWA NA LAYOUT) -->
+        <!-- Message banner -->
         <Border x:Name="MessageBanner"
                 AbsoluteLayout.LayoutBounds="0,0,1,60"
                 AbsoluteLayout.LayoutFlags="WidthProportional"
@@ -68,13 +68,13 @@
                    HorizontalTextAlignment="Center" />
         </Border>
 
-        <!-- CAŁY DOTYCHCZASOWY UKŁAD STRONY -->
+        <!-- Top bar -->
+
         <Grid RowDefinitions="auto,*,auto"
               AbsoluteLayout.LayoutBounds="0,0,1,1"
               AbsoluteLayout.LayoutFlags="All"
               Padding="0">
 
-            <!-- GÓRNY PASEK -->
             <Grid Grid.Row="0"
                   BackgroundColor="{DynamicResource UpperBarColor}"
                   VerticalOptions="Start">
@@ -86,16 +86,16 @@
                         Clicked="OnMenuClicked" />
                 <Label Text="OnlineShop"
                        VerticalOptions="Center"
-                       HorizontalOptions="Center" 
-                       FontSize="25"/>
+                       HorizontalOptions="Center"
+                       FontSize="25" />
             </Grid>
 
-            <!-- CONTENT (środek) -->
+            <!-- Content -->
             <ContentView Grid.Row="1"
                          Content="{Binding CurrentView}"
                          x:Name="Host" />
 
-            <!-- DOLNY PASEK -->
+            <!-- Bottom bar -->
             <Grid Grid.Row="2"
                   BackgroundColor="{DynamicResource LowerBarColor}"
                   VerticalOptions="Start"
@@ -111,7 +111,7 @@
                             HeightRequest="50"
                             Command="{Binding SwitchTabCommand}"
                             CommandParameter="Catalog"
-                            FontSize="16"/>
+                            FontSize="16" />
                     <Button Grid.Column="2"
                             Padding="1,14,1,14"
                             Text="Cart"
@@ -139,7 +139,7 @@
                 </Grid>
             </Grid>
 
-            <!-- Boczne menu (overlay, ale nadal w gridzie strony) -->
+            <!-- Side menu -->
             <Grid x:Name="MenuOverlay"
                   Grid.RowSpan="3"
                   IsVisible="False"
@@ -189,10 +189,6 @@
                     </Grid.GestureRecognizers>
                 </Grid>
             </Grid>
-
         </Grid>
-
-        
-
     </AbsoluteLayout>
 </ContentPage>

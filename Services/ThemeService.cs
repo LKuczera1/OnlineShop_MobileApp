@@ -19,13 +19,6 @@ namespace OnlineShop_MobileApp.Services
         private ResourceDictionary _dark;
         private ResourceDictionary _gold;
 
-        private static string themePath = "Resources/Themes/";
-
-        private static string darkThemePath = "Resources/Themes/DarkTheme.xaml";
-        private static string lightThemePath = "Resources/Themes/LightTheme.xaml";
-        private static string goldThemePath = "Resources/Themes/GoldTheme.xaml";
-
-
         private ResourceDictionary? _currentDictionary;
 
         public void Initialize()
