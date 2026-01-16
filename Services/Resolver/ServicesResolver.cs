@@ -2,6 +2,7 @@
 
 namespace OnlineShop_MobileApp.Services.Resolver
 {
+    //Actually its Facade design pattern, not Resolver.
     internal class ServicesResolver : IServicesResolver
     {
         private readonly ICatalogService _catalogService;
@@ -43,9 +44,6 @@ namespace OnlineShop_MobileApp.Services.Resolver
 
             return null;
         }
-
-        //Moze lepiej zrobić z tego fasade
-
         public async Task<bool> ResolveInsertItemIntoCart(int productId)
         {
             return await _shoppingService.InsertItemToCart(productId);

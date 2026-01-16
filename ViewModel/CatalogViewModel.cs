@@ -278,7 +278,7 @@
                 await LoadPage(page);
                 ConnectionStatus = ConnectionState.Connected;
             }
-            catch (Exception ex) when (ex is TimeoutException or TaskCanceledException or Service.ConnectionErrorException)
+            catch (Exception ex) when (ex is TimeoutException or TaskCanceledException)
             {
                 ConnectionStatus = ConnectionState.ConnectionFailed;
             }

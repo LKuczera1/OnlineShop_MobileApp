@@ -6,14 +6,11 @@ namespace OnlineShop_MobileApp.GUI_elements
     public abstract class Banner : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        // --- Animacja / layout (wspólne dla wszystkich bannerów) ---
         public double HiddenPosition { get; protected set; } = -200;
         public double OnViewPosition { get; protected set; } = 10;
         public double AnimationLength { get; protected set; } = 500;
         public TimeSpan OnScreenTime { get; set; } = TimeSpan.FromSeconds(2);
 
-        // --- Stan (wspólny) ---
         private bool _isVisible;
         public bool IsVisible
         {
@@ -44,18 +41,12 @@ namespace OnlineShop_MobileApp.GUI_elements
             IsAnimating = false;
         }
 
-        /// <summary>
-        /// Ustawia banner w stan "do pokazania" i resetuje flagi animacji.
-        /// </summary>
         protected void PrepareToShow()
         {
             IsVisible = true;
             IsAnimating = false;
         }
 
-        /// <summary>
-        /// Ukrywa banner i resetuje flagi animacji.
-        /// </summary>
         protected void PrepareToHide()
         {
             IsVisible = false;

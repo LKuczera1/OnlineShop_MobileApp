@@ -8,17 +8,15 @@ namespace OnlineShop_MobileApp.Services
 {
     public class ShoppingService : Service, IShoppingService
     {
-
+        //ToDo: Move endpoints from class to Config.json
         private const string CartItemsEndpoint = "/api/ShoppingCartItems";
         private const string InsertItemToCartEndpoint = "/api/ShoppingCartItems";
         private const string RemoveCartItemEndpoint = "/api/ShoppingCartItems/";
         private const string PlaceOrderEndpoint = "/api/ShoppingCartItems/PlaceOrder";
         private const string GetOrdersEndpoint = "/api/Orders";
-        public ShoppingService(HttpClient client, ITokenStore tokenStore)
-            : base(client, tokenStore)
-        {
-        }
 
+        public ShoppingService(HttpClient client, ITokenStore tokenStore)
+            : base(client, tokenStore){}
 
 
         private static readonly JsonSerializerOptions JsonOptions = new()

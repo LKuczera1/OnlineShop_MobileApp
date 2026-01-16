@@ -13,44 +13,25 @@ namespace OnlineShop_MobileApp.Services
         protected CancellationTokenSource cts;
         protected int connectionTimeout = 3; //Cancelation token timeout in seconds
 
-
-        //Custom exception to simplify possible scenarios...
-        public class ConnectionErrorException : Exception
-        {
-            public enum ConnectionErrorType
-            {
-                CouldNotConnectToService = 0,
-                ResponseTreatedAsError = 1,
-            }
-
-            public ConnectionErrorType _errorType { get; }
-
-            public ConnectionErrorException(ConnectionErrorType errorType, string message = null) : base(message)
-            {
-                _errorType = errorType;
-            }
-            public ConnectionErrorException(ConnectionErrorType errorType, Exception e) : base(e.Message, e)
-            {
-                //Wraps received exception to my custom exception
-                _errorType = errorType;
-            }
-        }
-
-        //Zrobic uniwersalne metody zajmujace sie logika polaczen z rest api, tak aby dalo sie stworzyc funkcje
-        //w glownych services z jak najmniejsza liniakodu
-
         public Service(HttpClient client, ITokenStore tokenStore)
         {
             httpClient = client;
             _tokenStore = tokenStore;
         }
 
-        protected void SetCancelationToken() //Refresh Cancellation token
+        /// <summary>
+        /// This method refreshes the cancelation token with specified time. It is recommended to call this method before each use of the CTS.
+        /// </summary>
+        protected void SetCancelationToken()
         {
             cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(connectionTimeout));
         }
 
+        /// <summary>
+        /// Checks if JWT token is still valid.
+        /// </summary>
+        /// <returns></returns>
         protected async Task<bool> CheckJWTTokenStatus()
         {
             try
@@ -63,7 +44,10 @@ namespace OnlineShop_MobileApp.Services
             }
         }
 
-        //Refreshes cancellationToken and fetches JWT token
+        /// <summary>
+        /// Refreshes Cancelation Token and fetches new JWT token
+        /// </summary>
+        /// <returns></returns>
         protected async Task<AuthSession> GetJWTToken()
         {
             SetCancelationToken();
@@ -170,7 +154,8 @@ namespace OnlineShop_MobileApp.Services
             bool ignoreStatusCode = false)
         {
             //--- JWT logic ---
-            string JWTtoken = null;
+
+            string? JWTtoken = null;
 
             try
             {
@@ -189,6 +174,7 @@ namespace OnlineShop_MobileApp.Services
             {
                 throw new Exception("An error occured while fetchin JWT token.");
             }
+
             //----------------
 
             if (httpMethod is null) httpMethod = HttpMethod.Post;
@@ -208,13 +194,6 @@ namespace OnlineShop_MobileApp.Services
             catch
             {
                 throw;
-            }
-
-            //Możliwa utrata waznosci tokenu, jednak w tym przypadku bardziej prawdopodobny brak dostepu
-            //W itoken securestore 401 oznacza utrate waznosci tokenu, nie potrzebne tu bo itak wywali exception przy ensucresuccesstatus...
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                //await _tokenStore.ClearAsync();
             }
 
             return response;
@@ -238,7 +217,8 @@ namespace OnlineShop_MobileApp.Services
             bool ignoreStatusCode = false)
         {
             //--- JWT logic ---
-            string JWTtoken = null;
+
+            string? JWTtoken = null;
 
             try
             {
@@ -258,6 +238,7 @@ namespace OnlineShop_MobileApp.Services
             {
                 throw new Exception("An error occured while fetchin JWT token.");
             }
+
             //----------------
 
             if (httpMethod is null) httpMethod = HttpMethod.Get;
@@ -278,16 +259,13 @@ namespace OnlineShop_MobileApp.Services
                 throw;
             }
 
-            //Możliwa utrata waznosci tokenu, jednak w tym przypadku bardziej prawdopodobny brak dostepu
-            //W itoken securestore 401 oznacza utrate waznosci tokenu
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                //await _tokenStore.ClearAsync();
-            }
-
             return response;
         }
 
+        /// <summary>
+        /// Return true if user is LoggedIn - Token is valid, and user is logged in.
+        /// </summary>
+        /// <returns></returns>
         public bool isUserLoggedIn()
         {
             return _tokenStore.IsUserLoggedIn;

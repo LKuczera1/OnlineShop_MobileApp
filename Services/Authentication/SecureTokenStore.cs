@@ -46,17 +46,6 @@ public class SecureTokenStore : ITokenStore
     private readonly string _refreshEndpoint;
 
     private const int tokenTimeoutReverveTime = 300; //5 minutes before JWT token expires
-
-    //Gdy uzytkownik zostanie zalogowany, tworzony jest nowy obiekt CredentialStoreDto
-    //Z danymi logowania. Za kazdym razem gdy wysylany jest request sprawdzamy czy
-    //jwt jest wciaz valid, jezeli nie, to pobieramy stad credentialStore - dane logowania
-    //i w klasie bazowej Service jest metoda RefreshJWT... blah blah blah...
-    //Cholernie bezpieczne jezeli chodzi o bezpieczenstwo danych uzytkownika... No ale coz...
-    //jest to projekt na "HumanComputerInteraction", gdzie liczy sie "wyglad" aplikacji, a nie na
-    //"UserDataProtection". Moze kiedys zostanie to naprawione. +Nie chce mi sie dodawac specjalnych
-    //Endpointow do api...
-
-
     public SecureTokenStore(HttpClient httpClient, string refreshEndpoint)
     {
         _httpClient = httpClient;

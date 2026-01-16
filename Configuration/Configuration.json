@@ -10,7 +10,7 @@
             "Identity": "https://192.168.0.178:7002",
             "Shopping": "https://192.168.0.178:7003",
             "CatalogEndpoints": {
-                "Produ":  "222"
+                "Produ":  "test"
             },
             "IdentityEndpoints": {
                 "login": "/api/Accounts/login",
@@ -18,29 +18,13 @@
                 "register": "/api/Accounts/register"
             },
             "ShoppingEndpoints": {
-                "Produ": "222"
+                "Produ": "test"
             }
         },
         "WindowsMachineServices": {
             "Catalog": "https://localhost:7001",
             "Identity": "https://localhost:7002",
             "Shopping": "https://localhost:7003"
-        },
-        "DarkTheme": {
-            "BackgroundColor": "#ffffff",
-            "FontColor": "#66ccff",
-            "BorderBackgroundColor": "#33ccff",
-            "ButtonColor": "#6699ff",
-            "PressedButtonColor": "#0066ff",
-            "ButtonFontColor": "#000000"
-        },
-        "WhiteTheme": {
-            "Background": "#ffffff",
-            "MainComponents": "#66ccff",
-            "SlidingMenu": "#33ccff",
-            "Tiles": "#6699ff",
-            "Buttons": "#0066ff",
-            "Text": "#000000"
         }
     }
 }

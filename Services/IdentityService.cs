@@ -10,6 +10,7 @@ namespace OnlineShop_MobileApp.Services
 
         private readonly ITokenStore _tokenStore;
 
+        //ToDo: Move endpoints from class to Config.json
         public string loginendpoint = "/api/Accounts/login";
         public string getUserDataEndpoint = "/api/Accounts/";
         public string registerEndpoint = "/api/Accounts/register";
@@ -21,8 +22,6 @@ namespace OnlineShop_MobileApp.Services
 
         public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto loginRequest)
         {
-            SetCancelationToken();
-
             JsonContent loginJson = JsonContent.Create(loginRequest);
 
             try
@@ -40,7 +39,6 @@ namespace OnlineShop_MobileApp.Services
                     {
                         //Unable to connect - throw an exception
                     }
-                    //---------------------------------------------------
 
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
@@ -69,8 +67,6 @@ namespace OnlineShop_MobileApp.Services
 
         public async Task<UserDataDto?> GetUserData(int userId)
         {
-            SetCancelationToken();
-
             string endpoint = getUserDataEndpoint + userId.ToString();
 
             HttpResponseMessage response = await AuthorizedGetAsync(endpoint);
@@ -104,8 +100,6 @@ namespace OnlineShop_MobileApp.Services
 
         public async Task<RegisterResponseDto> CreateNewAccount(RegisterRequestDto regRequest)
         {
-            SetCancelationToken();
-
             JsonContent messageContent = JsonContent.Create(regRequest);
             RegisterResponseDto regResponse = new RegisterResponseDto();
 

@@ -11,10 +11,15 @@ namespace OnlineShop_MobileApp.ViewModel
 
     public class AccountViewModel : INotifyPropertyChanged
     {
+        //---Commands---
+        public ICommand LoginCommand { get; }
+        public ICommand ShowRegisterCommand { get; }
+        public ICommand ShowLoginCommand { get; }
+        public ICommand CreateAccountCommand { get; }
+        public ICommand TogglePasswordVisibilityCommand { get; }
+        public ICommand LogOutCommand { get; }
 
-        //Straszny to AI bordel, trzeba to sprzatnac jak juz apka zacznie dzialac poprawnie
-
-        //---Moje linie kodu---
+        //---Services related fiels---
 
         private readonly IIdentityService _service;
 
@@ -22,6 +27,8 @@ namespace OnlineShop_MobileApp.ViewModel
         public void SetNavigator(IMainPageNavigator navigator) => _navigator = navigator;
 
         private UserDataDto _userData = new UserDataDto();
+
+        //---Properties---
 
 
         private CurrentView _currentView = CurrentView.LoginScreen;
@@ -60,10 +67,6 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
-        //---------------------
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         private ImageSource _showPasswordIcon;
 
         private ImageSource _hidePasswordIcon;
@@ -100,10 +103,6 @@ namespace OnlineShop_MobileApp.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        // LOGIN
-        private LoginRequestDto _loginRequest = new LoginRequestDto();
-
         public LoginRequestDto LoginRequest
         {
             get { return _loginRequest; }
@@ -113,16 +112,6 @@ namespace OnlineShop_MobileApp.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        private void ClearLoginForm()
-        {
-            LoginRequest.Clear();
-            OnPropertyChanged(nameof(LoginRequest));
-        }
-
-        // REGISTER
-        private RegisterRequestDto _registerRequest = new RegisterRequestDto();
-
         public RegisterRequestDto RegisterRequest
         {
             get { return _registerRequest; }
@@ -133,23 +122,28 @@ namespace OnlineShop_MobileApp.ViewModel
             }
         }
 
+        //---------------------
+
+        private string HidePasswordIconPath = "Images/closedeyeicon.png";
+        private string ShowPasswordIconPath = "Images/openeyeicon.png";
+        private string UserProfilePicturePath = "Images/userprofilepicture.png";
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private LoginRequestDto _loginRequest = new LoginRequestDto();
+
+        private RegisterRequestDto _registerRequest = new RegisterRequestDto();
+        private void ClearLoginForm()
+        {
+            LoginRequest.Clear();
+            OnPropertyChanged(nameof(LoginRequest));
+        }
+
         private void ClearRegistrationForm()
         {
             RegisterRequest.Clear();
             OnPropertyChanged(nameof(RegisterRequest));
         }
-
-        public ICommand LoginCommand { get; }
-        public ICommand ShowRegisterCommand { get; }
-        public ICommand ShowLoginCommand { get; }
-        public ICommand CreateAccountCommand { get; }
-        public ICommand TogglePasswordVisibilityCommand { get; }
-
-        public ICommand LogOutCommand { get; }
-
-        private string HidePasswordIconPath = "Images/closedeyeicon.png";
-        private string ShowPasswordIconPath = "Images/openeyeicon.png";
-        private string UserProfilePicturePath = "Images/userprofilepicture.png";
 
         private async Task LoadGraphicResources()
         {
@@ -163,13 +157,11 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public AccountViewModel(IIdentityService service)
         {
-            //-----------------------------------------
-
             _service = service;
 
             LoadGraphicResources();
-            //-----------------------------------------
 
+            //---Command binding---
 
             LoginCommand = new Command(async () =>
             {
