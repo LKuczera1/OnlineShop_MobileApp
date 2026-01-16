@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineShop_MobileApp.ViewModel
+﻿namespace OnlineShop_MobileApp.ViewModel
 {
-    using Chessie.ErrorHandling;
     using OnlineShop_MobileApp.Models;
     using OnlineShop_MobileApp.Navigators;
     using OnlineShop_MobileApp.Services;
     using OnlineShop_MobileApp.Services.Resolver;
-    using OnlineShop_MobileApp.Views;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
@@ -58,7 +50,7 @@ namespace OnlineShop_MobileApp.ViewModel
         private readonly IServicesResolver _servicesResolver;
 
         //Task wait async (replacing canncelacion token)
-        
+
         private TimeSpan _waitAsynctimeSpan = TimeSpan.FromSeconds(3);
 
         private ImageSource NoThumbnailIcon;
@@ -106,7 +98,7 @@ namespace OnlineShop_MobileApp.ViewModel
         private ConnectionState _connectionState = ConnectionState.Loading;
         public enum ConnectionState
         {
-            Connected  = 0,
+            Connected = 0,
             ConnectionFailed = 1,
             Loading = 2,
         }
@@ -195,7 +187,7 @@ namespace OnlineShop_MobileApp.ViewModel
             GoToPageNumberCommand = new Command<int>(async page => await SwitchPageAsync(page));
 
             ProductDetailsCommand = new Command<Product>(async product => await ShowProductDetails(product));
-            BackToCatalogCommand = new Command( async () => await GoBackToCatalog());
+            BackToCatalogCommand = new Command(async () => await GoBackToCatalog());
             RefreshCommand = new Command(() => Refresh());
 
             AddToCartCommand = new Command<Product>(async (product) => await AddToCart(product.Id));
@@ -244,6 +236,7 @@ namespace OnlineShop_MobileApp.ViewModel
             if (_bckTskCt != null) return;
 
             _bckTskCt = new CancellationTokenSource();
+            _bckTskCt.CancelAfter(TimeSpan.FromSeconds(3));
             _ = BackgroundProcessing(_bckTskCt.Token);
         }
 
@@ -261,7 +254,7 @@ namespace OnlineShop_MobileApp.ViewModel
             try
             {
                 //Second connection attempt, just in case first one was unsucsesful
-                if(IsRefreshButtonVisible)
+                if (IsRefreshButtonVisible)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(connectionTimeout), ct);
 
@@ -311,7 +304,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 (PrevPageCommand as Command)?.ChangeCanExecute();
                 (NextPageCommand as Command)?.ChangeCanExecute();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ConnectionStatus = ConnectionState.ConnectionFailed;
                 throw;
@@ -322,7 +315,7 @@ namespace OnlineShop_MobileApp.ViewModel
 
         private async Task ShowProductDetails(Product product)
         {
-            if(_navigator!=null)
+            if (_navigator != null)
             {
                 await LoadProductPicture(product, false);
                 _navigator.ShowProductDetails(product);
@@ -333,7 +326,7 @@ namespace OnlineShop_MobileApp.ViewModel
         {
             if (_navigator != null)
             {
-                if(_service.isUserLoggedIn())
+                if (_service.isUserLoggedIn())
                 {
                     await _servicesResolver.ResolveInsertItemIntoCart(productId);
                 }

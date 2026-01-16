@@ -1,13 +1,8 @@
 ﻿using OnlineShop_MobileApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.Services.Resolver
 {
-    internal class ServicesResolver :IServicesResolver
+    internal class ServicesResolver : IServicesResolver
     {
         private readonly ICatalogService _catalogService;
         private readonly IIdentityService _identityService;

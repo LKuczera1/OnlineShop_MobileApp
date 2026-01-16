@@ -1,6 +1,7 @@
 ﻿using OnlineShop_MobileApp.Models.DTOs;
 using OnlineShop_MobileApp.Navigators;
 using OnlineShop_MobileApp.Services;
+using OnlineShop_MobileApp.ViewModel.Common;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -125,9 +126,10 @@ namespace OnlineShop_MobileApp.ViewModel
         public RegisterRequestDto RegisterRequest
         {
             get { return _registerRequest; }
-            set { 
+            set
+            {
                 _registerRequest = value;
-                OnPropertyChanged(); 
+                OnPropertyChanged();
             }
         }
 
@@ -145,16 +147,27 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public ICommand LogOutCommand { get; }
 
+        private string HidePasswordIconPath = "Images/closedeyeicon.png";
+        private string ShowPasswordIconPath = "Images/openeyeicon.png";
+        private string UserProfilePicturePath = "Images/userprofilepicture.png";
+
+        private async Task LoadGraphicResources()
+        {
+            _hidePasswordIcon = await ResourcesLoader.LoadImageFromPackageAsync(HidePasswordIconPath);
+            _showPasswordIcon = await ResourcesLoader.LoadImageFromPackageAsync(ShowPasswordIconPath);
+            UserProfilePicture = await ResourcesLoader.LoadImageFromPackageAsync(UserProfilePicturePath);
+
+            //Required to notify App of loaded resources
+            OnPropertyChanged(nameof(PasswordVisibilityIcon));
+        }
+
         public AccountViewModel(IIdentityService service)
         {
             //-----------------------------------------
 
             _service = service;
 
-            _hidePasswordIcon = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\openeyeicon.png");
-            _showPasswordIcon = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\closedeyeicon.png");
-            UserProfilePicture = ImageSource.FromFile("D:\\Programming\\Projects\\Visual Studio\\OnlineShop_MobileApp\\Resources\\Images\\userprofilepicture.png");
-
+            LoadGraphicResources();
             //-----------------------------------------
 
 
@@ -210,7 +223,7 @@ namespace OnlineShop_MobileApp.ViewModel
                     return;
                 }
 
-                if(regResponse.Success)
+                if (regResponse.Success)
                 {
                     _navigator.ShowMessage(regResponse.Message);
                     currentView = CurrentView.LoginScreen;
@@ -219,7 +232,7 @@ namespace OnlineShop_MobileApp.ViewModel
                 }
                 else
                 {
-                    _navigator.ShowAllert("Registration form filled incorectly",regResponse.Message);
+                    _navigator.ShowAllert("Registration form filled incorectly", regResponse.Message);
                 }
 
             });

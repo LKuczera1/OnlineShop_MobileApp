@@ -1,10 +1,4 @@
-﻿using Mono.Cecil;
-using OnlineShop_MobileApp.Resources.Themes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OnlineShop_MobileApp.Resources.Themes;
 
 namespace OnlineShop_MobileApp.Services
 {

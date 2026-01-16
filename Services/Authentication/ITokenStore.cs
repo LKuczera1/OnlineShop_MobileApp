@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineShop_MobileApp.Services.Authentication
+﻿namespace OnlineShop_MobileApp.Services.Authentication
 {
     public record AuthSession
     {
-        public AuthSession(string? accesToken = null, DateTimeOffset? expiresAt= null)
+        public AuthSession(string? accesToken = null, DateTimeOffset? expiresAt = null)
         {
             AccessToken = accesToken;
             ExpiresAtUtc = expiresAt;

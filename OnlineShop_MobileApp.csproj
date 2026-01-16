@@ -1,5 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+
+	<!--
+		Android Release: trimming and AOT are disabled because the linker was removing
+		types used during API deserialization, causing data to fail loading at runtime.
+	-->
+	
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+		<PublishTrimmed>false</PublishTrimmed>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
@@ -57,10 +69,18 @@
 		<MauiAsset Include="Resources\Images\nophotothumbnail.png" LogicalName="Images/%(Filename)%(Extension)">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</MauiAsset>
-		
-		<MauiAsset Include="Resources\Images\closedeyeicon.png" />
-		<MauiAsset Include="Resources\Images\openeyeicon.png" />
-		<MauiAsset Include="Resources\Images\userprofilepicture.png" />
+
+		<MauiAsset Include="Resources\Images\closedeyeicon.png" LogicalName="Images/%(Filename)%(Extension)">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiAsset>
+
+		<MauiAsset Include="Resources\Images\openeyeicon.png" LogicalName="Images/%(Filename)%(Extension)">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiAsset>
+
+		<MauiAsset Include="Resources\Images\userprofilepicture.png" LogicalName="Images/%(Filename)%(Extension)">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</MauiAsset>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -72,7 +92,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#8FB6FF" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />

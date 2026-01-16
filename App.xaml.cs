@@ -1,5 +1,4 @@
 ﻿using OnlineShop_MobileApp.Services;
-using OnlineShop_MobileApp.Views;
 
 namespace OnlineShop_MobileApp
 {

@@ -1,5 +1,4 @@
-﻿using Microsoft.Maui.Storage;
-using OnlineShop_MobileApp.Models.DTOs;
+﻿using OnlineShop_MobileApp.Models.DTOs;
 using OnlineShop_MobileApp.Services.Authentication;
 using System.ComponentModel;
 using System.Net.Http.Json;
@@ -56,7 +55,7 @@ public class SecureTokenStore : ITokenStore
     //jest to projekt na "HumanComputerInteraction", gdzie liczy sie "wyglad" aplikacji, a nie na
     //"UserDataProtection". Moze kiedys zostanie to naprawione. +Nie chce mi sie dodawac specjalnych
     //Endpointow do api...
-    
+
 
     public SecureTokenStore(HttpClient httpClient, string refreshEndpoint)
     {
@@ -94,7 +93,7 @@ public class SecureTokenStore : ITokenStore
         await _gate.WaitAsync();
         try
         {
-            if(login!=null)
+            if (login != null)
             {
                 _username = login;
             }
@@ -117,7 +116,8 @@ public class SecureTokenStore : ITokenStore
             SecureStorage.Remove(TokenKey);
             SecureStorage.Remove(ExpKey);
         }
-        finally { 
+        finally
+        {
             _gate.Release();
             IsUserLoggedIn = false;
         }
@@ -133,8 +133,8 @@ public class SecureTokenStore : ITokenStore
     {
         bool isTokenActive = await IsTokenStillActive();
 
-        if(isTokenActive) return true;
-        else if(!_isUserLoggedIn) return false;
+        if (isTokenActive) return true;
+        else if (!_isUserLoggedIn) return false;
 
         try
         {
@@ -204,7 +204,7 @@ public class SecureTokenStore : ITokenStore
             if (!response.IsSuccessStatusCode)
                 throw new TokenRefreshException(
                     $"Refresh endpoint returned {(int)response.StatusCode}");
-            
+
             AuthResponseDto dto;
             try
             {

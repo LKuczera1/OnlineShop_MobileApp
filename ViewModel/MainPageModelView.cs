@@ -71,7 +71,7 @@ namespace OnlineShop_MobileApp.ViewModel
 
             SwitchTabCommand = new Command<string>(tab =>
             {
-                switch(tab)
+                switch (tab)
                 {
                     case "Catalog":
                         CurrentView = _catalog;

@@ -111,6 +111,7 @@
                                         MaximumWidthRequest="120"
                                         HorizontalOptions="End"
                                         VerticalOptions="Start"
+                                        CornerRadius="5"
                                         MaximumHeightRequest="80"
                                         Command="{Binding BindingContext.ChangeOrderDetailsVisiblity, Source={RelativeSource AncestorType={x:Type ContentView}}}"
                                         CommandParameter="{Binding .}">

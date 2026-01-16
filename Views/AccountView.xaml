@@ -40,8 +40,9 @@
                                      Source="{Binding PasswordVisibilityIcon}"
                                      WidthRequest="24"
                                      HeightRequest="24"
-                                     BackgroundColor="Transparent"
-                                     Command="{Binding TogglePasswordVisibilityCommand}" />
+                                     BackgroundColor="{DynamicResource ContrastColor}"
+                                     Command="{Binding TogglePasswordVisibilityCommand}" 
+                                     CornerRadius="5"/>
                     </Grid>
                 </Border>
 

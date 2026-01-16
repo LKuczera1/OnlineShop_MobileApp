@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OnlineShop_MobileApp.Views.CartView">
 
-    <Grid RowDefinitions="6*,1*"
+    <Grid RowDefinitions="85*,15*"
           BackgroundColor="{DynamicResource BackgroundColor}">
 
         <!-- Komunikat gdy użytkownik nie jest zalogowany -->
@@ -30,7 +30,8 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Border class="CollectionItemBorder">
+                        <Border class="CollectionItemBorder"
+                                Padding="0">
 
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="8" />
@@ -38,14 +39,14 @@
 
                             <!-- GŁÓWNY UKŁAD: 2 wiersze -->
                             <Grid RowDefinitions="Auto,Auto"
-                                  RowSpacing="10"
+                                  RowSpacing="2"
                                   Padding="0"
                                   VerticalOptions="Center">
                                 
                                 <Grid Grid.Row="0"
                                       ColumnDefinitions="Auto,*"
                                       ColumnSpacing="5"
-                                      Padding="0">
+                                      Padding="5,0,5,0">
 
                                     <!-- LEWA: Thumbnail -->
                                     <Border Grid.Column="0"
@@ -92,7 +93,7 @@
                                 <Grid Grid.Row="1"
                                       ColumnDefinitions="Auto,*"
                                       ColumnSpacing="10"
-                                      Padding="0">
+                                      Padding="5,0,5,5">
 
 
                                     <!-- PRAWA: wszystko wyrównane do prawej -->
@@ -107,8 +108,11 @@
 
                                             <Button Text="-"
                                                     FontSize="30"
+                                                    Padding="0,0,0,8"
                                                     WidthRequest="44"
                                                     HeightRequest="44"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Start"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
                                           Path=BindingContext.DecreaseCommand}"
                                                     CommandParameter="{Binding .}" />
@@ -123,17 +127,23 @@
                                             </Border>
 
                                             <Button Text="+"
+                                                    Padding="0,0,0,5"
                                                     FontSize="25"
                                                     WidthRequest="44"
                                                     HeightRequest="44"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
                                           Path=BindingContext.IncreaseCommand}"
                                                     CommandParameter="{Binding .}" />
 
                                             <Button Text="U"
                                                     FontSize="22"
+                                                    Padding="0,0,0,2"
                                                     WidthRequest="44"
                                                     HeightRequest="44"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
                                           Path=BindingContext.RemoveCommand}"
                                                     CommandParameter="{Binding .}" />
@@ -184,30 +194,37 @@
                 StrokeThickness="0">
 
             <Grid ColumnDefinitions="7*,3*"
-                  Padding="5">
-                <Grid RowDefinitions="*,*,*"
+                  Padding="2">
+                <Grid RowDefinitions="Auto,Auto,Auto"
                       Grid.Column="0"
-                      Padding="0">
+                      Padding="0"
+                      RowSpacing="1">
 
                     <Label Text="Order summary:"
-                           Grid.Row="0" />
+                           Grid.Row="0" 
+                           FontSize="15"/>
 
                     <Label Grid.Row="1">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="Total price: " />
                                 <Span Text="{Binding TotalPrice, StringFormat='{0:0.00}'}" />
+                                <Span FontSize="15" />
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
                     <Label Text="Pay to send order request"
-                           Grid.Row="2" />
+                           Grid.Row="2"
+                           FontSize="15" />
                 </Grid>
 
                 <Button Grid.Column="1"
                         Text="Pay order"
-                        Command="{Binding PlaceOrderCommand}" />
+                        Command="{Binding PlaceOrderCommand}" 
+                        MaximumHeightRequest="60"
+                        MaximumWidthRequest="140"
+                        CornerRadius="5"/>
 
             </Grid>
         </Border>

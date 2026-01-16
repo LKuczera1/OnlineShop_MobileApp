@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineShop_MobileApp.ViewModel
+﻿namespace OnlineShop_MobileApp.ViewModel
 {
     using OnlineShop_MobileApp.Services;
     using Shopping.Models;
@@ -13,7 +7,7 @@ namespace OnlineShop_MobileApp.ViewModel
     using System.Runtime.CompilerServices;
     using System.Windows.Input;
 
-    public class OrdersViewModel: INotifyPropertyChanged
+    public class OrdersViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -60,7 +54,7 @@ namespace OnlineShop_MobileApp.ViewModel
 
         public async Task Refresh()
         {
-            if(!_shoppingService.isUserLoggedIn()) CurrentView = CurrentViewEnum.UserNotLoggedIn;
+            if (!_shoppingService.isUserLoggedIn()) CurrentView = CurrentViewEnum.UserNotLoggedIn;
 
             await GetOrderItems();
             await MainThread.InvokeOnMainThreadAsync(() =>
@@ -83,7 +77,7 @@ namespace OnlineShop_MobileApp.ViewModel
             _orders = await _shoppingService.GetOrders();
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                if(_orders==null)
+                if (_orders == null)
                 {
                     _orders = new List<Order>();
                     Items.Clear();
@@ -102,7 +96,7 @@ namespace OnlineShop_MobileApp.ViewModel
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public class OrderItem: Order, INotifyPropertyChanged
+    public class OrderItem : Order, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -148,7 +142,8 @@ namespace OnlineShop_MobileApp.ViewModel
         public bool AreDetailsVisible
         {
             get { return _areDetailsVisible; }
-            set { 
+            set
+            {
                 _areDetailsVisible = value;
                 OnPropertyChanged();
             }

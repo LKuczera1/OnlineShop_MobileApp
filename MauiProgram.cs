@@ -6,7 +6,6 @@ using OnlineShop_MobileApp.Services.Resolver;
 using OnlineShop_MobileApp.ViewModel;
 using OnlineShop_MobileApp.Views;
 using OnlineShopMobileApp.Configuration;
-using Paket;
 
 //Zeby pokazywało apke w sensownym miejscu
 #if WINDOWS
@@ -126,7 +125,7 @@ namespace OnlineShop_MobileApp
 
             builder.Services.AddSingleton<CartViewModel>();
             builder.Services.AddSingleton<CartView>();
-            
+
             builder.Services.AddSingleton<ProductDetailsView>();
 
             builder.Services.AddSingleton<AccountViewModel>();
@@ -185,7 +184,7 @@ namespace OnlineShop_MobileApp
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

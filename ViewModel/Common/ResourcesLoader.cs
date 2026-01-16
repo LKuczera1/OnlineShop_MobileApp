@@ -1,11 +1,4 @@
-﻿using Microsoft.Maui.Platform;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineShop_MobileApp.ViewModel.Common
+﻿namespace OnlineShop_MobileApp.ViewModel.Common
 {
     public static class ResourcesLoader
     {

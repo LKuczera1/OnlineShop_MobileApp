@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Graphics;
-using Microsoft.Maui.Platform;
-using OnlineShop_MobileApp.Models;
+﻿using OnlineShop_MobileApp.Models;
 using OnlineShop_MobileApp.Models.DTOs;
 using OnlineShop_MobileApp.Services;
 using OnlineShop_MobileApp.Services.Resolver;
@@ -11,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 using System.Windows.Input;
 
-public class CartViewModel: INotifyPropertyChanged
+public class CartViewModel : INotifyPropertyChanged
 {
     //--------------------
 
@@ -71,7 +69,7 @@ public class CartViewModel: INotifyPropertyChanged
 
         RemoveCommand = new Command<CartItem>(item => _ = RemoveItemAsync(item));
 
-        PlaceOrderCommand = new Command( () => PlaceOrder());
+        PlaceOrderCommand = new Command(() => PlaceOrder());
 
         _service = service;
         _servicesResolver = servicesResolver;
@@ -91,7 +89,7 @@ public class CartViewModel: INotifyPropertyChanged
 
     private async Task PlaceOrder()
     {
-        if(Items.Count == 0) return;
+        if (Items.Count == 0) return;
 
         var jsonArray = new JsonArray();
 
@@ -106,7 +104,7 @@ public class CartViewModel: INotifyPropertyChanged
 
         var result = await _service.PlaceOrder(JsonContent.Create(jsonArray));
 
-        if(result)
+        if (result)
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -183,7 +181,7 @@ public class CartViewModel: INotifyPropertyChanged
     {
         IsCartViewAvailable = _service.isUserLoggedIn();
 
-        if(IsCartViewAvailable)
+        if (IsCartViewAvailable)
         {
             try
             {

@@ -1,18 +1,11 @@
 ﻿using OnlineShop_MobileApp.Models.DTOs;
 using OnlineShop_MobileApp.Services.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.Services
 {
-    public class IdentityService: Service, IIdentityService
+    public class IdentityService : Service, IIdentityService
     {
 
         private readonly ITokenStore _tokenStore;
@@ -35,8 +28,8 @@ namespace OnlineShop_MobileApp.Services
             try
             {
 
-                var response = await SendAsync(loginendpoint, loginJson, HttpMethod.Post); 
-                
+                var response = await SendAsync(loginendpoint, loginJson, HttpMethod.Post);
+
                 if (response != null)
                 {
                     try
@@ -116,7 +109,7 @@ namespace OnlineShop_MobileApp.Services
             JsonContent messageContent = JsonContent.Create(regRequest);
             RegisterResponseDto regResponse = new RegisterResponseDto();
 
-            HttpResponseMessage response = await SendAsync(registerEndpoint, messageContent, HttpMethod.Post, ignoreStatusCode:true);
+            HttpResponseMessage response = await SendAsync(registerEndpoint, messageContent, HttpMethod.Post, ignoreStatusCode: true);
 
             if (response != null)
             {

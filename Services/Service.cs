@@ -1,13 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using OnlineShop_MobileApp.Services.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using OnlineShop_MobileApp.Services.Authentication;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop_MobileApp.Services
 {
@@ -35,7 +29,7 @@ namespace OnlineShop_MobileApp.Services
             {
                 _errorType = errorType;
             }
-            public ConnectionErrorException(ConnectionErrorType errorType, Exception e) :base(e.Message, e)
+            public ConnectionErrorException(ConnectionErrorType errorType, Exception e) : base(e.Message, e)
             {
                 //Wraps received exception to my custom exception
                 _errorType = errorType;
@@ -104,7 +98,7 @@ namespace OnlineShop_MobileApp.Services
 
             var response = await httpClient.SendAsync(request, HttpCmpOptions, cts.Token);
 
-            if(ignoreStatusCode) return response;
+            if (ignoreStatusCode) return response;
 
             try
             {
@@ -201,7 +195,7 @@ namespace OnlineShop_MobileApp.Services
 
             HttpRequestMessage request = new HttpRequestMessage(httpMethod, url);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", JWTtoken);
-            if(messageContent!=null) { request.Content = messageContent; }
+            if (messageContent != null) { request.Content = messageContent; }
 
             var response = await httpClient.SendAsync(request, HttpCmpOptions, cts.Token);
 
@@ -238,8 +232,8 @@ namespace OnlineShop_MobileApp.Services
         /// <param name="ignoreStatusCode"></param>
         /// <returns></returns>
 
-        protected async Task<HttpResponseMessage> AuthorizedGetAsync(string url, 
-            HttpMethod? httpMethod = null, 
+        protected async Task<HttpResponseMessage> AuthorizedGetAsync(string url,
+            HttpMethod? httpMethod = null,
             HttpCompletionOption HttpCmpOptions = HttpCompletionOption.ResponseHeadersRead,
             bool ignoreStatusCode = false)
         {

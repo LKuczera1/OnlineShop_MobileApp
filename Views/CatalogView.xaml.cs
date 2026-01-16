@@ -4,9 +4,9 @@ namespace OnlineShop_MobileApp.Views;
 
 public partial class CatalogView : ContentView
 {
-	public CatalogView(CatalogViewModel viewModel)
-	{
-		InitializeComponent();
-		BindingContext = viewModel;
-	}
+    public CatalogView(CatalogViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
 }

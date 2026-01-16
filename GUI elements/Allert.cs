@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OnlineShop_MobileApp.GUI_elements
+﻿namespace OnlineShop_MobileApp.GUI_elements
 {
     public class Allert : Banner
     {

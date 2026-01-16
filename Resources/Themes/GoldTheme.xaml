@@ -23,6 +23,7 @@
 
     <Color x:Key="EntryColor">#7B91B2</Color>
 
+    <Color x:Key="ContrastColor">#5E79A1</Color>
     <!--                             -->
 
     <Color x:Key="Primary">#512BD4</Color>

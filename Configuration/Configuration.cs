@@ -26,7 +26,7 @@ namespace OnlineShopMobileApp.Configuration
             public String identity { get; set; }
             public String shopping { get; set; }
 
-            //Simple deserializing all endpoints to dictionary
+            //Todo: deserialization of endpoints to dictionary
             public Dictionary<string, string> CatalogEndpoints { get; set; } = new();
             public Dictionary<string, string> IdentityEndpoints { get; set; } = new();
             public Dictionary<string, string> ShoppingEndpoints { get; set; } = new();
@@ -36,10 +36,6 @@ namespace OnlineShopMobileApp.Configuration
         public ScreenResolution screenResolution { get; set; }
 
         public Services services { get; set; }
-
-        public ColorTheme DarkTheme { get; set; }
-        public ColorTheme WhiteTheme { get; set; }
-        //public ColorTheme GoldTheme { get; set; }
 
         public ConfigurationProperties() 
         {
@@ -53,7 +49,7 @@ namespace OnlineShopMobileApp.Configuration
         public ConfigurationProperties? Properties { get; set; }
 
 
-        // double backslash can provide errors on android devices, it's recommended to use single front slash
+        //Its recommended to use front slash instead of backslash on android
         private const string configurationFileDirectory = "Configuration/Configuration.json";
         public Configuration(bool loadConfigurationNow = true) 
         {

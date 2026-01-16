@@ -22,6 +22,8 @@
 
     <Color x:Key="EntryColor">#525252</Color>
 
+    <Color x:Key="ContrastColor">#BABABA</Color>
+
     <!--                             -->
 
     <Color x:Key="Primary">#512BD4</Color>
