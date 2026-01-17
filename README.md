@@ -1,13 +1,16 @@
 # OnlineShop_MobileApp
 
-OnlineShop_MobileApp jest front-endow¹ aplikacj¹ mobiln¹ dla projektu REST API OnlineShop. Do implementacji aplikacji zosta³ wykorzystany jêzyk **C# (.NET w wersji 9.0)**
-oraz pakiet **.NET MAUI**. Aplikacja umozliwia przegl¹danie listy produktów w katalogu serwisu, dodawanie ich do koszyka, sk³adanie zamówieñ oraz logowanie lub rejestracje
+OnlineShop_MobileApp jest front-endowÄ… aplikacjÄ… mobilnÄ… dla projektu REST API OnlineShop. Do implementacji aplikacji zostaÅ‚ wykorzystany jÄ™zyk **C# (.NET w wersji 9.0)**
+oraz pakiet **.NET MAUI**. Aplikacja umozliwia przeglÄ…danie listy produktÃ³w w katalogu serwisu, dodawanie ich do koszyka, skÅ‚adanie zamÃ³wieÅ„ oraz logowanie lub rejestracje
 nowego uzytkownika.
 
-Aplikacja jest projektem akademickim dla przedmiotu Humanan-Computer Interaction i jej implementacja jest zorientowana g³ównie wokó³ wizualnego wygl¹du aplikacji, dostêpnoœci
-i funkcjonalnoœci. Aplikacja zosta³a wyposa¿ona w 3 motywy kolorystyczne, i zosta³a przetestowana zarówno na urz¹dzeniu mobilnym jak i na Windows Machine.
+Aplikacja jest projektem akademickim dla przedmiotu Humanan-Computer Interaction i jej implementacja jest zorientowana gÅ‚Ã³wnie wokÃ³Å‚ wizualnego wyglÄ…du aplikacji, dostÄ™pnoÅ›ci
+i funkcjonalnoÅ›ci. Aplikacja zostaÅ‚a wyposaÅ¼ona w 3 motywy kolorystyczne, i zostaÅ‚a przetestowana zarÃ³wno na urzÄ…dzeniu mobilnym jak i na Windows Machine.
 
 # Repozytorium zawiera:
 - **OnlineShop_MobileApp** - Aplikacja mobilna sklepu internetowego
 
-Obecna wersja projektu to: 1.0 - Dzia³aj¹cy prototyp aplikacji.
+Obecna wersja projektu to: 1.0 - DziaÅ‚ajÄ…cy prototyp aplikacji.
+
+MateriaÅ‚ wideo prezentujÄ…cy dziaÅ‚anie Backendu i Aplikacji mobilnej - FrontEndu:
+https://youtu.be/65hNJ2_KMIk?si=p-V184GnC3ZeJvEF
